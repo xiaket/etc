@@ -1,0 +1,17 @@
+Listen 127.0.0.1:19063
+<VirtualHost *:19063>
+        ServerAdmin xiaket@gmail.com
+
+        DocumentRoot /Users/xiaket/.Sites/blog
+
+        <Directory />
+                Options FollowSymLinks
+                AllowOverride None
+                Order allow,deny
+                Allow from all
+        </Directory>
+
+        ErrorLog /Users/xiaket/.Sites/log/blog_error.log
+        LogLevel warn
+        CustomLog /Users/xiaket/.Sites/log/blog_access.log combined
+</VirtualHost>
