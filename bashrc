@@ -7,7 +7,7 @@ xiaketDIR="/Users/xiaket/.xiaket"
 bashrcdir=$xiaketDIR"/etc"
 bindir=$xiaketDIR"/bin"
 
-export PATH="~/.xiaket/bin.mac:~/.xiaket/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/texlive/2013/bin/x86_64-darwin"
+export PATH="~/.xiaket/bin.mac:~/.xiaket/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/texlive/2013/bin/x86_64-darwin:/usr/local/share/npm/bin"
 MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 ############
@@ -70,6 +70,7 @@ PROMPT_COMMAND=`$PROMPT_COMMAND; history -a`
 # Setup Python PATH, so our python libraries would be portable.
 export PYTHONPATH="$PYTHONPATH:/Users/xiaket/.xiaket/python:/Users/xiaket/.xiaket/python/lib"
 export PYTHONSTARTUP=~/.pythonrc
+export NODE_PATH=/usr/local/lib/node_modules
 export SVN_EDITOR=vim
 SSH_ENV="$HOME/.ssh/environment"
 
