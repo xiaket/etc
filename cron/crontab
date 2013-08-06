@@ -1,0 +1,20 @@
+MAILTO=xiaket
+PATH=/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:
+PYTHON=/usr/local/bin/python
+PYTHONPATH=/Users/xiaket/.xiaket/python:/Users/xiaket/.xiaket/python/lib
+CRONDIR=/Users/xiaket/.xiaket/etc/cron
+
+# Automatic update user crontab every time.
+@reboot crontab ${CRONDIR}/crontab
+@reboot supervisord -c ~/.supervisord.conf
+@reboot ssh-agent -s | grep -v echo > ~/.ssh-agent
+
+################
+# end section. #
+################
+
+# update all repos.
+21 16 * * * $SH ${CRONDIR}/update_repo.sh
+
+# update local hosts every two hours.
+23 */2 * * * (cd /Users/xiaket/.xiaket/share/Dropbox/mercurial/Stygian/ && $PYTHON manage.py update_serverlist 2>/dev/null && $PYTHON manage.py update_hosts && cd /Users/xiaket/.xiaket/share/Dropbox/mercurial/Stygian/db/hosts && > ~/.xiaket/etc/hosts && cat * >> ~/.xiaket/etc/hosts)

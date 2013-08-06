@@ -70,7 +70,7 @@ PROMPT_COMMAND=`$PROMPT_COMMAND; history -a`
 # Setup Python PATH, so our python libraries would be portable.
 export PYTHONPATH="$PYTHONPATH:/Users/xiaket/.xiaket/python:/Users/xiaket/.xiaket/python/lib"
 export PYTHONSTARTUP=~/.pythonrc
-export NODE_PATH=/usr/local/lib/node_modules
+export NODE_PATH="$NODE_PATH:/usr/local/lib/node_modules:/usr/local/share/npm/lib/node_modules"
 export SVN_EDITOR=vim
 SSH_ENV="$HOME/.ssh/environment"
 

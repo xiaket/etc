@@ -1,0 +1,13 @@
+[user]
+	name = 夏恺(Xia Kai)
+	email = xiaket@gmail.com
+[alias]
+    ci = commit
+    st = status
+    co = checkout
+[core]
+	excludesfile = /Users/xiaket/.xiaket/etc/gitignore_global
+[push]
+	default = simple
+[color]
+	ui = true
