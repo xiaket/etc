@@ -17,4 +17,4 @@ CRONDIR=/Users/xiaket/.xiaket/etc/cron
 21 16 * * * $SH ${CRONDIR}/update_repo.sh
 
 # update local hosts every two hours.
-23 */2 * * * (cd /Users/xiaket/.xiaket/share/Dropbox/mercurial/Stygian/ && $PYTHON manage.py update_serverlist 2>/dev/null && $PYTHON manage.py update_hosts && cd /Users/xiaket/.xiaket/share/Dropbox/mercurial/Stygian/db/hosts && > ~/.xiaket/etc/hosts && cat * >> ~/.xiaket/etc/hosts)
+36 * * * * (cd /Users/xiaket/.Git/local/Stygian/ && make)
