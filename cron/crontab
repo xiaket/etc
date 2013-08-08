@@ -14,7 +14,10 @@ CRONDIR=/Users/xiaket/.xiaket/etc/cron
 ################
 
 # update all repos.
-21 16 * * * $SH ${CRONDIR}/update_repo.sh
+21 16 * * * ($SH ${CRONDIR}/update_repo.sh)
+
+# update all repos.
+06 16 * * * ($SH ${CRONDIR}/cleanssh.sh)
 
 # update local hosts every two hours.
 36 * * * * (cd /Users/xiaket/.Git/local/Stygian/ && make)
