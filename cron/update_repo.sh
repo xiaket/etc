@@ -3,7 +3,7 @@
 # Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
 # Filename:       update_repo.sh
 # Date created:   2013-08-04 12:15
-# Last modified:  2013-08-08 13:19
+# Last modified:  2013-08-10 14:01
 #
 # Description:
 #
@@ -61,6 +61,5 @@ do
     done
 done
 
-cat $TEMPFILE | mail -s "Repo update" xiaket@corp.netease.com
-
+#cat $TEMPFILE | mail -s "Repo update" xiaket@corp.netease.com
 rm -f $TEMPFILE
