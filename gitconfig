@@ -5,6 +5,8 @@
     ci = commit
     st = status
     co = checkout
+    lg = log --graph --decorate --pretty=oneline --abbrev-commit
+
 [core]
 	excludesfile = /Users/xiaket/.xiaket/etc/gitignore_global
 [push]
