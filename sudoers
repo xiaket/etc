@@ -41,5 +41,5 @@ root	ALL=(ALL) ALL
 # %wheel	ALL=(ALL) NOPASSWD: ALL
 
 # Samples
-xiaket  ALL=(ALL) NOPASSWD: /usr/sbin/networksetup, /usr/local/sbin/iftop, /usr/local/sbin/mtr
+xiaket  ALL=(ALL) NOPASSWD: /usr/sbin/networksetup, /usr/local/sbin/iftop, /usr/local/sbin/mtr, /usr/local/sbin/openvpn
 # %users  localhost=/sbin/shutdown -h now
