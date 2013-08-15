@@ -30,6 +30,7 @@ alias mn='make clean'
 alias mt='make test'
 alias :q='exit'
 alias ZZ='exit'
+alias py='python2.7'
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias watch='cd ~/.Watch && /usr/bin/watch -n 300 bash ls.sh'
