@@ -1,0 +1,4 @@
+dns-resolution: yes
+show-bars: no
+port-display: on
+use-bytes: yes
