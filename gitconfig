@@ -9,6 +9,7 @@
 
 [core]
 	excludesfile = /Users/xiaket/.xiaket/etc/gitignore_global
+	pager = cat
 [push]
 	default = simple
 [color]
