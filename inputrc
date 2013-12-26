@@ -1,3 +1,7 @@
+set bind-tty-special-chars off
+"\C-u": kill-whole-line
+"\C-w": backward-kill-word
+
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 set show-all-if-ambiguous on
