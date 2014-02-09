@@ -1,11 +1,13 @@
 [user]
 	name = 夏恺(Xia Kai)
 	email = xiaket@gmail.com
+
 [alias]
     ci = commit
     st = status
     co = checkout
     lg = log --graph --decorate --pretty=oneline --abbrev-commit
+    pulls = "!f() { git pull --squash -s recursive "$1" master; }; f"
 
 [core]
 	excludesfile = /Users/xiaket/.xiaket/etc/gitignore_global
