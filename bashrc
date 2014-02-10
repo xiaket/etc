@@ -72,6 +72,7 @@ export PYTHONPATH="$PYTHONPATH:/Users/xiaket/.xiaket/python:/Users/xiaket/.xiake
 export PYTHONSTARTUP=~/.pythonrc
 export NODE_PATH="$NODE_PATH:/usr/local/lib/node_modules:/usr/local/share/npm/lib/node_modules"
 export SVN_EDITOR=vim
+export VISUAL=vim
 
 #################
 # accessibility #
