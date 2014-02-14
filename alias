@@ -33,7 +33,6 @@ alias ZZ='exit'
 alias py='python2.7'
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
-alias watch='cd ~/.Watch && /usr/bin/watch -n 300 bash ls.sh'
 alias rehost='cd ~/.Hg/Stygian && make update && cd -'
 alias randport='python -c "import random; print random.randint(1025, 65535)"'
 alias chardet='/usr/local/share/python/chardetect.py'
