@@ -1,0 +1,10 @@
+Listen 127.0.0.1:7698
+<VirtualHost *:7698>
+        ServerAdmin xiaket@gmail.com
+
+        DocumentRoot /Users/xiaket/.Sites/album
+
+        ErrorLog /Users/xiaket/.Sites/log/album_error.log
+        LogLevel warn
+        CustomLog /Users/xiaket/.Sites/log/album_access.log combined
+</VirtualHost>
