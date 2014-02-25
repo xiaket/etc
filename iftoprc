@@ -1,4 +1,5 @@
-dns-resolution: yes
+dns-resolution: no
 show-bars: no
-port-display: on
+port-display: destination-only
 use-bytes: yes
+port-resolution: no
