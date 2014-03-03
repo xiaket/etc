@@ -8,6 +8,7 @@
     co = checkout
     lg = log --graph --decorate --pretty=oneline --abbrev-commit
     pulls = "!f() { git pull --squash -s recursive "$1" master; }; f"
+	g = grep --break --heading --line-number
 
 [core]
 	excludesfile = /Users/xiaket/.xiaket/etc/gitignore_global
@@ -18,3 +19,6 @@
 	ui = true
 [init]
 	templatedir = ~/.git_template
+[grep]
+	extendRegexp = true
+	lineNumber = true
