@@ -18,7 +18,12 @@ MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 . /usr/local/etc/bash_completion
 
 . /Users/xiaket/.xiaket/share/repos/pub-repos/github/django/extras/django_bash_completion
-. $bashrcdir/ntes
+if [ -f $bashrcdir/ntes ]
+then
+    . $bashrcdir/ntes
+else
+    echo "ntes settings not found in $bashrcdir"
+fi
 
 # If we are logging through tty, set locale to en_US.UTF-8
 TTY=`tty | grep tty -c`
