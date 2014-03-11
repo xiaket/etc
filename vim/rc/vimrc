@@ -1,0 +1,136 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plain things that (almost) everybody would agree.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Get out of VI's compatible mode.
+set nocompatible
+" enable pathogen
+call pathogen#infect()
+call pathogen#helptags()
+" Enable filetype plugin
+filetype on
+filetype plugin on
+filetype indent on
+" encoding and formats.
+set fileencodings=utf-8,gbk,ucs-bom,cp936
+set ffs=unix,dos,mac
+"Set backspace
+set backspace=eol,start,indent
+" Do not redraw while running macros (much faster).
+set lazyredraw
+" Search related.
+set noignorecase
+set incsearch
+set hlsearch
+set showmatch
+" Tab and indent
+set smarttab
+set expandtab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set autoindent
+set smartindent
+autocmd FileType make set noexpandtab shiftwidth=8
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za
+vnoremap <space> zf
+" Minimal number of screen lines to keep above and below the cursor.
+set scrolloff=3
+" always report number of lines affected.
+set report=0
+"Wrap lines
+set wrap
+" backup and swap file
+set backup
+set backupdir=~/.vim/backup
+set nowb
+set noswapfile
+" save undo history
+set undofile
+set undodir=~/.vim/undo
+" Auto save and load view (folding, position)
+autocmd BufWinLeave ?* mkview
+autocmd BufWinEnter ?* silent loadview
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" End of Plain things.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Start of magic
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" enable tormorrow colorscheme
+syntax enable
+set background=dark
+colorscheme tomorrow-night-eighties
+
+" Statusline
+set laststatus=2
+hi StatusLine ctermbg=Black ctermfg=White
+set statusline=%y[%l-%L,%v][%p%%][%{&fileencoding},%{&fileformat}]\ %F%m%r\ %h
+let g:airline_theme='simple'
+
+" rainbow_parentheses:
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+
+" YouCompleteMe
+func! g:jInYCM()
+    if pumvisible()
+        return "\<C-n>"
+    else
+        return "\<c-j>"
+endfunction
+
+func! g:kInYCM()
+    if pumvisible()
+        return "\<C-p>"
+    else
+        return "\<c-k>"
+endfunction
+
+inoremap <c-j> <c-r>=g:jInYCM()<cr>
+au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:kInYCM()<cr>"
+
+" UltiSnip key mappings.
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+
+" UltiSnip settings.
+let g:UltiSnipsSnippetDirectories=["/Users/xiaket/.vim/snippets"]
+let g:UltiSnipsDoHash=0
+
+" mappings
+"Paste toggle - when pasting something in, don't indent.
+set pastetoggle=<F3>
+"Remove trailing spaces
+map <silent> <F5> :%s/\s*$//g<cr>
+" In case of Q! and WQ, as I have to press Shift.
+cmap Q q
+cmap W w
+
+" Bash like keys for the command line
+cnoremap <C-A> <Home>
+cnoremap <C-E> <End>
+cnoremap <C-P> <Up>
+cnoremap <C-N> <Down>
+
+" case sensible when doing completion
+set infercase
+
+" auto save on bufleave and lose focus.
+autocmd BufLeave,FocusLost * silent! wall
+
+" relative line number
+autocmd InsertEnter * :set number
+autocmd InsertLeave * :set relativenumber
+autocmd FocusLost * :set number
+autocmd CursorMoved * :set relativenumber
+
+let g:BHAUTHOR = 'Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>'
+let g:BHUnder = ['~/.xiaket/share/repos/ntes-repos', '~/.xiaket/share/Dropbox/git']
+let g:BHDebug = "0"

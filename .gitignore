@@ -2,3 +2,6 @@ hosts
 ntes
 openvpn
 config.json
+vim/backup
+vim/undo
+vim/view
