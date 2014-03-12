@@ -150,3 +150,5 @@ let g:BHDebug = "0"
 
 " Testing these features:
 set shortmess+=filmnrxoOtT
+let python_version_2 = 1
+let python_highlight_all = 1
