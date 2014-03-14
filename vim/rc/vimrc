@@ -138,11 +138,45 @@ set infercase
 " auto save on bufleave and lose focus.
 autocmd BufLeave,FocusLost * silent! wall
 
+" Smart line number
+function RelativeLineNumber(target)
+    if !exists("b:lnstatus")
+        let b:lnstatus = "number"
+    endif
+    if b:lnstatus != "nonumber"
+        if a:target == "number"
+            set number
+            set norelativenumber
+        else
+            set number
+            set relativenumber
+        endif
+    else
+        set nonumber
+    endif
+endfunction
+
+function ToggleLineNumber()
+    if !exists("b:lnstatus")
+        let b:lnstatus = "number"
+    endif
+    if b:lnstatus == "number"
+        set nonumber
+        set norelativenumber
+        let b:lnstatus = "nonumber"
+    else
+        set number
+        set relativenumber
+        let b:lnstatus = "number"
+    endif
+endfunction
+
 " relative line number
-autocmd InsertEnter * :set number
-autocmd InsertLeave * :set relativenumber
-autocmd FocusLost * :set number
-autocmd CursorMoved * :set relativenumber
+autocmd InsertEnter * :call RelativeLineNumber("number")
+autocmd InsertLeave * :call RelativeLineNumber("relativenumber")
+autocmd FocusLost * :call RelativeLineNumber("number")
+autocmd CursorMoved * :call RelativeLineNumber("relativenumber")
+nnoremap <F2> :call ToggleLineNumber()<cr>
 
 let g:BHAUTHOR = 'Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>'
 let g:BHUnder = ['~/.xiaket/share/repos/ntes-repos', '~/.xiaket/share/Dropbox/git']
