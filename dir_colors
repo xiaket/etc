@@ -175,6 +175,7 @@ EXEC   00;38;5;046      # a little brighter than usual.
 .ogg    00;38;5;090
 .wav    00;38;5;090
 .m4a    00;38;5;090
+.m4b    00;38;5;090
 
 # Video formats (as audio + bold)
 .mov    00;38;5;090
