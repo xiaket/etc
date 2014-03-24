@@ -62,7 +62,6 @@ autocmd BufWinEnter ?* silent loadview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " A list of plugins that I've used:
 " git@github.com:chriskempson/tomorrow-theme.git
-" git@github.com:kien/rainbow_parentheses.vim.git
 " git@github.com:tpope/vim-fugitive.git
 " git@github.com:ervandew/supertab.git
 " git@github.com:bling/vim-airline.git
@@ -83,12 +82,6 @@ set laststatus=2
 hi StatusLine ctermbg=Black ctermfg=White
 set statusline=%y[%l-%L,%v][%p%%][%{&fileencoding},%{&fileformat}]\ %F%m%r\ %h
 let g:airline_theme='simple'
-
-" rainbow_parentheses:
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
 
 " YouCompleteMe
 func! g:jInYCM()
