@@ -48,3 +48,6 @@ alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias mtr='sudo /usr/local/sbin/mtr'
 alias gftp='lftp torrent:G4009@192.168.34.33/ok'
 alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm Win7'
+
+# use https://github.com/ccontavalli/ssh-ident
+alias ssh='ssh-ident'
