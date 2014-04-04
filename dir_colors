@@ -193,6 +193,7 @@ EXEC   00;38;5;046      # a little brighter than usual.
 .rmvb   00;38;5;090
 .avi    00;38;5;090
 .flv    00;38;5;090
+.ts    00;38;5;090
 
 # playground
 # for i in `seq -w 1 256`; do touch xiaket.$i; done
