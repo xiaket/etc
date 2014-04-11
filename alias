@@ -40,6 +40,7 @@ alias rehost='cd ~/.Hg/Stygian && make update && cd -'
 alias randport='python -c "import random; print random.randint(1025, 65535)"'
 alias chardet='/usr/local/share/python/chardetect.py'
 alias mou='open -a Mou.app'
+alias ssh='pre-ssh && ssh'
 
 # BSD fix
 alias sed='gsed'
@@ -48,6 +49,3 @@ alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias mtr='sudo /usr/local/sbin/mtr'
 alias gftp='lftp torrent:G4009@192.168.34.33/ok'
 alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm Win7'
-
-# use https://github.com/ccontavalli/ssh-ident
-alias ssh='ssh-ident'
