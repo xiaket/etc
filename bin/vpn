@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+# Filename:       vpn
+# Date created:   2013-08-14 16:36
+# Last modified:  2013-09-29 14:57
+#
+# Description:
+#
+
+CONFIG="/Users/xiaket/.xiaket/etc/openvpn/savpn.nie.netease.com.ovpn"
+PID="/Users/xiaket/.xiaket/var/run/openvpn.pid"
+
+if [ ! -f $CONFIG ]
+then
+    echo "configuration file: $CONFIG not found."
+    exit 1
+fi
+
+ifconfig tap0 >/dev/null 2>&1
+if [ $? -eq 1 ]
+then
+    has_interface="no"
+else
+    has_interface="yes"
+fi
+
+_pid=`cat $PID 2>/dev/null`
+ps auxww | grep $_pid 2>/dev/null | grep -v grep >/dev/null
+if [ $? -eq 0 ]
+then
+    has_pid="yes"
+else
+    rm -f $PID
+    has_pid="no"
+fi
+
+# Get corp password
+connect(){
+    password_str=`security 2>&1 >/dev/null find-internet-password -ga xiaket@corp.netease.com`
+    if [ $? -ne 0 ]
+    then
+        echo "Fail to get password, quit."
+        exit 1
+    fi
+    password=`echo "$password_str" | python -c "import sys; print sys.stdin.read().strip().split()[1].strip('\"')"`
+    TEMPFILE=`mktemp /tmp/openvpn.XXXXXX || exit 1`
+    echo "xiaket" >> $TEMPFILE
+    echo "$password" >> $TEMPFILE
+    sudo openvpn --daemon --config $CONFIG --connect-retry 1 --ping 300 --auth-nocache --auth-user-pass $TEMPFILE --writepid $PID
+    if [ $? -ne 0 ]
+    then
+        echo "start failed."
+        rm -f $TEMPFILE
+        exit 1
+    fi
+    rm -f $TEMPFILE
+    echo "Waiting interface..."
+    while [ $has_interface = "no" ]
+    do
+        sleep 0.5
+        ifconfig tap0 >/dev/null 2>&1
+        if [ $? -eq 1 ]
+        then
+            has_interface="no"
+        else
+            has_interface="yes"
+        fi
+    done
+    echo "all done."
+}
+
+check(){
+    if [ $has_interface = "yes" ] && [ $has_pid = "no" ]
+    then
+        echo "broken!"
+        exit 1
+    fi
+}
+
+toggle(){
+    if [ "$has_interface" = "yes" ]
+    then
+        echo "please kill this:"
+        echo "sudo kill `cat $PID`"
+    else
+        echo "starting openvpn"
+        connect
+    fi
+}
+
+check
+
+if [ "$1" = "status" -o "$1" = "st" ]
+then
+    echo "Has interface? "$has_interface
+else
+    toggle
+fi

@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+#
+# Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+# Filename:       proxy
+# Date created:   2013-03-19 13:30
+# Last modified:  2013-12-11 11:06
+# Modified by:    Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+#
+# Description:
+# 
+# Changelog:
+#
+
+current_ipaddress=`python -c "import socket; u = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); u.connect(('www.baidu.com', 9)); print u.getsockname()[0]"`
+
+get_service(){
+    networksetup -listallnetworkservices | grep -v "*" | while read service
+    do
+        networksetup -getinfo "$service" | grep -q "$current_ipaddress"
+        if [ $? -eq 0 ]
+        then
+            # found service
+            echo $service
+        fi
+    done
+    networksetup -listallnetworkservices | grep -v "*" | while read service
+    do
+        networksetup -showpppoestatus "$service" | grep "connected" | grep -vq disconnected
+        if [ $? -eq 0 ]
+        then
+            # found service
+            echo $service
+        fi
+    done
+}
+
+
+service=`get_service`
+
+if [ "x$service" = "x" ]
+then
+    RED=$(tput setaf 160)
+    RESET=$(tput sgr0)
+    echo "${RED}service not found, please debug${RESET}"
+    exit 1
+fi
+
+setup_proxy(){
+    sudo networksetup -setautoproxyurl "$service" "http://127.0.0.1:19063/autoproxy.pac"
+    sudo networksetup -setsocksfirewallproxy "$service" 127.0.0.1 9999
+}
+
+enable_socks(){
+    sudo networksetup -setsocksfirewallproxystate "$service" on
+    sudo networksetup -setautoproxystate "$service" off
+}
+
+disable_socks(){
+    sudo networksetup -setsocksfirewallproxystate "$service" off
+    sudo networksetup -setautoproxystate "$service" on
+}
+
+print_status(){
+    YELLOW=$(tput setaf 136)
+    RED=$(tput setaf 160)
+    GREEN=$(tput setaf 64)
+    RESET=$(tput sgr0)
+    has_socks=`networksetup -getsocksfirewallproxy "$service" | grep "^Enabled" | awk '{print $2}'`
+    has_auto=`networksetup -getautoproxyurl  "$service" | grep "^Enabled" | awk '{print $2}'`
+
+    if [ "$has_socks" = "Yes" ] && [ "$has_auto" = "No" ]
+    then
+        echo ${YELLOW}Using Socks${RESET}
+    else
+        setup_proxy
+        disable_socks
+        echo ${GREEN}Regular browsing${RESET}
+    fi
+}
+
+on (){
+    setup_proxy
+    enable_socks
+}
+
+off (){
+    setup_proxy
+    disable_socks
+}
+
+case $1 in
+    on )
+        on ;;
+    off )
+        off ;;
+    *)
+        print_status
+    ;;
+esac

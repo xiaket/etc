@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#
+# Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+# Filename:       mp3join
+# Date created:   2014-02-28 11:55
+# Last modified:  2014-02-28 11:55
+# Modified by:    Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+#
+# Description:
+# 
+# Changelog:
+# 
+
+TEMPFILE=mp3join.list
+OUTPUT="./output.mp3"
+rm -f $TEMPFILE
+
+python -c "import os; open('${TEMPFILE}', 'w').writelines(['file \'%s\'\n' % file for file in os.listdir('.') if file.endswith('.mp3')])"
+
+if [ -f $OUTPUT ]
+then
+    echo "file exist, quit"
+    exit 1
+fi
+
+ffmpeg -f concat -i "$TEMPFILE" -c copy $OUTPUT
+
+rm $TEMPFILE

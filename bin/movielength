@@ -1,0 +1,4 @@
+#!/bin/bash
+LEN=`mplayer -vo null -ao null -frames 0 -identify "$1" 2>/dev/null | grep "^ID_LENGTH" | sed 's/ID_LENGTH=//g'`
+min=`echo "$LEN / 60 " | bc`
+echo $min minutes

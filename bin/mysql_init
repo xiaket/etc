@@ -1,0 +1,36 @@
+#!/bin/sh
+# 
+# Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+# Filename:       mysql.sh
+# Type:           
+# Last modified:  2012-07-03 17:59
+# 
+# Description:
+# 
+
+echo "Enter mysql root user password:"
+read password
+echo "Enter project name:"
+read project
+
+echo -n "Generate password for you? (y/n)"
+read choice
+
+if [ "$choice" = "y" ]
+then
+    dbpassword=`pwgen -sy 14 1`
+else
+    echo "Enter your password for the database:"
+    read dbpassword
+fi
+
+if [ "x$password" = "x" ]
+then
+    echo "CREATE DATABASE $project CHARACTER SET utf8 COLLATE utf8_general_ci; grant ALL on $project.* to $project@localhost IDENTIFIED BY '$dbpassword'; flush privileges;" | mysql -h localhost -u root
+else
+    echo "CREATE DATABASE $project CHARACTER SET utf8 COLLATE utf8_general_ci; grant ALL on $project.* to $project@localhost IDENTIFIED BY '$dbpassword'; flush privileges;" | mysql -h localhost -u root -p$password
+fi
+
+echo "done!"
+echo "proj: " $project
+echo "pass: " $dbpassword

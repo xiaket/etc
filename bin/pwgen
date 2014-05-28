@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+#coding=utf-8
+"""
+Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+Filename:       pwgen
+Last modified:  2013-06-26 14:45
+
+Description:
+生成可用的密码:
+    1. 每个类型都必须出现一次
+    2. 默认16个字符
+    3. 倾向于数字和小写字母, 不倾向于大写字母和标点符号.
+"""
+import random
+import string
+import sys
+
+
+QUOTATIONS = '<>?,./;\':"{}|[]\\~!@#$%^&*()_+=-'
+LETTERS_LOWER = string.ascii_lowercase
+LETTERS_UPPER = string.ascii_uppercase
+DIGITS = string.digits
+
+def generate_one(length):
+    characters = []
+    characters.append(random.choice(QUOTATIONS))
+    characters.append(random.choice(LETTERS_LOWER))
+    characters.append(random.choice(LETTERS_UPPER))
+    characters.append(random.choice(DIGITS))
+    length -= 4
+    while length > 0:
+        length -= 1
+        roll = random.randint(0, 100)
+        if roll > 95:
+            characters.append(random.choice(QUOTATIONS))
+        elif roll > 70:
+            characters.append(random.choice(LETTERS_UPPER))
+        elif roll > 35:
+            characters.append(random.choice(DIGITS))
+        else:
+            characters.append(random.choice(LETTERS_LOWER))
+    random.shuffle(characters)
+    return "".join(characters)
+
+def main():
+    try:
+        length = int(sys.argv[1])
+        assert length > 8
+    except ValueError:
+        sys.stderr.write("enter an interger as parameter.")
+        sys.exit(1)
+    except AssertionError:
+        sys.stderr.write("password length must be greater than 8")
+        sys.exit(1)
+    except IndexError:
+        length = 16
+
+    for i in xrange(5):
+        for j in xrange(4):
+            print generate_one(length),
+        print ""
+
+
+if __name__ == '__main__':
+    main()

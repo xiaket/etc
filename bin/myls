@@ -1,0 +1,17 @@
+#!/bin/sh
+# 
+# Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+# Filename:       myls
+# Last modified:  2013-10-09 11:42
+# 
+# Description:
+# Hide certain directories in my home. 
+
+cwd=`pwd`
+
+if [ "x$cwd" = "x/Users/xiaket" ]
+then
+    gls $LS_OPTIONS --hide="VirtualBox VMs" --hide="Applications*" --hide="Books" --hide="Desktop" --hide="Library" --hide="Music" --hide="Movies" --hide="Pictures" --hide="Public" --hide="Documents" $*
+else
+    gls $LS_OPTIONS $*
+fi
