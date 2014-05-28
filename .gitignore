@@ -5,3 +5,4 @@ config.json
 vim/backup
 vim/undo
 vim/view
+bin.disabled
