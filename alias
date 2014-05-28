@@ -9,7 +9,6 @@ alias vi='vim'
 # Generic 
 alias su='su -'
 alias df='df -h'
-alias nettop='nettop -nm tcp'
 alias diff='colordiff'
 
 # Typos
@@ -39,8 +38,6 @@ alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias rehost='cd ~/.Hg/Stygian && make update && cd -'
 alias randport='python -c "import random; print random.randint(1025, 65535)"'
 alias chardet='/usr/local/share/python/chardetect.py'
-alias mou='open -a Mou.app'
-alias ssh='pre-ssh && ssh'
 
 # BSD fix
 alias sed='gsed'

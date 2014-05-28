@@ -7,7 +7,7 @@ xiaketDIR="/Users/xiaket/.xiaket"
 bashrcdir=$xiaketDIR"/etc"
 bindir=$xiaketDIR"/bin"
 
-export PATH="~/.xiaket/bin.mac:~/.xiaket/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/texlive/2013/bin/x86_64-darwin:/usr/local/share/npm/bin"
+export PATH="~/.xiaket/etc/bin:~/.xiaket/bin.mac:~/.xiaket/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/texlive/2013/bin/x86_64-darwin:/usr/local/share/npm/bin"
 MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 ############
@@ -18,12 +18,7 @@ MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 . /usr/local/etc/bash_completion
 
 . /Users/xiaket/.xiaket/share/repos/pub-repos/github/django/extras/django_bash_completion
-if [ -f $bashrcdir/ntes ]
-then
-    . $bashrcdir/ntes
-else
-    echo "ntes settings not found in $bashrcdir"
-fi
+. $bashrcdir/ntes
 
 # If we are logging through tty, set locale to en_US.UTF-8
 TTY=`tty | grep tty -c`
@@ -77,7 +72,6 @@ export PYTHONPATH="$PYTHONPATH:/Users/xiaket/.xiaket/python:/Users/xiaket/.xiake
 export PYTHONSTARTUP=~/.pythonrc
 export NODE_PATH="$NODE_PATH:/usr/local/lib/node_modules:/usr/local/share/npm/lib/node_modules"
 export SVN_EDITOR=vim
-export VISUAL=vim
 
 #################
 # accessibility #
@@ -89,3 +83,26 @@ eval `gdircolors "$HOME/.xiaket/etc/dir_colors"`
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+#####################
+# ssh agent forward #
+#####################
+SSH_ENV="$HOME/.ssh/environment"
+
+function start_agent {
+    content=`/usr/bin/ssh-agent | sed "/^echo/d"`
+    [ -f $SSH_ENV ] && return 0 || echo $content > $SSH_ENV
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add
+}
+
+# Source SSH settings, if applicable
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    ps auwxx | grep ${SSH_AGENT_PID} | grep -q ssh-agent$ || {
+        start_agent
+    }
+else
+    start_agent;
+fi
