@@ -98,11 +98,16 @@ function start_agent {
 }
 
 # Source SSH settings, if applicable
+lockfile -1 /tmp/ssh.lock
 if [ -f "${SSH_ENV}" ]; then
     . "${SSH_ENV}" > /dev/null
-    ps auwxx | grep ${SSH_AGENT_PID} | grep -q ssh-agent$ || {
+    ps auwxx | grep ${SSH_AGENT_PID} | grep -q ssh-agent$
+    if [ $? -ne 0 ]
+    then
+        rm -f ${SSH_ENV}
         start_agent
-    }
+    fi
 else
     start_agent;
 fi
+rm -f /tmp/ssh.lock
