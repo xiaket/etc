@@ -33,6 +33,7 @@ alias ZZ='exit'
 alias py='python2.7'
 alias bp='bpython'
 alias ip='ipython'
+alias preview='open -a Preview '
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias rehost='cd ~/.Hg/Stygian && make update && cd -'
