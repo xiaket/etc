@@ -16,7 +16,6 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 . $bashrcdir/alias
 . /usr/local/etc/bash_completion
 
-. /Users/xiaket/.xiaket/share/repos/pub-repos/github/django/extras/django_bash_completion
 . $bashrcdir/ntes
 
 # If we are logging through tty, set locale to en_US.UTF-8
