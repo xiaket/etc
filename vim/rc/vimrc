@@ -84,14 +84,14 @@ set statusline=%y[%l-%L,%v][%p%%][%{&fileencoding},%{&fileformat}]\ %F%m%r\ %h
 let g:airline_theme='simple'
 
 " YouCompleteMe
-func! g:jInYCM()
+func! s:jInYCM()
     if pumvisible()
         return "\<C-n>"
     else
         return "\<c-j>"
 endfunction
 
-func! g:kInYCM()
+func! s:kInYCM()
     if pumvisible()
         return "\<C-p>"
     else
