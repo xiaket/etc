@@ -60,18 +60,6 @@ autocmd BufWinEnter ?* silent loadview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Start of magic
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" A list of plugins that I've used:
-" git@github.com:chriskempson/tomorrow-theme.git
-" git@github.com:tpope/vim-fugitive.git
-" git@github.com:ervandew/supertab.git
-" git@github.com:bling/vim-airline.git
-" git@github.com:plasticboy/vim-markdown.git
-" git@github.com:SirVer/ultisnips.git
-" git@github.com:Valloric/YouCompleteMe.git
-" git@github.com:xiaket/better-header.git
-" git@github.com:vim-scripts/AutoClose.git
-" git@github.com:hynek/vim-python-pep8-indent.git
-
 " enable tormorrow colorscheme
 syntax enable
 set background=dark
@@ -111,13 +99,14 @@ let g:UltiSnipsSnippetDirectories=["/Users/xiaket/.vim/snippets"]
 let g:UltiSnipsDoHash=0
 
 " mappings
-"Paste toggle - when pasting something in, don't indent.
+"Paste toggle - don't indent during pasting.
 set pastetoggle=<F3>
 "Remove trailing spaces
 map <silent> <F5> :%s/\s*$//g<cr>
 " In case of Q! and WQ, as I have to press Shift.
-cmap Q q
-cmap W w
+cmap Q! q!
+cmap WQ wq
+cmap Wq wq
 
 " Bash like keys for the command line
 cnoremap <C-A> <Home>
@@ -174,8 +163,3 @@ nnoremap <F2> :call ToggleLineNumber()<cr>
 let g:BHAUTHOR = 'Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>'
 let g:BHUnder = ['~/.xiaket/share/repos/ntes-repos', '~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos/gitlab']
 let g:BHDebug = "0"
-
-" Testing these features:
-set shortmess+=filmnrxoOtT
-let python_version_2 = 1
-let python_highlight_all = 1
