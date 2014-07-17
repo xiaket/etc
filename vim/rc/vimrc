@@ -101,6 +101,8 @@ let g:UltiSnipsDoHash=0
 " mappings
 "Paste toggle - don't indent during pasting.
 set pastetoggle=<F3>
+" use json.tool magic
+nnoremap <F4> :%!python -m json.tool<cr>
 "Remove trailing spaces
 map <silent> <F5> :%s/\s*$//g<cr>
 " In case of Q! and WQ, as I have to press Shift.
