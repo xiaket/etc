@@ -73,6 +73,7 @@ export SVN_EDITOR=vim
 export GIT_EDITOR=vim
 export VISUAL=vim
 export EDITOR=vim
+export DOCKER_HOST=tcp://192.168.59.103:2375
 
 #################
 # accessibility #
