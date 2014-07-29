@@ -82,7 +82,7 @@ toggle(){
     if [ "$has_interface" = "yes" ]
     then
         echo "please kill this:"
-        echo "sudo kill `cat $PID`"
+        eval "sudo kill `cat $PID`"
     else
         echo "starting openvpn"
         connect
