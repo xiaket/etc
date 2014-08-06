@@ -39,6 +39,7 @@ alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias mtr='sudo /usr/local/sbin/mtr'
 alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm Win7'
 alias gc='git commit -v'
+alias lsvn='/usr/bin/svn'
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias randport='python -c "import random; print random.randint(1025, 65535)"'
