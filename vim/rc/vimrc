@@ -163,5 +163,5 @@ autocmd CursorMoved * :call RelativeLineNumber("relativenumber")
 nnoremap <F2> :call ToggleLineNumber()<cr>
 
 let g:BHAUTHOR = 'Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>'
-let g:BHUnder = ['~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos/gitlab']
+let g:BHUnder = ['~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos/gitlab', '~/.xiaket/share/repos/github']
 let g:BHDebug = "0"
