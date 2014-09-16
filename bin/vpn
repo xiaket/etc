@@ -23,7 +23,7 @@ has_tun="$?"
 kextstat | grep -q ".tap"
 has_tap="$?"
 
-ifconfig tap0 >/dev/null 2>&1
+ifconfig utun0 >/dev/null 2>&1
 if [ $? -eq 1 ]
 then
     has_interface="no"
@@ -65,7 +65,7 @@ connect(){
     while [ $has_interface = "no" ]
     do
         sleep 0.5
-        ifconfig tap0 >/dev/null 2>&1
+        ifconfig utun0 >/dev/null 2>&1
         if [ $? -eq 1 ]
         then
             has_interface="no"
