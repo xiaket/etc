@@ -46,6 +46,7 @@ alias randport='python -c "import random; print random.randint(1025, 65535)"'
 alias chardet='/usr/local/share/python/chardetect.py'
 alias pylint='python -c "import sys; from pylint.lint import Run; Run(sys.argv[1:])"'
 alias symilar='python -c "import sys; from pylint.checkers.similar import Run; Run(sys.argv[1:])"'
+alias 32off='hdiutil detach /dev/disk3s1 -force'
 
 # BSD fix
 alias sed='gsed'
