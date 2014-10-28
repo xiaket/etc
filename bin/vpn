@@ -81,8 +81,7 @@ check(){
     then
         echo "has interface = ${has_interface}"
         echo "has pid = ${has_pid}"
-        echo "the environment is broken!"
-        exit 1
+        echo "the environment might be broken!"
     fi
 
     if [ $has_tap != "0" ] || [ $has_tap != "0" ]
@@ -94,7 +93,7 @@ check(){
 }
 
 toggle(){
-    if [ "$has_interface" = "yes" ]
+    if [ "$has_pid" = "yes" ]
     then
         echo "please kill this:"
         eval "sudo kill `cat $PID`"
