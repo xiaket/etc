@@ -16,8 +16,6 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 . $bashrcdir/alias
 . /usr/local/etc/bash_completion
 
-. $bashrcdir/ntes
-
 # If we are logging through tty, set locale to en_US.UTF-8
 TTY=`tty | grep tty -c`
 if [ $TTY == 1 ]
