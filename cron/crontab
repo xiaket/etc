@@ -7,17 +7,7 @@ CRONDIR=/Users/xiaket/.xiaket/etc/cron
 # Automatic update user crontab every time.
 @reboot crontab ${CRONDIR}/crontab
 @reboot supervisord -c ~/.supervisord.conf
-@reboot ssh-agent -s | grep -v echo > ~/.ssh-agent
 
 ################
 # end section. #
 ################
-
-# update all repos.
-#21 16 * * * ($SH ${CRONDIR}/update_repo.sh 2>&1 >/dev/null)
-
-# clean ssh list.
-06 16 * * * ($SH ${CRONDIR}/cleanssh.sh)
-
-# update local hosts every two hours.
-36 * * * * (cd /Users/xiaket/.Git/local/Stygian/ && make)
