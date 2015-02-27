@@ -37,7 +37,7 @@ alias gdf='ssh 192.168.34.33 df -h'
 alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias mtr='sudo /usr/local/sbin/mtr'
 alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm Win7'
-alias gc='git commit -v'
+alias gc='git commit -vs'
 alias lsvn='/usr/bin/svn'
 alias mou='open -a Mou.app'
 
@@ -47,6 +47,8 @@ alias chardet='/usr/local/share/python/chardetect.py'
 alias pylint='python -c "import sys; from pylint.lint import Run; Run(sys.argv[1:])"'
 alias symilar='python -c "import sys; from pylint.checkers.similar import Run; Run(sys.argv[1:])"'
 alias 32off='hdiutil detach /dev/disk3s1 -force'
+alias corp='offlineimap -a Corp'
+
 
 # BSD fix
 alias sed='gsed'
