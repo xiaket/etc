@@ -6,4 +6,4 @@ current_ipaddress=`python -c "import socket; u = socket.socket(socket.AF_INET, s
 
 hardware=`ifconfig | egrep -B 10 ".*${current_ipaddress}" | egrep -v "^\t" | tail -n 1 | awk -F ":" '{print $1}'`
 
-$TOP -i ${hardware} 2>/dev/null
+sudo $TOP -i ${hardware} 2>/dev/null
