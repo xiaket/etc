@@ -2,7 +2,14 @@ Listen 127.0.0.1:19063
 <VirtualHost *:19063>
         ServerAdmin xiaket@gmail.com
 
-        DocumentRoot /Users/xiaket/.Sites/blog
+        DocumentRoot /Users/xiaket/.xiaket/share/Dropbox/git/blog/blog.xiaket.org
+
+        <Directory />
+            Options Indexes MultiViews FollowSymLinks
+            AllowOverride All
+            Order allow,deny
+            Allow from all
+        </Directory>
 
         ErrorLog /Users/xiaket/.Sites/log/blog_error.log
         LogLevel warn
