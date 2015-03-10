@@ -48,7 +48,7 @@ alias pylint='python -c "import sys; from pylint.lint import Run; Run(sys.argv[1
 alias symilar='python -c "import sys; from pylint.checkers.similar import Run; Run(sys.argv[1:])"'
 alias 32off='hdiutil detach /dev/disk3s1 -force'
 alias corp='offlineimap -a Corp'
-
+alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=TW3'
 
 # BSD fix
 alias sed='gsed'
