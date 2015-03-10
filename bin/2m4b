@@ -27,8 +27,7 @@ bit_rate=`python -c "br = '${mediainfo}'.split(',')[3].strip().split()[0]; print
 
 if [ $suffix = "mp3" ]
 then
-    afconvert "${fullpath}" -v -s 3 -o "${output_name}" -q 127 -b "${bit_rate}000" -f m4bf -d aach
+    afconvert "${fullpath}" -v -s 3 -o "${output_name}" -q 127 -b "${bit_rate}000" -f m4bf -d aac
 else
-
-    ffmpeg -i "$fullpath" "${temp_name}" && afconvert "${temp_name}" -v -s 3 -o "${output_name}" -q 127 -b "${bit_rate}000" -f m4bf -d aach && rm "${temp_name}"
+    ffmpeg -i "$fullpath" "${temp_name}" && afconvert "${temp_name}" -v -s 3 -o "${output_name}" -q 127 -b "${bit_rate}000" -f m4bf -d aac && rm "${temp_name}"
 fi
