@@ -52,12 +52,13 @@ fi
 
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
-export HISTSIZE=500000
+# unlimited playback.
+export HISTFILESIZE=-1
+export HISTSIZE=-1
 export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
-
 # append to the history file, don't overwrite it
 shopt -s histappend
-PROMPT_COMMAND=`$PROMPT_COMMAND; history -a`
+export PROMPT_COMMAND="history -a; history -n"
 
 #########################
 # environment variables #
