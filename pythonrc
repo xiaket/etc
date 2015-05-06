@@ -1,2 +1,44 @@
-import rlcompleter, readline
+import atexit
+import os
+import random
+import readline
+import rlcompleter
+import sys
+
+
+HISTORYPATH = os.path.expanduser("~/.pyhistory")
 readline.parse_and_bind('tab:complete')
+
+
+def save_history(HISTORYPATH):
+    import readline
+    readline.write_history_file(HISTORYPATH)
+
+readline.read_history_file(HISTORYPATH)
+
+"""
+if os.environ.get('TERM').startswith('xterm'):
+    sys.ps1 = Prompt('\001\033[0:1;31m\002h[%d] >>> \001\033[0m\002')
+else:
+    sys.ps1 = Prompt()
+
+"""
+
+
+class ColorChanger(object):
+    def __init__(self):
+        self.color = self
+
+    def __call__(self, value):
+        print value
+        choice = random.randint(90, 98)
+        sys.ps1 = '\001\033[' + str(choice) + 'm\002>\001\033[0m\002 '
+        sys.ps2 = '  '
+
+sys.displayhook = ColorChanger()
+
+sys.ps1 = '> '
+sys.ps2 = '  '
+
+atexit.register(save_history, HISTORYPATH)
+del os, atexit, readline, rlcompleter, save_history, HISTORYPATH
