@@ -50,6 +50,7 @@ alias 32off='hdiutil detach /dev/disk3s1 -force'
 alias corp='offlineimap -a Corp'
 alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=TW3'
 alias brewup='brew update && brew upgrade --all && brew cleanup'
+alias lvi='vim --noplugin'
 
 # BSD fix
 alias sed='gsed'
