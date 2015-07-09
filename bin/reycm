@@ -14,8 +14,8 @@
 cd ~/.vim/bundle
 git rm -f --cached YouCompleteMe
 rm -rf YouCompleteMe/
-sed -i '/YouCompleteMe/d' ~/.xiaket/etc/.gitmodules
-sed -i '/YouCompleteMe/d' ~/.xiaket/etc/.git/config
+gsed -i '/YouCompleteMe/d' ~/.xiaket/etc/.gitmodules
+gsed -i '/YouCompleteMe/d' ~/.xiaket/etc/.git/config
 rm -rf ~/.xiaket/etc/.git/modules/YouCompleteMe
 rm -rf ~/.xiaket/etc/.git/modules/vim/bundle/YouCompleteMe
 git submodule add git@github.com:Valloric/YouCompleteMe.git
