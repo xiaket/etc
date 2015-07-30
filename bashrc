@@ -13,7 +13,13 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 # sourcing #
 #############
 
+# For things that can be used as alias
 . $bashrcdir/alias
+
+# For things that can only be done as a bash function.
+. $bashrcdir/bash_functions
+
+# For bash completion.
 . /usr/local/etc/bash_completion
 
 # If we are logging through tty, set locale to en_US.UTF-8
