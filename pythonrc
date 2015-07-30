@@ -16,15 +16,6 @@ def save_history(HISTORYPATH):
 
 readline.read_history_file(HISTORYPATH)
 
-"""
-if os.environ.get('TERM').startswith('xterm'):
-    sys.ps1 = Prompt('\001\033[0:1;31m\002h[%d] >>> \001\033[0m\002')
-else:
-    sys.ps1 = Prompt()
-
-"""
-
-
 class ColorChanger(object):
     def __init__(self):
         self.color = self
