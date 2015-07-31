@@ -11,7 +11,7 @@
 	g = grep --break --heading --line-number
 
 [core]
-	excludesfile = /Users/xiaket/.xiaket/etc/gitignore_global
+	excludesfile = ~/.xiaket/etc/gitignore_global
 	pager = cat
 [push]
 	default = simple
