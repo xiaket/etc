@@ -8,6 +8,7 @@
     co = checkout
     lg = log --graph --decorate --pretty=oneline --abbrev-commit
     pulls = "!f() { git pull --squash -s recursive "$1" master; }; f"
+    pull = pull --rebase
 	g = grep --break --heading --line-number
 
 [core]
