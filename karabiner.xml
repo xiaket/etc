@@ -1,0 +1,276 @@
+<?xml version=“1.0”?>
+<root>
+  <!-- safari -->
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_APP_SAFARI</name>
+    <url type="file">/Applications/Safari.app</url>
+  </vkopenurldef>
+
+  <!-- popo -->
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_APP_POPO</name>
+    <url type="file">/Applications/popo_mac.app</url>
+  </vkopenurldef>
+
+  <!-- iterm2 -->
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_APP_ITERM</name>
+    <url type="file">/Applications/iTerm.app</url>
+  </vkopenurldef>
+
+  <!-- wechat -->
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_APP_WECHAT</name>
+    <url type="file">/Applications/WeChat.app</url>
+  </vkopenurldef>
+
+  <item>
+    <name>F18 to Hyper</name>
+    <identifier>private.f18tohyper</identifier>
+    <autogen>
+      __KeyOverlaidModifier__
+      KeyCode::F18,
+      KeyCode::COMMAND_L, ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::ESCAPE
+    </autogen>
+  </item>
+  <item>
+    <name>Switch to Sarari</name>
+    <identifier>private.right_command_s</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::S,
+      ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::VK_OPEN_URL_APP_SAFARI,
+    </autogen>
+  </item>
+  <item>
+    <name>Switch to WeChat</name>
+    <identifier>private.right_command_w</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::W,
+      ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::VK_OPEN_URL_APP_WECHAT,
+    </autogen>
+  </item>
+
+  <item>
+    <name>Switch to iTerm</name>
+    <identifier>private.right_command_i</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::I,
+      ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::VK_OPEN_URL_APP_ITERM,
+    </autogen>
+  </item>
+
+  <item>
+    <name>Switch to POPO</name>
+    <identifier>private.right_command_p</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::P,
+      ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::VK_OPEN_URL_APP_POPO,
+    </autogen>
+  </item>
+
+  <inputsourcedef>
+      <name>MY_keylayout_zh_Hans</name>
+      <inputsourceid_prefix>com.apple.inputmethod.SCIM.ITABC</inputsourceid_prefix>
+  </inputsourcedef>
+  <item>
+      <name>使用英文标点符号</name>
+      <identifier>private.quick_dotOfEnglish</identifier>
+      <inputsource_only>MY_keylayout_zh_Hans</inputsource_only>
+      <uielementrole_only>AXTextArea, AXTextField</uielementrole_only>
+      <autogen>__KeyToKey__
+          KeyCode::DOT,
+          KeyCode::CAPSLOCK,
+          KeyCode::DOT,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::DOT, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::DOT, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::COMMA,
+          KeyCode::CAPSLOCK,
+          KeyCode::COMMA,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::COMMA, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::COMMA, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::SLASH,
+          KeyCode::CAPSLOCK,
+          KeyCode::SLASH,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::SLASH, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::SLASH, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::SEMICOLON,
+          KeyCode::CAPSLOCK,
+          KeyCode::SEMICOLON,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::SEMICOLON, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::SEMICOLON, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::QUOTE,
+          KeyCode::CAPSLOCK,
+          KeyCode::QUOTE,
+          KeyCode::CAPSLOCK,
+      </autogen>
+        <autogen>__KeyToKey__
+          KeyCode::BACKQUOTE,
+          KeyCode::CAPSLOCK,
+          KeyCode::BACKQUOTE,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::QUOTE, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::QUOTE, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::BRACKET_LEFT,
+          KeyCode::CAPSLOCK,
+          KeyCode::BRACKET_LEFT,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::BRACKET_LEFT, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::BRACKET_RIGHT,
+          KeyCode::CAPSLOCK,
+          KeyCode::BRACKET_RIGHT,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::BRACKET_RIGHT, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::BACKSLASH,
+          KeyCode::CAPSLOCK,
+          KeyCode::BACKSLASH,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::BACKSLASH, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::BACKSLASH, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::MINUS,
+          KeyCode::CAPSLOCK,
+          KeyCode::MINUS,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::MINUS, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::MINUS, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::EQUAL,
+          KeyCode::CAPSLOCK,
+          KeyCode::EQUAL,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::EQUAL, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::EQUAL, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::KEY_1, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::KEY_1, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::KEY_2, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::KEY_2, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__
+          KeyCode::KEY_3, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+          KeyCode::KEY_3, ModifierFlag::SHIFT_L,
+          KeyCode::CAPSLOCK,
+      </autogen>
+      <autogen>__KeyToKey__ 
+          KeyCode::KEY_4, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+          KeyCode::KEY_4, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+      </autogen> 
+      <autogen>__KeyToKey__ 
+          KeyCode::KEY_5, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+          KeyCode::KEY_5, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+      </autogen> 
+      <autogen>__KeyToKey__ 
+          KeyCode::KEY_6, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+          KeyCode::KEY_6, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+      </autogen> 
+      <autogen>__KeyToKey__ 
+          KeyCode::KEY_7, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+          KeyCode::KEY_7, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+      </autogen> 
+      <autogen>__KeyToKey__ 
+          KeyCode::KEY_8, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+          KeyCode::KEY_8, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+      </autogen> 
+      <autogen>__KeyToKey__ 
+          KeyCode::KEY_9, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+          KeyCode::KEY_9, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+      </autogen> 
+      <autogen>__KeyToKey__ 
+          KeyCode::KEY_0, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+          KeyCode::KEY_0, ModifierFlag::SHIFT_L, 
+          KeyCode::CAPSLOCK, 
+      </autogen> 
+  </item>
+</root>
