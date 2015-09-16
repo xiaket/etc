@@ -85,7 +85,7 @@
       <name>使用英文标点符号</name>
       <identifier>private.quick_dotOfEnglish</identifier>
       <inputsource_only>MY_keylayout_zh_Hans</inputsource_only>
-      <uielementrole_only>AXTextArea, AXTextField</uielementrole_only>
+      <uielementrole_only>AXWebArea, AXTextArea, AXTextField</uielementrole_only>
       <autogen>__KeyToKey__
           KeyCode::DOT,
           KeyCode::CAPSLOCK,
