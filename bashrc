@@ -118,3 +118,6 @@ else
     start_agent;
 fi
 rm -f /tmp/ssh.lock
+
+# For iTerm 3 shell integration.
+. ~/.iterm2_shell_integration.bash
