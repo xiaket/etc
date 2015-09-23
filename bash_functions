@@ -6,11 +6,9 @@ function debian(){
         read choice
         if [ $choice = "y" ]
         then
-            echo "stop"
-            #supervisorctl -c ~/.supervisord.conf stop "debian"
+            supervisorctl -c ~/.supervisord.conf stop "debian"
         fi
     else
-        echo "start"
-        #supervisorctl -c ~/.supervisord.conf start "debian"
+        supervisorctl -c ~/.supervisord.conf start "debian"
     fi
 }
