@@ -46,7 +46,7 @@ then
 fi
 
 setup_proxy(){
-    sudo networksetup -setautoproxyurl "$service" "http://127.0.0.1:19063/autoproxy.pac"
+    sudo networksetup -setautoproxyurl "$service" "http://127.0.0.1/autoproxy.pac"
     sudo networksetup -setsocksfirewallproxy "$service" 127.0.0.1 9999
 }
 

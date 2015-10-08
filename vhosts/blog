@@ -1,5 +1,5 @@
-Listen 127.0.0.1:19063
-<VirtualHost *:19063>
+Listen 127.0.0.1:80
+<VirtualHost *:80>
         ServerAdmin xiaket@gmail.com
 
         DocumentRoot /Users/xiaket/.xiaket/share/Dropbox/git/blog/blog.xiaket.org
