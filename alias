@@ -17,6 +17,7 @@ alias clera='clear'
 alias ls-l='ls -l'
 alias mkae='make'
 alias maek='make'
+alias gti='git'
 
 # Acesssibilities
 alias c='clear'
