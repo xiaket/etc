@@ -71,9 +71,8 @@ export PROMPT_COMMAND="history -a; history -n"
 #########################
 
 # Setup Python PATH, so our python libraries would be portable.
-export PYTHONPATH="$PYTHONPATH:/Users/xiaket/.xiaket/python:/Users/xiaket/.xiaket/python/lib"
+export PYTHONPATH="$PYTHONPATH:~/.xiaket/python:~/.xiaket/python/lib"
 export PYTHONSTARTUP=~/.pythonrc
-export NODE_PATH="$NODE_PATH:/usr/local/lib/node_modules:/usr/local/share/npm/lib/node_modules"
 export SVN_EDITOR=vim
 export GIT_EDITOR=vim
 export VISUAL=vim
