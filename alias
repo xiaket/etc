@@ -55,6 +55,7 @@ alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -Onl
 alias brewup='brew update && brew upgrade --all && brew cleanup'
 alias lvi='vim --noplugin'
 alias beep='python -c "import time; print \"\a\"; time.sleep(0.5); print \"\a\""'
+alias fixvi='gsed -i "s/noexpandtab/expandtab/g" ~/.xiaket/etc/vim/view/*'
 
 # BSD fix
 alias sed='gsed'
