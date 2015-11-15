@@ -27,3 +27,20 @@ function docker(){
         supervisorctl -c ~/.supervisord.conf start "docker"
     fi
 }
+
+function nightwatch(){
+    cd ~/.GIT/Python/nightwatch
+}
+
+function cbrc(){
+    cd ~/.GIT/Python/cbrc-mods
+}
+function hooks(){
+    cd ~/.GIT/Gitlab/server-hooks
+}
+function xycmd(){
+    cd ~/.GIT/Python/xycmd
+}
+function xyteam(){
+    cd ~/.GIT/Python/pyteam/xyteam
+}
