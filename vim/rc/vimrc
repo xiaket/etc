@@ -50,7 +50,10 @@ set noswapfile
 " save undo history
 set undofile
 set undodir=~/.vim/undo
-" Auto save and load view (folding, position)
+" Auto save and load view (folding, position, but not options)
+" saving options would sometime incorrectly set noexpandtab in 
+" python source files.
+set viewoptions-=options
 autocmd BufWinLeave ?* mkview
 autocmd BufWinEnter ?* silent loadview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
