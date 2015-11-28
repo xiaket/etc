@@ -39,7 +39,7 @@ function hooks(){
     cd ~/.GIT/Gitlab/server-hooks
 }
 function xycmd(){
-    cd ~/.GIT/Python/xycmd
+    cd ~/.GIT/Python/xycmd/xycmd
 }
 function xyteam(){
     cd ~/.GIT/Python/pyteam/xyteam
