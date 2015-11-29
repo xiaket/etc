@@ -42,6 +42,7 @@ alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm winx'
 alias gc='git commit -vs'
 alias lsvn='/usr/bin/svn'
 alias mou='open -a Mou.app'
+alias go=colorgo
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias randport='python -c "import random; print random.randint(1025, 65535)"'
