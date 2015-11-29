@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+#coding=utf-8
+"""
+Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+Filename:       pre-commit.py
+Date created:   2015-07-18 11:34
+Last modified:  2015-07-18 11:34
+Modified by:    Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+
+Description:
+
+Changelog:
+
+"""
+import sys
+
+from sh import git, pyflakes, bash
+
+
+IDENTITIES = {
+    'github.com': ("Xia Kai(夏恺)", "xiaket@gmail.com"),
+    'netease.com': ("夏恺", "xiaket@corp.netease.com"),
+}
+
+for line in git.remote("-v"):
+    if line.strip().startswith("origin"):
+        url = line.strip()
+        break
+
+for identity in IDENTITIES:
+    if url.find(identity) != -1:
+        name, email = IDENTITIES[identity]
+        git.config("user.name", name)
+        git.config("user.email", email)
+        break
+
+for filename in git.diff(name_only=True, cached=True):
+    filename = filename.strip()
+    if filename.split(".")[-1] == "py":
+        checker_result = pyflakes(filename, _ok_code=[0, 1])
+        if checker_result.exit_code == 1:
+            sys.stderr.write(
+                "Syntax error in %s. %s" % (filename, checker_result.stderr),
+            )
+            sys.exit(1)
+        with open(filename) as fobj:
+            if "\t" in fobj.read():
+                sys.stderr.write("Found tab in %s" % filename)
+                sys.exit(1)
+    elif filename.split(".")[-1].strip() == "sh":
+        if bash("-n", filename, _ok_code=[0, 1]).exit_code == 1:
+            sys.stderr.write("Syntax error in %s" % filename)
+            sys.exit(1)
