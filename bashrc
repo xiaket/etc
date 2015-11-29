@@ -6,7 +6,7 @@
 xiaketDIR="/Users/xiaket/.xiaket"
 bashrcdir=$xiaketDIR"/etc"
 
-export PATH="~/.xiaket/etc/ntes/bin:~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/share/npm/bin:/usr/local/texlive/2014basic/bin/universal-darwin"
+export PATH="~/.xiaket/etc/ntes/bin:~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/share/npm/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 ############
@@ -73,11 +73,11 @@ export PROMPT_COMMAND="history -a; history -n"
 # Setup Python PATH, so our python libraries would be portable.
 export PYTHONPATH="$PYTHONPATH:~/.xiaket/python:~/.xiaket/python/lib"
 export PYTHONSTARTUP=~/.pythonrc
+export GOPATH="~/.xiaket/go"
 export SVN_EDITOR=vim
 export GIT_EDITOR=vim
 export VISUAL=vim
 export EDITOR=vim
-export DOCKER_HOST=tcp://192.168.59.103:2375
 
 #################
 # accessibility #
