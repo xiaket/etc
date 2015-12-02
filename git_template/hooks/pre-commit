@@ -12,6 +12,7 @@ Description:
 Changelog:
 
 """
+import os
 import sys
 
 from sh import git, pyflakes, bash
@@ -36,7 +37,7 @@ for identity in IDENTITIES:
 
 for filename in git.diff(name_only=True, cached=True):
     filename = filename.strip()
-    if filename.split(".")[-1] == "py":
+    if filename.split(".")[-1] == "py" and os.path.isfile(filename):
         checker_result = pyflakes(filename, _ok_code=[0, 1])
         if checker_result.exit_code == 1:
             sys.stderr.write(
