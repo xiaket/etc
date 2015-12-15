@@ -28,6 +28,38 @@ function docker(){
     fi
 }
 
+function cbc(){
+    vboxmanage list runningvms | grep -q "cbcadmin"
+    if [ $? -eq 0 ]
+    then
+        /bin/echo -n "Running, stop it?(y/n): "
+        read choice
+        if [ "x$choice" = "xy" ]
+        then
+            supervisorctl -c ~/.supervisord.conf stop "cbcadmin"
+            supervisorctl -c ~/.supervisord.conf stop "cbcgs"
+        fi
+    else
+        supervisorctl -c ~/.supervisord.conf start "cbcadmin"
+        supervisorctl -c ~/.supervisord.conf start "cbcgs"
+    fi
+}
+
+function cbcadm(){
+    vboxmanage list runningvms | grep -q "cbcadmin"
+    if [ $? -eq 0 ]
+    then
+        /bin/echo -n "Running, stop it?(y/n): "
+        read choice
+        if [ "x$choice" = "xy" ]
+        then
+            supervisorctl -c ~/.supervisord.conf stop "cbcadmin"
+        fi
+    else
+        supervisorctl -c ~/.supervisord.conf start "cbcadmin"
+    fi
+}
+
 function nightwatch(){
     cd ~/.GIT/Python/nightwatch
 }
