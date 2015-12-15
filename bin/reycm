@@ -18,8 +18,7 @@ gsed -i '/YouCompleteMe/d' ~/.xiaket/etc/.gitmodules
 gsed -i '/YouCompleteMe/d' ~/.xiaket/etc/.git/config
 rm -rf ~/.xiaket/etc/.git/modules/YouCompleteMe
 rm -rf ~/.xiaket/etc/.git/modules/vim/bundle/YouCompleteMe
-git submodule add git@github.com:Valloric/YouCompleteMe.git
+git submodule add https://github.com/Valloric/YouCompleteMe.git
 cd ~/.vim/bundle/YouCompleteMe
 git submodule update --init --recursive
-./install.sh
-
+./install.py
