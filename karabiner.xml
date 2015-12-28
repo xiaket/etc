@@ -24,6 +24,12 @@
     <url type="file">/Applications/WeChat.app</url>
   </vkopenurldef>
 
+  <!-- safari -->
+  <vkopenurldef>
+    <name>KeyCode::VK_OPEN_URL_APP_QUIVER</name>
+    <url type="file">/Applications/Quiver.app</url>
+  </vkopenurldef>
+
   <item>
     <name>F18 to Hyper</name>
     <identifier>private.f18tohyper</identifier>
@@ -42,6 +48,16 @@
       KeyCode::S,
       ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
       KeyCode::VK_OPEN_URL_APP_SAFARI,
+    </autogen>
+  </item>
+  <item>
+    <name>Switch to Quiver</name>
+    <identifier>private.right_command_q</identifier>
+    <autogen>
+      __KeyToKey__
+      KeyCode::Q,
+      ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
+      KeyCode::VK_OPEN_URL_APP_QUIVER,
     </autogen>
   </item>
   <item>
