@@ -63,7 +63,7 @@ autocmd BufWinEnter ?* silent loadview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Start of magic
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" enable tormorrow colorscheme
+" enable tomorrow colorscheme
 syntax enable
 set background=dark
 colorscheme tomorrow-night-eighties
@@ -72,7 +72,7 @@ colorscheme tomorrow-night-eighties
 set laststatus=2
 hi StatusLine ctermbg=Black ctermfg=White
 set statusline=%y[%l-%L,%v][%p%%][%{&fileencoding},%{&fileformat}]\ %F%m%r\ %h
-let g:airline_theme='simple'
+let g:airline_theme='tomorrow'
 
 " YouCompleteMe
 func! s:jInYCM()
