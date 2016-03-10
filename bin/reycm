@@ -20,5 +20,4 @@ rm -rf ~/.xiaket/etc/.git/modules/YouCompleteMe
 rm -rf ~/.xiaket/etc/.git/modules/vim/bundle/YouCompleteMe
 git submodule add https://github.com/Valloric/YouCompleteMe.git
 cd ~/.vim/bundle/YouCompleteMe
-git submodule update --init --recursive
-./install.py
+git submodule update --init --recursive && ./install.py
