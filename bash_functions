@@ -29,7 +29,7 @@ function docker(){
 }
 
 function cbc(){
-    vboxmanage list runningvms | grep -q "cbcadmin"
+    vboxmanage list runningvms | grep -q "admin"
     if [ $? -eq 0 ]
     then
         /bin/echo -n "Running, stop it?(y/n): "
