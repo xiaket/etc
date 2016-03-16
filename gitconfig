@@ -6,7 +6,7 @@
     ci = commit
     st = status
     co = checkout
-    lg = log --graph --decorate --pretty=oneline --abbrev-commit
+    lg = log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit
     pulls = "!f() { git pull --squash -s recursive "$1" master; }; f"
 	g = grep --break --heading --line-number
     pr = pull --rebase
@@ -18,6 +18,10 @@
 	default = simple
 [color]
 	ui = true
+    branch = auto
+    diff = auto
+    interactive = auto
+    status = auto
 [init]
 	templatedir = ~/.git_template
 [grep]
