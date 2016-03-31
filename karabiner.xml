@@ -3,7 +3,7 @@
   <!-- safari -->
   <vkopenurldef>
     <name>KeyCode::VK_OPEN_URL_APP_SAFARI</name>
-    <url type="file">/Applications/Safari.app</url>
+    <url type="file">/Applications/Safari Technology Preview.app</url>
   </vkopenurldef>
 
   <!-- popo -->
