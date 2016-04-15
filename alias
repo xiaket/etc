@@ -5,7 +5,7 @@ alias ll='gls $LS_OPTIONS -lh'
 alias la='gls -a'
 alias l='gls -lF'
 alias rm='grm'
-alias vi='vim'
+alias vi='nvim'
 
 # Generic 
 alias su='su -'
@@ -54,7 +54,7 @@ alias 32off='hdiutil detach `df -h | grep "32$" | cut -d " " -f 1` -force'
 alias corp='offlineimap -a Corp'
 alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
 alias brewup='brew update && brew upgrade --all && brew cleanup'
-alias lvi='vim --noplugin'
+alias lvi='nvim --noplugin'
 alias beep='python -c "import time; print \"\a\"; time.sleep(0.5); print \"\a\""'
 alias fixvi='gsed -i "s/noexpandtab/expandtab/g" ~/.xiaket/etc/vim/view/*'
 
