@@ -4,7 +4,7 @@
 " Get out of VI's compatible mode.
 set nocompatible
 " enable vim-plug
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 Plug 'chriskempson/tomorrow-theme'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab'
@@ -74,7 +74,7 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " Start of magic
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " enable tomorrow colorscheme
-colorscheme tomorrow-night-eighties
+colorscheme Tomorrow-Night-Eighties
 
 " Statusline
 hi StatusLine ctermbg=Black ctermfg=White
