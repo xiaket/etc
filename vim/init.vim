@@ -5,7 +5,7 @@
 set nocompatible
 " enable vim-plug
 call plug#begin('~/.config/nvim/plugged')
-Plug 'chriskempson/tomorrow-theme'
+Plug 'chriskempson/tomorrow-theme', {'do': 'ln -sf vim/colors colors'}
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab'
 Plug 'bling/vim-airline'
