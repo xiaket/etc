@@ -1,13 +1,11 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plain things that (almost) everybody would agree.
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Get out of VI's compatible mode.
-set nocompatible
 " enable vim-plug
 call plug#begin('~/.config/nvim/plugged')
-Plug 'chriskempson/tomorrow-theme', {'do': 'ln -sf vim/colors colors'}
-Plug 'tpope/vim-fugitive'
+Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plug 'ervandew/supertab'
+Plug 'tpope/vim-surround'
 Plug 'bling/vim-airline'
 Plug 'plasticboy/vim-markdown'
 Plug 'SirVer/ultisnips'
@@ -18,6 +16,9 @@ Plug 'hdima/python-syntax'
 Plug 'fatih/vim-go'
 Plug 'Valloric/YouCompleteMe', {'do': './install.py'}
 Plug 'vim-airline/vim-airline-themes'
+Plug 'scrooloose/nerdtree'
+Plug 'junegunn/vim-emoji'
+Plug 'airblade/vim-gitgutter'
 call plug#end()
 
 " encoding and formats.
@@ -66,11 +67,6 @@ autocmd BufWinEnter ?* silent loadview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" nvim things.
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Start of magic
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " enable tomorrow colorscheme
@@ -115,8 +111,8 @@ let g:UltiSnipsDoHash=0
 " mappings
 "Paste toggle - don't indent during pasting.
 set pastetoggle=<F3>
-" use json.tool magic
-nnoremap <F4> :%!python -m json.tool<cr>
+" use NERDTree
+nnoremap <F4> :NERDTree<cr>
 "Remove trailing spaces
 map <silent> <F5> :%s/\s*$//g<cr>
 " In case of Q! and WQ, as I have to press Shift.
@@ -180,3 +176,14 @@ let g:BHAUTHOR = 'Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>'
 let g:BHUnder = ['~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos/gitlab', '~/.xiaket/share/repos/github']
 let g:BHExcludeDir = ["~/.xiaket/share/repos/gitlab/Python/cbrc-core"]
 let g:BHDebug = "0"
+
+" NERD configurations
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let NERDTreeIgnore = ['\.pyc$']
+
+silent! if emoji#available()
+  let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
+  let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
+  let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
+  let g:gitgutter_sign_modified_removed = emoji#for('collision')
+endif
