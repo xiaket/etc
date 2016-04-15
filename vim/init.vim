@@ -3,22 +3,22 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " enable vim-plug
 call plug#begin('~/.config/nvim/plugged')
+Plug 'airblade/vim-gitgutter'
+Plug 'bling/vim-airline'
 Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plug 'ervandew/supertab'
-Plug 'tpope/vim-surround'
-Plug 'bling/vim-airline'
-Plug 'plasticboy/vim-markdown'
-Plug 'SirVer/ultisnips'
-Plug 'xiaket/better-header'
-Plug 'vim-scripts/AutoClose'
-Plug 'hynek/vim-python-pep8-indent'
-Plug 'hdima/python-syntax'
 Plug 'fatih/vim-go'
+Plug 'hdima/python-syntax'
+Plug 'hynek/vim-python-pep8-indent'
+Plug 'junegunn/vim-emoji'
+Plug 'plasticboy/vim-markdown'
+Plug 'scrooloose/nerdtree'
+Plug 'SirVer/ultisnips'
+Plug 'tpope/vim-surround'
 Plug 'Valloric/YouCompleteMe', {'do': './install.py'}
 Plug 'vim-airline/vim-airline-themes'
-Plug 'scrooloose/nerdtree'
-Plug 'junegunn/vim-emoji'
-Plug 'airblade/vim-gitgutter'
+Plug 'vim-scripts/AutoClose'
+Plug 'xiaket/better-header'
 call plug#end()
 
 " encoding and formats.
