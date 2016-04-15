@@ -3,27 +3,32 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Get out of VI's compatible mode.
 set nocompatible
-" enable pathogen
-call pathogen#infect()
-call pathogen#helptags()
-" Enable filetype plugin
-filetype on
-filetype plugin on
-filetype indent on
+" enable vim-plug
+call plug#begin('~/.vim/plugged')
+Plug 'chriskempson/tomorrow-theme'
+Plug 'tpope/vim-fugitive'
+Plug 'ervandew/supertab'
+Plug 'bling/vim-airline'
+Plug 'plasticboy/vim-markdown'
+Plug 'SirVer/ultisnips'
+Plug 'xiaket/better-header'
+Plug 'vim-scripts/AutoClose'
+Plug 'hynek/vim-python-pep8-indent'
+Plug 'hdima/python-syntax'
+Plug 'fatih/vim-go'
+Plug 'Valloric/YouCompleteMe', {'do': './install.py'}
+Plug 'vim-airline/vim-airline-themes'
+call plug#end()
+
 " encoding and formats.
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set ffs=unix,dos,mac
-"Set backspace
-set backspace=eol,start,indent
 " Do not redraw while running macros (much faster).
 set lazyredraw
 " Search related.
 set noignorecase
-set incsearch
-set hlsearch
 set showmatch
 " Tab and indent
-set smarttab
 set expandtab
 set tabstop=4
 set softtabstop=4
@@ -61,15 +66,17 @@ autocmd BufWinEnter ?* silent loadview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" nvim things.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Start of magic
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " enable tomorrow colorscheme
-syntax enable
-set background=dark
 colorscheme tomorrow-night-eighties
 
 " Statusline
-set laststatus=2
 hi StatusLine ctermbg=Black ctermfg=White
 set statusline=%y[%l-%L,%v][%p%%][%{&fileencoding},%{&fileformat}]\ %F%m%r\ %h
 let g:airline_theme='tomorrow'
