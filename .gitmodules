@@ -19,18 +19,12 @@
 [submodule "vim/bundle/better-header"]
 	path = vim/bundle/better-header
 	url = git@github.com:xiaket/better-header.git
-[submodule "vim/bundle/AutoClose"]
-	path = vim/bundle/AutoClose
-	url = git@github.com:vim-scripts/AutoClose.git
 [submodule "vim/bundle/vim-python-pep8-indent"]
 	path = vim/bundle/vim-python-pep8-indent
 	url = https://github.com/hynek/vim-python-pep8-indent.git
 [submodule "vim/bundle/python-syntax"]
 	path = vim/bundle/python-syntax
 	url = git@github.com:hdima/python-syntax.git
-[submodule "vim/bundle/vim-go"]
-	path = vim/bundle/vim-go
-	url = https://github.com/fatih/vim-go.git
 [submodule "vim/bundle/YouCompleteMe"]
 	path = vim/bundle/YouCompleteMe
 	url = https://github.com/Valloric/YouCompleteMe.git
