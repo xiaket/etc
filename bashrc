@@ -75,10 +75,10 @@ export PYTHONPATH="$PYTHONPATH:/Users/xiaket/.xiaket/python/lib"
 export PYTHONSTARTUP=~/.pythonrc
 export PYTHONDONTWRITEBYTECODE="False"
 export GOPATH="/Users/xiaket/.xiaket/go"
-export SVN_EDITOR=vim
-export GIT_EDITOR=vim
-export VISUAL=vim
-export EDITOR=vim
+export SVN_EDITOR=nvim
+export GIT_EDITOR=nvim
+export VISUAL=nvim
+export EDITOR=nvim
 
 #################
 # accessibility #
