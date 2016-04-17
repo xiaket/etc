@@ -10,7 +10,6 @@ Plug 'ervandew/supertab'
 Plug 'fatih/vim-go'
 Plug 'hdima/python-syntax'
 Plug 'hynek/vim-python-pep8-indent'
-Plug 'junegunn/vim-emoji'
 Plug 'plasticboy/vim-markdown'
 Plug 'scrooloose/nerdtree'
 Plug 'SirVer/ultisnips'
@@ -20,6 +19,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/AutoClose'
 Plug 'xiaket/better-header'
 call plug#end()
+
 
 " encoding and formats.
 set fileencodings=utf-8,gbk,ucs-bom,cp936
@@ -59,9 +59,9 @@ set undodir=~/.vim/undo
 " Auto save and load view (folding, position, but not options)
 " saving options would sometime incorrectly set noexpandtab in 
 " python source files.
-set viewoptions-=options
-autocmd BufWinLeave ?* mkview
-autocmd BufWinEnter ?* silent loadview
+""set viewoptions-=options
+""autocmd BufWinLeave ?* mkview
+""autocmd BufWinEnter ?* silent loadview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " End of Plain things.
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -69,12 +69,14 @@ autocmd BufWinEnter ?* silent loadview
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Start of magic
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" At times, I want to select text using the mouse and paste it somewhere, I
+" know '"*' works, but I just don't like that.
+set mouse=iv
+
 " enable tomorrow colorscheme
 colorscheme Tomorrow-Night-Eighties
 
-" Statusline
-hi StatusLine ctermbg=Black ctermfg=White
-set statusline=%y[%l-%L,%v][%p%%][%{&fileencoding},%{&fileformat}]\ %F%m%r\ %h
+" airline
 let g:airline_theme='tomorrow'
 
 " YouCompleteMe
@@ -99,10 +101,6 @@ au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-
-" Change cursor shape in insert: only work in iTerm2.
-let &t_SI = "\<Esc>]50;CursorShape=1\x7" 
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 " UltiSnip settings.
 let g:UltiSnipsSnippetDirectories=["/Users/xiaket/.vim/UltiSnips"]
@@ -180,10 +178,3 @@ let g:BHDebug = "0"
 " NERD configurations
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeIgnore = ['\.pyc$']
-
-silent! if emoji#available()
-  let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
-  let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
-  let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
-  let g:gitgutter_sign_modified_removed = emoji#for('collision')
-endif
