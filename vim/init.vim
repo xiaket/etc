@@ -150,7 +150,6 @@ let g:BHDebug = "0"
 nnoremap <space> za
 vnoremap <space> zf
 nnoremap <F2> :call ToggleLineNumber()<cr>
-set pastetoggle=<F3>
 " use NERDTree
 nnoremap <F4> :NERDTree<cr>
 "Remove trailing spaces
