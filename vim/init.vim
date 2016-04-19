@@ -149,7 +149,7 @@ let g:BHDebug = "0"
 " use space to open and close a fold
 nnoremap <space> za
 vnoremap <space> zf
-nnoremap <F2> :call ToggleLineNumber()<cr>
+nnoremap <silent> <F2> :call ToggleLineNumber()<cr>:call gitgutter#toggle()<cr>
 " use NERDTree
 nnoremap <F4> :NERDTree<cr>
 "Remove trailing spaces
