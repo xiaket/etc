@@ -6,12 +6,6 @@
     <url type="file">/Applications/Safari Technology Preview.app</url>
   </vkopenurldef>
 
-  <!-- popo -->
-  <vkopenurldef>
-    <name>KeyCode::VK_OPEN_URL_APP_POPO</name>
-    <url type="file">/Applications/popo_mac.app</url>
-  </vkopenurldef>
-
   <!-- iterm2 -->
   <vkopenurldef>
     <name>KeyCode::VK_OPEN_URL_APP_ITERM</name>
@@ -79,17 +73,6 @@
       KeyCode::I,
       ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
       KeyCode::VK_OPEN_URL_APP_ITERM,
-    </autogen>
-  </item>
-
-  <item>
-    <name>Switch to POPO</name>
-    <identifier>private.right_command_p</identifier>
-    <autogen>
-      __KeyToKey__
-      KeyCode::P,
-      ModifierFlag::COMMAND_L | ModifierFlag::OPTION_L | ModifierFlag::SHIFT_L | ModifierFlag::CONTROL_L,
-      KeyCode::VK_OPEN_URL_APP_POPO,
     </autogen>
   </item>
 
