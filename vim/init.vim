@@ -138,7 +138,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let NERDTreeIgnore = ['\.pyc$']
 
 " better header settings
-let g:BHAUTHOR = 'Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>'
+let g:BHAUTHOR = 'Xia Kai <xiaket@gmail.com>'
 let g:BHUnder = ['~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos/gitlab', '~/.xiaket/share/repos/github']
 let g:BHExcludeDir = ["~/.xiaket/share/repos/gitlab/Python/cbrc-core"]
 let g:BHDebug = "0"
