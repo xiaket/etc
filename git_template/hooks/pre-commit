@@ -18,21 +18,9 @@ import sys
 from sh import git, pyflakes, bash
 
 
-IDENTITIES = {
-    'github.com': ("Xia Kai(夏恺)", "xiaket@gmail.com"),
-    'netease.com': ("夏恺", "xiaket@corp.netease.com"),
-}
-
 for line in git.remote("-v"):
     if line.strip().startswith("origin"):
         url = line.strip()
-        break
-
-for identity in IDENTITIES:
-    if url.find(identity) != -1:
-        name, email = IDENTITIES[identity]
-        git.config("user.name", name)
-        git.config("user.email", email)
         break
 
 for filename in git.diff(name_only=True, cached=True):
