@@ -51,12 +51,10 @@ alias chardet='/usr/local/share/python/chardetect.py'
 alias pylint='python -c "import sys; from pylint.lint import Run; Run(sys.argv[1:])"'
 alias symilar='python -c "import sys; from pylint.checkers.similar import Run; Run(sys.argv[1:])"'
 alias 32off='hdiutil detach `df -h | grep "32$" | cut -d " " -f 1` -force'
-alias corp='offlineimap -a Corp'
 alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
 alias brewup='brew update && brew upgrade --all && brew cleanup'
 alias lvi='nvim --noplugin'
 alias beep='python -c "import time; print \"\a\"; time.sleep(0.5); print \"\a\""'
-alias fixvi='gsed -i "s/noexpandtab/expandtab/g" ~/.xiaket/etc/vim/view/*'
 
 # BSD fix
 alias sed='gsed'
