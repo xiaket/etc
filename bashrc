@@ -6,7 +6,7 @@
 xiaketDIR="/Users/xiaket/.xiaket"
 bashrcdir=$xiaketDIR"/etc"
 
-export PATH="~/.xiaket/etc/ntes/bin:~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/share/npm/bin:~/.xiaket/go/bin"
+export PATH="~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/share/npm/bin:~/.xiaket/go/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 ############
