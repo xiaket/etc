@@ -44,17 +44,6 @@ fi
 
 # Get corp password
 connect(){
-    #password_str=`security 2>&1 >/dev/null find-internet-password -ga xiaket@corp.netease.com`
-    #if [ $? -ne 0 ]
-    #then
-    #    echo "Fail to get password, quit."
-    #    exit 1
-    #fi
-    #password=`echo "$password_str" | python -c "import sys; print sys.stdin.read().strip().split()[1].strip('\"')"`
-    #TEMPFILE=`mktemp /tmp/openvpn.XXXXXX || exit 1`
-    #echo "xiaket" >> $TEMPFILE
-    #echo "$password" >> $TEMPFILE
-    #sudo openvpn --script-security 2 --daemon --config $CONFIG --ping 300 --auth-user-pass $TEMPFILE --writepid $PID --route-up "/bin/chmod 644 ${PID}"
     sudo openvpn --script-security 2 --daemon --config $CONFIG --ping 300 --writepid $PID --route-up "/bin/chmod 644 ${PID}"
     if [ $? -ne 0 ]
     then
