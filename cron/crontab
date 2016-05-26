@@ -12,4 +12,4 @@ CRONDIR=/Users/xiaket/.xiaket/etc/cron
 # end section. #
 ################
 
-*/20 * * * *       /Users/xiaket/.xiaket/ntes/bin/galaxy
+0 10 * * *         brew update && brew upgrade --all && brew cleanup
