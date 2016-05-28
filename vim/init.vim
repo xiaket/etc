@@ -139,8 +139,7 @@ let NERDTreeIgnore = ['\.pyc$']
 
 " better header settings
 let g:BHAUTHOR = 'Xia Kai <xiaket@gmail.com>'
-let g:BHUnder = ['~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos/gitlab', '~/.xiaket/share/repos/github']
-let g:BHExcludeDir = ["~/.xiaket/share/repos/gitlab/Python/cbrc-core"]
+let g:BHUnder = ['~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos']
 let g:BHDebug = "0"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
