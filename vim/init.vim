@@ -13,9 +13,12 @@ Plug 'hynek/vim-python-pep8-indent'
 Plug 'plasticboy/vim-markdown'
 Plug 'scrooloose/nerdtree'
 Plug 'SirVer/ultisnips'
+Plug 'tpope/vim-haml'
+Plug 'tpope/vim-rails'
 Plug 'tpope/vim-surround'
 Plug 'Valloric/YouCompleteMe', {'do': './install.py'}
 Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-ruby/vim-ruby'
 Plug 'vim-scripts/AutoClose'
 Plug 'xiaket/better-header'
 call plug#end()
@@ -141,6 +144,8 @@ let NERDTreeIgnore = ['\.pyc$']
 let g:BHAUTHOR = 'Xia Kai <xiaket@gmail.com>'
 let g:BHUnder = ['~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos']
 let g:BHDebug = "0"
+let g:BHEnabledSuffix = ['py', 'sh', 'rb']
+let g:BHrbHeader = "# encoding: UTF-8\n=begin\nAuthor:         %(author)s\nFilename:       %(filename)s\nDate created:   %(cdate)s\nLast modified:  %(date)s\n\nDescription:\n\n=end"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key remaps
