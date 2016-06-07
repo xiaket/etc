@@ -41,3 +41,18 @@ function denv(){
     eval "$(docker-machine env docker)"
     echo "ready to go!"
 }
+
+function dls(){
+    if [ -z $DOCKER_HOST ]
+    then
+        echo "Please do denv first."
+        return
+    fi
+    echo "docker ps -a"
+    echo -e "------------\n"
+    docker ps -a
+    echo ""
+    echo "docker images"
+    echo -e "-------------\n"
+    docker images
+}
