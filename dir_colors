@@ -76,6 +76,7 @@ NORMAL 00;38;5;247      # a little brighter than usual.
 EXEC   00;38;5;046      # a little brighter than usual.
 
 .py    01;38;5;202
+.rb    01;38;5;198
 .sh    01;38;5;58
 .log   00;38;5;222
 *Makefile        00;38;5;125
