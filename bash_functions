@@ -56,3 +56,23 @@ function dls(){
     echo -e "-------------\n"
     docker images
 }
+
+function gogs(){
+    if [ -z $DOCKER_HOST ]
+    then
+        echo "Please do denv first."
+        return
+    fi
+    gogs_running=`docker inspect gogs | grep Status | grep -o running`
+    if [ "${gogs_running}" = "running" ]
+    then
+        echo -e "gogs running, stop it?(y/n) "
+        read choice
+        if [ "x$choice" = "xy" ]
+        then
+            docker stop gogs 2>&1 > /dev/null
+        fi
+    else
+        docker start gogs 2>&1 > /dev/null
+    fi
+}
