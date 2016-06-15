@@ -102,6 +102,8 @@ function start_agent {
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
     /usr/bin/ssh-add
+    /usr/bin/ssh-add ~/.ssh/id_ed25519.git
+    /usr/bin/ssh-add ~/.ssh/id_ed25519.vps
 }
 
 # Source SSH settings, if applicable
