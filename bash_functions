@@ -24,7 +24,15 @@ function debian(){
 #}
 
 function denv(){
-    if VBoxManage list vms | grep -q '"docker"' && docker-machine ls | grep -q "^docker"
+    if vboxmanage list runningvms | grep -q '^"docker"'
+    then
+        echo "docker vm running."
+    else
+        VBoxManage startvm --type headless docker
+    fi
+
+    dm_status=`docker-machine ls | grep "^docker" | awk '{print $4}'`
+    if [ $dm_status = "" ]
     then
         echo "found existing docker env, configuring it."
     else
