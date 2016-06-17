@@ -32,7 +32,7 @@ function denv(){
     fi
 
     dm_status=`docker-machine ls | grep "^docker" | awk '{print $4}'`
-    if [ $dm_status = "" ]
+    if [ "x$dm_status" = "xRunning" ]
     then
         echo "found existing docker env, configuring it."
     else
