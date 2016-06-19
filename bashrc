@@ -64,7 +64,7 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 # If we are logging through tty, set locale to en_US.UTF-8
 TTY=`tty | grep tty -c`
-if [ $TTY == 1 ]
+if [ $TTY == 1 ] || [ "x$OSTYPE" = "xlinux" ]
 then
     export LANG=en_US.UTF-8
 else
