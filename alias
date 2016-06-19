@@ -1,10 +1,22 @@
-# GNU rules.
-alias ls='myls'
+if [ ! "x$OSTYPE" = "xlinux" ]
+then
+    # GNU rules.
+    alias ls='myls'
+    alias ll='gls $LS_OPTIONS -lh'
+    alias la='gls -a'
+    alias l='gls -lF'
+    alias rm='grm'
+    alias preview='open -a Preview '
+    alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm winx'
+    alias mou='open -a Mou.app'
+    alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
+
+    # BSD fix
+    alias sed='gsed'
+    alias awk='gawk'
+fi
+
 alias grep='grep --color'
-alias ll='gls $LS_OPTIONS -lh'
-alias la='gls -a'
-alias l='gls -lF'
-alias rm='grm'
 alias vi='nvim'
 
 # Generic 
@@ -34,14 +46,10 @@ alias :q='exit'
 alias ZZ='exit'
 alias py='python2.7'
 alias ip='ipython'
-alias preview='open -a Preview '
-alias gdf='ssh 192.168.34.33 df -h'
 alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias mtr='sudo /usr/local/sbin/mtr'
-alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm winx'
 alias gc='git commit -vs'
 alias lsvn='/usr/bin/svn'
-alias mou='open -a Mou.app'
 alias go=colorgo
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
@@ -51,11 +59,7 @@ alias chardet='/usr/local/share/python/chardetect.py'
 alias pylint='python -c "import sys; from pylint.lint import Run; Run(sys.argv[1:])"'
 alias symilar='python -c "import sys; from pylint.checkers.similar import Run; Run(sys.argv[1:])"'
 alias 32off='hdiutil detach `df -h | grep "32$" | cut -d " " -f 1` -force'
-alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
 alias brewup='brew update && brew upgrade --all && brew cleanup'
 alias lvi='nvim --noplugin'
 alias beep='python -c "import time; print \"\a\"; time.sleep(0.5); print \"\a\""'
 
-# BSD fix
-alias sed='gsed'
-alias awk='gawk'

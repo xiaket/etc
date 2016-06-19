@@ -24,7 +24,7 @@
     interactive = auto
     status = auto
 [init]
-	templatedir = ~/.git_template
+	templatedir = ~/.xiaket/etc/git_template
 [grep]
 	extendRegexp = true
 	lineNumber = true

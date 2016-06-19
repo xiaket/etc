@@ -3,7 +3,47 @@
 ##############
 [ -z "$PS1" ] && return
 
-xiaketDIR="/Users/xiaket/.xiaket"
+# explicitly enable term colors.
+export TERM="xterm-256color"
+
+if [ "x$OSTYPE" = "xlinux" ]
+then
+    export MAN_POSIXLY_CORRECT=1
+
+    # running on a linux virtual machine.
+    COLORS=dircolors
+    SED=sed
+    ADD_KEY="no"
+    HAS_ITERM="no"
+    COMPLETION_PATH=/etc/profile.d/bash_completion.sh
+    YELLOW=$(tput setaf 136)
+    ORANGE=$(tput setaf 166)
+    RED=$(tput setaf 160)
+    MAGENTA=$(tput setaf 125)
+    VIOLET=$(tput setaf 61)
+    BLUE=$(tput setaf 33)
+    CYAN=$(tput setaf 37)
+    GREEN=$(tput setaf 64)
+    RESET=$(tput sgr0)
+else
+    # running on a macOS machine.
+    COLORS=gdircolors
+    SED=gsed
+    ADD_KEY="yes"
+    HAS_ITERM="yes"
+    COMPLETION_PATH=/usr/local/etc/bash_completion
+    YELLOW=$(tput setaf 136)
+    ORANGE=$(tput setaf 166)
+    RED=$(tput setaf 160)
+    MAGENTA=$(tput setaf 125)
+    VIOLET=$(tput setaf 61)
+    BLUE=$(tput setaf 33)
+    CYAN=$(tput setaf 37)
+    GREEN=$(tput setaf 64)
+    RESET=$(tput sgr0)
+fi
+    
+xiaketDIR=~/.xiaket
 bashrcdir=$xiaketDIR"/etc"
 
 export PATH="~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/opt/coreutils/bin:/usr/local/share/npm/bin:~/.xiaket/go/bin"
@@ -20,7 +60,7 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 . $bashrcdir/bash_functions
 
 # For bash completion.
-. /usr/local/etc/bash_completion
+. $COMPLETION_PATH
 
 # If we are logging through tty, set locale to en_US.UTF-8
 TTY=`tty | grep tty -c`
@@ -31,16 +71,6 @@ else
     export LANG=zh_CN.UTF-8
 fi
 
-YELLOW=$(tput setaf 136)
-ORANGE=$(tput setaf 166)
-RED=$(tput setaf 160)
-MAGENTA=$(tput setaf 125)
-VIOLET=$(tput setaf 61)
-BLUE=$(tput setaf 33)
-CYAN=$(tput setaf 37)
-GREEN=$(tput setaf 64)
-BOLD=$(tput bold)
-RESET=$(tput sgr0)
  
 
 # use ascii colors to show whether we are root.
@@ -85,7 +115,7 @@ export EDITOR=nvim
 #################
 
 export LS_OPTIONS='--color=auto'
-eval `gdircolors "$HOME/.xiaket/etc/dir_colors"`
+eval `"$COLORS" "$HOME/.xiaket/etc/dir_colors"`
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -106,20 +136,26 @@ function start_agent {
     /usr/bin/ssh-add ~/.ssh/id_ed25519.vps
 }
 
-# Source SSH settings, if applicable
-lockfile -1 /tmp/ssh.lock
-if [ -f "${SSH_ENV}" ]; then
-    . "${SSH_ENV}" > /dev/null
-    ps auwxx | grep ${SSH_AGENT_PID} | grep -q ssh-agent$
-    if [ $? -ne 0 ]
-    then
-        rm -f ${SSH_ENV}
-        start_agent
+if [ "x$ADD_KEY" = "xyes" ]
+then
+    # Source SSH settings, if applicable
+    lockfile -1 /tmp/ssh.lock
+    if [ -f "${SSH_ENV}" ]; then
+        . "${SSH_ENV}" > /dev/null
+        ps auwxx | grep ${SSH_AGENT_PID} | grep -q ssh-agent$
+        if [ $? -ne 0 ]
+        then
+            rm -f ${SSH_ENV}
+            start_agent
+        fi
+    else
+        start_agent;
     fi
-else
-    start_agent;
+    rm -f /tmp/ssh.lock
 fi
-rm -f /tmp/ssh.lock
 
-# For iTerm 3 shell integration.
-. ~/.iterm2_shell_integration.bash
+if [ "x$HAS_ITERM" = "xyes" ]
+then
+    # For iTerm 3 shell integration.
+    . ~/.iterm2_shell_integration.bash
+fi
