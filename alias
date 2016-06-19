@@ -8,6 +8,7 @@ then
     alias rm='grm'
     alias preview='open -a Preview '
     alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm winx'
+    alias K='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm K'
     alias mou='open -a Mou.app'
     alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
 
