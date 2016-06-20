@@ -13,15 +13,23 @@ function debian(){
     fi
 }
 
-#function gc(){
-    # psedo-code:
-# for file in $?
-# do
-# check if file is added.
-# if not, add
-# done
-    #git commit -vs
-#}
+function gc(){
+    new_files=`git status --short | grep '^??' | awk '{print $NF}' | sed "s/\n/ /g"`
+    If [ ! -z "$new_files" ]
+    then
+        echo "Adding new files: $new_files"
+        for file in `git status --short | grep '^??' | awk '{print $NF}'`
+        do
+            /bin/echo -n "Adding $file , sure?(y/n): "
+            read choice
+            if [ "x$choice" = "xy" ]
+            then
+                git add "$file"
+            fi
+        done
+    fi
+    git commit -vs
+}
 
 function denv(){
     if vboxmanage list runningvms | grep -q '^"docker"'

@@ -49,7 +49,6 @@ alias py='python2.7'
 alias ip='ipython'
 alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias mtr='sudo /usr/local/sbin/mtr'
-alias gc='git commit -vs'
 alias lsvn='/usr/bin/svn'
 alias go=colorgo
 
