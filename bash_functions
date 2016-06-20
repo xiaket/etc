@@ -15,7 +15,7 @@ function debian(){
 
 function gc(){
     new_files=`git status --short | grep '^??' | awk '{print $NF}' | sed "s/\n/ /g"`
-    If [ ! -z "$new_files" ]
+    if [ ! -z "$new_files" ]
     then
         echo "Adding new files: $new_files"
         for file in `git status --short | grep '^??' | awk '{print $NF}'`
