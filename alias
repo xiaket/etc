@@ -10,6 +10,7 @@ then
     alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm winx'
     alias mou='open -a Mou.app'
     alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
+    alias ip='ipython'
 
     # BSD fix
     alias sed='gsed'
@@ -45,7 +46,6 @@ alias mt='make test'
 alias :q='exit'
 alias ZZ='exit'
 alias py='python2.7'
-alias ip='ipython'
 alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias mtr='sudo /usr/local/sbin/mtr'
 alias gc='git commit -vs'
