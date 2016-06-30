@@ -8,6 +8,7 @@ Plug 'bling/vim-airline'
 Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go'
+Plug 'hail2u/vim-css3-syntax'
 Plug 'hdima/python-syntax'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'plasticboy/vim-markdown'
