@@ -15,6 +15,7 @@ function debian(){
 
 function gc(){
     new_files=`git status --short | grep '^??' | awk '{print $NF}' | sed "s/\n/ /g"`
+    added_files=""
     if [ ! -z "$new_files" ]
     then
         echo "Adding new files: $new_files"
@@ -25,10 +26,11 @@ function gc(){
             if [ "x$choice" = "xy" ]
             then
                 git add "$file"
+                added_files="$added_files $file"
             fi
         done
     fi
-    git commit -vs
+    git commit -vs $@ $added_files
 }
 
 function denv(){
