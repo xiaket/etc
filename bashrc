@@ -59,6 +59,9 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 # For things that can only be done as a bash function.
 . $bashrcdir/bash_functions
 
+# For Pronto settings
+. $bashrcdir/pronto
+
 # For bash completion.
 . $COMPLETION_PATH
 
