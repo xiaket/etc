@@ -51,7 +51,7 @@ def add(db, name):
 
     db[name] = "\n".join(contents)
     with open(DBFILE, 'w') as fobj:
-        fobj.write(json.dumps(db))
+        fobj.write(json.dumps(db, indent=2))
     return db
 
 def main():
