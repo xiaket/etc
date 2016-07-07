@@ -13,6 +13,7 @@ Changelog:
 """
 import json
 import os
+import readline
 import sys
 
 
