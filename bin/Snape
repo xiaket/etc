@@ -22,7 +22,6 @@ Usage:
     snape                       # list all snippet with descriptions.
     snape Name of snippet       # show the single snippet.
     snape add Name of snippet   # add a snippet
-    snape edit                  # edit the underline json manually.
 """
 DBFILE = os.path.expanduser("~/.snape.json")
 
