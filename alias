@@ -49,7 +49,6 @@ alias :q='exit'
 alias ZZ='exit'
 alias py='python2.7'
 alias daemon='supervisorctl -c ~/.supervisord.conf'
-alias gc='git commit -vs'
 alias lsvn='/usr/bin/svn'
 alias go=colorgo
 
