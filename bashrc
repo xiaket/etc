@@ -60,7 +60,10 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 . $bashrcdir/bash_functions
 
 # For Pronto settings
-. $bashrcdir/pronto
+if [ -f $bashrcdir/pronto ]
+then
+    . $bashrcdir/pronto
+fi
 
 # For bash completion.
 . $COMPLETION_PATH
@@ -92,8 +95,8 @@ fi
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
 # unlimited playback.
-export HISTFILESIZE=-1
-export HISTSIZE=-1
+export HISTFILESIZE=99999
+export HISTSIZE=99999
 export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
 # append to the history file, don't overwrite it
 shopt -s histappend
