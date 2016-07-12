@@ -18,10 +18,23 @@ import sys
 from sh import git, pyflakes, bash
 
 
+DEFAULT_IDENTITY = ("Kent Xia", "kentx@pronto.net")
+GITHUB_IDENTITY = ("Xia Kai(夏恺)", "xiaket@gmail.com")
+
+
 for line in git.remote("-v"):
     if line.strip().startswith("origin"):
         url = line.strip()
         break
+
+if url.find("github.com"):
+    name, email = GITHUB_IDENTITY
+else:
+    name, email = DEFAULT_IDENTITY
+
+git.config("user.name", name)
+git.config("user.email", email)
+
 
 for filename in git.diff(name_only=True, cached=True):
     filename = filename.strip()
