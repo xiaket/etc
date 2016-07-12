@@ -1,6 +1,6 @@
 [user]
-	name = Kent Xia
-	email = kentx@pronto.net
+    name = Kent Xia
+    email = kentx@pronto.net
 
 [alias]
     ci = commit
@@ -8,25 +8,25 @@
     co = checkout
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     pulls = "!f() { git pull --squash -s recursive "$1" master; }; f"
-	g = grep --break --heading --line-number
+    g = grep --break --heading --line-number
     pr = pull --rebase
 
 [core]
-	excludesfile = ~/.xiaket/etc/gitignore_global
-	pager = cat
-	quotepath = false
+    excludesfile = ~/.xiaket/etc/gitignore_global
+    pager = cat
+    quotepath = false
 [push]
-	default = simple
+    default = simple
 [color]
-	ui = true
+    ui = true
     branch = auto
     diff = auto
     interactive = auto
     status = auto
 [init]
-	templatedir = ~/.xiaket/etc/git_template
+    templatedir = ~/.xiaket/etc/git_template
 [grep]
-	extendRegexp = true
-	lineNumber = true
+    extendRegexp = true
+    lineNumber = true
 [branch]
-	autosetuprebase = always
+    autosetuprebase = always
