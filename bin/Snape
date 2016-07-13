@@ -22,6 +22,7 @@ Usage:
     snape                       # list all snippet with descriptions.
     snape Name of snippet       # show the single snippet.
     snape add Name of snippet   # add a snippet
+    snape search pattern        # search for a pattern in the library.
 """
 DBFILE = os.path.expanduser("~/.snape.json")
 
@@ -53,6 +54,12 @@ def add(db, name):
         fobj.write(json.dumps(db, indent=2))
     return db
 
+def search(db, name):
+    for key in sorted(db.keys()):
+        if name in key or name in db[key]:
+            print "%% %s %%" % key
+            print db[key]
+
 def main():
     db = load_db()
     if len(sys.argv) == 1:
@@ -64,6 +71,8 @@ def main():
             print "%s: \n%s" % (rest, db[rest])
         elif first == "add" and len(sys.argv) > 2:
             add(db, " ".join(sys.argv[2:]))
+        elif first == "search" and len(sys.argv) > 2:
+            search(db, " ".join(sys.argv[2:]))
         else:
             print USAGE
             sys.exit(1)
