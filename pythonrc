@@ -7,6 +7,8 @@ import sys
 
 
 HISTORYPATH = os.path.expanduser("~/.pyhistory")
+if not os.path.isfile(HISTORYPATH):
+    open(HISTORYPATH, 'w').close()
 readline.parse_and_bind('tab:complete')
 
 
