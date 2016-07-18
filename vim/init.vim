@@ -143,7 +143,7 @@ let NERDTreeIgnore = ['\.pyc$']
 
 " better header settings
 let g:BHAUTHOR = 'Kent Xia/Xia Kai <kentx@pronto.net/xiaket@gmail.com>'
-let g:BHUnder = ['~/.xiaket/share/Dropbox/git', '~/.xiaket/share/repos']
+let g:BHUnder = ['~/.Gitlab/']
 let g:BHDebug = "0"
 let g:BHEnabledSuffix = ['py', 'sh', 'rb']
 let g:BHrbHeader = "# encoding: UTF-8\n# Author:         %(author)s\n# Filename:       %(filename)s\n# Date created:   %(cdate)s\n# Last modified:  %(date)s\n#\n# Description:\n#\n"
