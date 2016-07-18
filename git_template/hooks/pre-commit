@@ -27,7 +27,7 @@ for line in git.remote("-v"):
         url = line.strip()
         break
 
-if url.find("github.com"):
+if url.find("github.com") != -1:
     name, email = GITHUB_IDENTITY
 else:
     name, email = DEFAULT_IDENTITY
