@@ -38,6 +38,8 @@ git.config("user.email", email)
 
 for filename in git.diff(name_only=True, cached=True):
     filename = filename.strip()
+    if not os.path.isfile(filename):
+        continue
     if filename.split(".")[-1] == "py" and os.path.isfile(filename):
         checker_result = pyflakes(filename, _ok_code=[0, 1])
         if checker_result.exit_code == 1:
