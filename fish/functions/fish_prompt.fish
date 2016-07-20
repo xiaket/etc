@@ -1,0 +1,1 @@
+/home/xiaket/.config/fisherman/agnoster/fish_prompt.fish

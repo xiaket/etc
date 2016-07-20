@@ -1,0 +1,1 @@
+/home/xiaket/.config/fisherman/get/functions/get.fish
