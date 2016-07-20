@@ -7,3 +7,5 @@ vim/shada
 pronto
 snape.json
 fish/fish_history
+fish/fish_read_history
+fish/fishd.*
