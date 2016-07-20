@@ -134,7 +134,7 @@ let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 " UltiSnip settings.
-let g:UltiSnipsSnippetDirectories=["/Users/xiaket/.vim/UltiSnips"]
+let g:UltiSnipsSnippetDirectories=["/home/xiaket/.vim/UltiSnips"]
 let g:UltiSnipsDoHash=0
 
 " NERD configurations
