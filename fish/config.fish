@@ -12,3 +12,5 @@ set --export PYTHONSTARTUP ~/.pythonrc
 set --export GIT_EDITOR nvim
 
 . $__fish_base_dir/aliases.fish
+
+set fish_greeting ""
