@@ -7,8 +7,8 @@ set --universal fish_user_paths ~/.xiaket/etc/bin /bin /usr/bin /usr/local/bin /
 
 eval (dircolors -c $__etc_dir/dir_colors)
 
-set --export PYTHONPATH "$PYTHONPATH:$__xiaketDIR/python/"
-set --export PYTHONSTARTUP=~/.pythonrc
-set --export GIT_EDITOR=nvim
+set --export PYTHONPATH $__xiaket_dir/python/
+set --export PYTHONSTARTUP ~/.pythonrc
+set --export GIT_EDITOR nvim
 
 . $__fish_base_dir/aliases.fish
