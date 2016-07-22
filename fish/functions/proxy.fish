@@ -22,5 +22,5 @@ function proxy
 
     echo "Ready to logout?"
     sleep 3
-    DISPLAY=:0 qdbus org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 0 0
+    env DISPLAY=:0 qdbus org.kde.ksmserver /KSMServer org.kde.KSMServerInterface.logout 0 0 0
 end
