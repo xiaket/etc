@@ -6,7 +6,7 @@
 # explicitly enable term colors.
 export TERM="xterm-256color"
 
-if [ "x$OSTYPE" = "xlinux-gnu" ]
+if [ "x`uname -s`" = "xLinux" ]
 then
     export MAN_POSIXLY_CORRECT=1
 

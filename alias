@@ -1,4 +1,4 @@
-if [ ! "x$OSTYPE" = "xlinux" ]
+if [ ! "x`uname -s`" = "xLinux" ]
 then
     # GNU rules.
     alias ls='myls'
