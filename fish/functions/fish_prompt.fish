@@ -1,1 +1,1 @@
-/home/xiaket/.config/fisherman/agnoster/fish_prompt.fish
+/home/xiaket/.config/fisherman/bobthefish/fish_prompt.fish
