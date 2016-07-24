@@ -73,7 +73,6 @@ end
 # ===========================
 # Segment functions
 # ===========================
-
 function __bobthefish_start_segment -S -d 'Start a prompt segment'
   set -l bg $argv[1]
   set -e argv[1]
@@ -276,21 +275,6 @@ function __bobthefish_prompt_dir -S -d 'Display a shortened form of the current 
   __bobthefish_path_segment "$PWD"
 end
 
-function __bobthefish_prompt_vi -S -d 'Display vi mode'
-  switch $fish_bind_mode
-    case default
-      __bobthefish_start_segment $__color_vi_mode_default
-      echo -n 'N'
-    case insert
-      __bobthefish_start_segment $__color_vi_mode_insert
-      echo -n 'I'
-    case visual
-      __bobthefish_start_segment $__color_vi_mode_visual
-      echo -n 'V'
-  end
-  set_color normal
-end
-
 # ===========================
 # Apply theme
 # ===========================
@@ -345,17 +329,29 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set __color_repo_work_tree           $green $colorfg --bold
   set __color_repo_dirty               $red $colorfg
   set __color_repo_staged              $yellow $colorfg
-
-  set __color_vi_mode_default          $blue $colorfg --bold
-  set __color_vi_mode_insert           $green $colorfg --bold
-  set __color_vi_mode_visual           $yellow $colorfg --bold
   # end setting up Colors
 
   # Start each line with a blank slate
   set -l __bobthefish_current_bg
 
   __bobthefish_prompt_status $last_status
-  __bobthefish_prompt_vi
+
+  switch $fish_bind_mode
+    case default
+      set_color -b $blue
+      echo -n 'n'
+      set_color normal
+    case insert
+      set_color black
+      set_color -b 4d4
+      echo -n 'i'
+      set_color normal
+    case visual
+      set_color -b b00
+      echo -n 'v'
+      set_color normal
+  end
+  set_color normal
 
   set -l git_root (__bobthefish_git_project_dir)
 
