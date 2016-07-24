@@ -1,7 +1,6 @@
 # prompt largely based on bobthefish
 #
 #     set -g theme_git_worktree_support yes
-#     set -g theme_display_docker_machine no
 
 # ===========================
 # Helper methods
@@ -336,7 +335,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
   set __color_initial_segment_exit     $base2 $red --bold
   set __color_initial_segment_su       $base2 $green --bold
-  set __color_initial_segment_jobs     $base2 $blue --bold
 
   set __color_path                     $base02 $base0
   set __color_path_basename            $base02 $base1 --bold
@@ -351,9 +349,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set __color_vi_mode_default          $blue $colorfg --bold
   set __color_vi_mode_insert           $green $colorfg --bold
   set __color_vi_mode_visual           $yellow $colorfg --bold
-
-  set __color_username                 $base02 $blue
-  set __color_rvm                      $red $colorfg --bold
   # end setting up Colors
 
   # Start each line with a blank slate
