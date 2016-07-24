@@ -15,7 +15,7 @@ function __bobthefish_git_branch -S -d 'Get the current git branch (or commitish
   echo $ref | sed "s#refs/heads/#$__bobthefish_branch_glyph #"
 end
 
-function __bobthefish_pretty_parent -S -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
+function __pretty_parent -S -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
   echo -n (dirname $current_dir) | sed -e 's#/private##' -e "s#^$HOME#~#" -e 's#/\(\.\{0,1\}[^/]\)\([^/]*\)#/\1#g' -e 's#/$##'
 end
 
@@ -101,34 +101,6 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
 end
 
 function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened form of a directory'
-  set -l segment_color $__color_path
-  set -l segment_basename_color $__color_path_basename
-
-  if not [ -w "$current_dir" ]
-    set segment_color $__color_path_nowrite
-    set segment_basename_color $__color_path_nowrite_basename
-  end
-
-  __bobthefish_start_segment $segment_color
-
-  set -l directory
-  set -l parent
-
-  switch "$current_dir"
-    case /
-      set directory '/'
-    case "$HOME"
-      set directory '~'
-    case '*'
-      set parent    (__bobthefish_pretty_parent "$current_dir")
-      set parent    "$parent/"
-      set directory (basename "$current_dir")
-  end
-
-  echo -n $parent
-  set_color -b $segment_basename_color
-  echo -ns $directory ' '
-  set_color normal
 end
 
 function __bobthefish_finish_segments -S -d 'Close open prompt segments'
@@ -146,23 +118,6 @@ end
 # ===========================
 # Theme components
 # ===========================
-
-function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a non zero exit status, root and background jobs'
-  set -l nonzero
-
-  # Last exit was nonzero
-  [ $last_status -ne 0 ]
-    and set nonzero $__bobthefish_nonzero_exit_glyph
-
-  if [ "$nonzero" ]
-    __bobthefish_start_segment $__color_initial_segment_exit
-    set_color normal; set_color -b $__color_initial_segment_exit
-    echo -ns $last_status ' '
-
-    set_color normal
-  end
-end
-
 function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git state'
   set -l dirty   (command git diff --no-ext-diff --quiet --exit-code; or echo -n '*')
   set -l staged  (command git diff --cached --no-ext-diff --quiet --exit-code; or echo -n '~')
@@ -263,6 +218,58 @@ function __bobthefish_prompt_dir -S -d 'Display a shortened form of the current 
   __bobthefish_path_segment "$PWD"
 end
 
+function __vim_key_status_show
+  switch $fish_bind_mode
+    case default
+      set_color -b $blue
+      echo -n 'n'
+      set_color normal
+    case insert
+      set_color black
+      set_color -b 4d4
+      echo -n 'i'
+      set_color normal
+    case visual
+      set_color -b b00
+      echo -n 'v'
+      set_color normal
+  end
+  set_color normal
+end
+
+function __non_git_dir_show -S
+  # for non-git dirs, just print prettified path.
+  switch "$PWD"
+    case /
+      set directory '/'
+    case "$HOME"
+      set directory '~'
+    case '*'
+      set parent (__pretty_parent "$PWD")
+      set parent "$parent/"
+      set directory (basename "$PWD")
+  end
+
+  set_color -b 444
+  if not [ -w "$PWD" ]
+    set -l __fg_color cb4b16
+  else
+    set -l __fg_color ddd
+  end
+  set_color $__fg_color
+
+  echo -ns $parent $directory
+  #echo -ns $directory
+  set_color normal
+  set -l __my_prompt_symbol \uE0B0
+  if [ $last_status -gt 0 ]
+    set_color e55
+  else
+    set_color 444
+  end
+  echo -n "$__my_prompt_symbol "
+  set_color normal
+end
 # ===========================
 # Apply theme
 # ===========================
@@ -322,31 +329,15 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   # Start each line with a blank slate
   set -l __bobthefish_current_bg
 
-  __bobthefish_prompt_status $last_status
-
-  switch $fish_bind_mode
-    case default
-      set_color -b $blue
-      echo -n 'n'
-      set_color normal
-    case insert
-      set_color black
-      set_color -b 4d4
-      echo -n 'i'
-      set_color normal
-    case visual
-      set_color -b b00
-      echo -n 'v'
-      set_color normal
-  end
-  set_color normal
+  #__bobthefish_prompt_status $last_status
+  __vim_key_status_show
 
   set -l git_root (__bobthefish_git_project_dir)
 
   if [ "$git_root" ]
     __bobthefish_prompt_git $git_root
   else
-    __bobthefish_prompt_dir
+    __non_git_dir_show
   end
 
   __bobthefish_finish_segments
