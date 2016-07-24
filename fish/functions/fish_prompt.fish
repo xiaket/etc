@@ -149,27 +149,15 @@ end
 
 function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a non zero exit status, root and background jobs'
   set -l nonzero
-  set -l superuser
 
   # Last exit was nonzero
   [ $last_status -ne 0 ]
     and set nonzero $__bobthefish_nonzero_exit_glyph
 
-  # if superuser (uid == 0)
-  [ (id -u $USER) -eq 0 ]
-    and set superuser $__bobthefish_superuser_glyph
-
-  if [ "$nonzero" -o "$superuser" ]
+  if [ "$nonzero" ]
     __bobthefish_start_segment $__color_initial_segment_exit
-    if [ "$nonzero" ]
-      set_color normal; set_color -b $__color_initial_segment_exit
-      echo -ns $last_status ' '
-    end
-
-    if [ "$superuser" ]
-      set_color normal; set_color -b $__color_initial_segment_su
-      echo -n $__bobthefish_superuser_glyph
-    end
+    set_color normal; set_color -b $__color_initial_segment_exit
+    echo -ns $last_status ' '
 
     set_color normal
   end
