@@ -100,9 +100,6 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
   set __bobthefish_current_bg $bg
 end
 
-function __bobthefish_path_segment -S -a current_dir -d 'Display a shortened form of a directory'
-end
-
 function __bobthefish_finish_segments -S -d 'Close open prompt segments'
   if [ "$__bobthefish_current_bg" != '' ]
     set_color normal
@@ -143,8 +140,6 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
   else if [ "$staged" ]
     set flag_colors $__color_repo_staged
   end
-
-  __bobthefish_path_segment $current_dir
 
   __bobthefish_start_segment $flag_colors
   echo -ns (__bobthefish_git_branch) $flags ' '
@@ -215,7 +210,7 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
 end
 
 function __bobthefish_prompt_dir -S -d 'Display a shortened form of the current directory'
-  __bobthefish_path_segment "$PWD"
+  __pretty_parent "$PWD"
 end
 
 function __vim_key_status_show
@@ -259,7 +254,6 @@ function __non_git_dir_show -S
   set_color $__fg_color
 
   echo -ns $parent $directory
-  #echo -ns $directory
   set_color normal
   set -l __my_prompt_symbol \uE0B0
   if [ $last_status -gt 0 ]
