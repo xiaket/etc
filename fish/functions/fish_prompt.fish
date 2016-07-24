@@ -2,7 +2,6 @@
 #
 #     set -g theme_git_worktree_support yes
 #     set -g theme_display_docker_machine no
-#     set -g theme_display_ruby no
 
 # ===========================
 # Helper methods
@@ -150,13 +149,6 @@ end
 # Theme components
 # ===========================
 
-function __bobthefish_prompt_docker -S -d 'Show docker machine name'
-    [ "$theme_display_docker_machine" = 'no' -o -z "$DOCKER_MACHINE_NAME" ]; and return
-    __bobthefish_start_segment $__color_vagrant
-    echo -ns $DOCKER_MACHINE_NAME ' '
-    set_color normal
-end
-
 function __bobthefish_prompt_status -S -a last_status -d 'Display symbols for a non zero exit status, root and background jobs'
   set -l nonzero
   set -l superuser
@@ -300,86 +292,6 @@ function __bobthefish_prompt_vi -S -d 'Display vi mode'
   set_color normal
 end
 
-function __bobthefish_rvm_parse_ruby -S -a ruby_string scope -d 'Parse RVM Ruby string'
-  # Function arguments:
-  # - 'ruby-2.2.3@rails', 'jruby-1.7.19'...
-  # - 'default' or 'current'
-  set -l IFS @
-  echo "$ruby_string" | read __ruby __rvm_{$scope}_ruby_gemset __
-  set IFS -
-  echo "$__ruby" | read __rvm_{$scope}_ruby_interpreter __rvm_{$scope}_ruby_version __
-  set -e __ruby
-  set -e __
-end
-
-function __bobthefish_rvm_info -S -d 'Current Ruby information from RVM'
-  # More `sed`/`grep`/`cut` magic...
-  set -l __rvm_default_ruby (grep GEM_HOME ~/.rvm/environments/default | sed -e"s/'//g" | sed -e's/.*\///')
-  set -l __rvm_current_ruby (rvm-prompt i v g)
-  [ "$__rvm_default_ruby" = "$__rvm_current_ruby" ]; and return
-
-  set -l __rvm_default_ruby_gemset
-  set -l __rvm_default_ruby_interpreter
-  set -l __rvm_default_ruby_version
-  set -l __rvm_current_ruby_gemset
-  set -l __rvm_current_ruby_interpreter
-  set -l __rvm_current_ruby_version
-
-  # Parse default and current Rubies to global variables
-  __bobthefish_rvm_parse_ruby $__rvm_default_ruby default
-  __bobthefish_rvm_parse_ruby $__rvm_current_ruby current
-  # Show unobtrusive RVM prompt
-
-  # If interpreter differs form default interpreter, show everything:
-  if [ "$__rvm_default_ruby_interpreter" != "$__rvm_current_ruby_interpreter" ]
-    if [ "$__rvm_current_ruby_gemset" = 'global' ]
-      rvm-prompt i v
-    else
-      rvm-prompt i v g
-    end
-  # If version differs form default version
-  else if [ "$__rvm_default_ruby_version" != "$__rvm_current_ruby_version" ]
-    if [ "$__rvm_current_ruby_gemset" = 'global' ]
-      rvm-prompt v
-    else
-      rvm-prompt v g
-    end
-  # If gemset differs form default or 'global' gemset, just show it
-  else if [ "$__rvm_default_ruby_gemset" != "$__rvm_current_ruby_gemset" ]
-    rvm-prompt g
-  end
-end
-
-function __bobthefish_show_ruby -S -d 'Current Ruby (rvm/rbenv)'
-  set -l ruby_version
-  if type -q rvm-prompt
-    set ruby_version (__bobthefish_rvm_info)
-  else if type -q rbenv
-    set ruby_version (rbenv version-name)
-    # Don't show global ruby version...
-    set -q RBENV_ROOT
-      or set -l RBENV_ROOT $HOME/.rbenv
-
-    read -l global_ruby_version <$RBENV_ROOT/version
-
-    [ "$global_ruby_version" ]
-      or set global_ruby_version system
-
-    [ "$ruby_version" = "$global_ruby_version" ]; and return
-  else if type -q chruby
-    set ruby_version $RUBY_VERSION
-  end
-  [ -z "$ruby_version" ]; and return
-  __bobthefish_start_segment $__color_rvm
-  echo -ns $__bobthefish_ruby_glyph $ruby_version ' '
-  set_color normal
-end
-
-function __bobthefish_prompt_rubies -S -d 'Display current Ruby information'
-  [ "$theme_display_ruby" = 'no' ]; and return
-  __bobthefish_show_ruby
-end
-
 # ===========================
 # Apply theme
 # ===========================
@@ -401,13 +313,6 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set -l __bobthefish_detached_glyph          \u27A6
   set -l __bobthefish_nonzero_exit_glyph      '! '
   set -l __bobthefish_superuser_glyph         '$ '
-  set -l __bobthefish_bg_job_glyph            '% '
-
-  # Python glyphs
-  set -l __bobthefish_superscript_glyph       \u00B9 \u00B2 \u00B3
-  set -l __bobthefish_pypy_glyph              \u1D56
-
-  set -l __bobthefish_ruby_glyph              ''
 
   # Colors: using the solarized-dark theme
   set -l base03  002b36
@@ -451,15 +356,11 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
   set __color_rvm                      $red $colorfg --bold
   # end setting up Colors
 
-  set __bobthefish_ruby_glyph       \uE791 ' '
-
   # Start each line with a blank slate
   set -l __bobthefish_current_bg
 
   __bobthefish_prompt_status $last_status
   __bobthefish_prompt_vi
-  __bobthefish_prompt_docker
-  __bobthefish_prompt_rubies
 
   set -l git_root (__bobthefish_git_project_dir)
 
