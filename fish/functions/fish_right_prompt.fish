@@ -19,7 +19,8 @@ function __timestamp -d 'Show the current timestamp'
 end
 
 function __git_base_dir
-  set -l git_dir (command git rev-parse --git-dir ^/dev/null | sed "s/\/home\/xiaket/~/g"); or return
+  set -l git_dir (command git rev-parse --git-dir ^/dev/null); or return
+  set -l git_dir (echo $git_dir | sed "s/\/home\/xiaket/~/g")
   echo "[$git_dir] "
 end
 
