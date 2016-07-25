@@ -216,7 +216,7 @@ end
 function __vim_key_status_show
   switch $fish_bind_mode
     case default
-      set_color -b $blue
+      set_color -b 268bd2
       echo -n 'n'
       set_color normal
     case insert
