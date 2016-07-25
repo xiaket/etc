@@ -1,3 +1,7 @@
+function __pretty_parent -S -a current_dir -d 'Print a parent directory, shortened to fit the prompt'
+  echo -n (dirname $current_dir) | sed -e 's#/private##' -e "s#^$HOME#~#" -e 's#/\(\.\{0,1\}[^/]\)\([^/]*\)#/\1#g' -e 's#/$##'
+end
+
 function __cmd_duration -S -d 'Show command duration'
   [ "$CMD_DURATION" -lt 200 ]; and return
 
@@ -20,8 +24,11 @@ end
 
 function __git_base_dir
   set -l git_dir (command git rev-parse --git-dir ^/dev/null); or return
-  set -l git_dir (echo $git_dir | sed "s/\/home\/xiaket/~/g")
-  echo "[$git_dir] "
+  set parent (__pretty_parent "$PWD")
+  set parent "$parent/"
+  set directory (basename "$PWD")
+  #set -l git_dir (__pretty_parent $git_dir)
+  echo -ns "[" $parent $directory "] "
 end
 
 function __status_code -S -d 'Show the exit code if it is not zero'
