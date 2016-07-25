@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Note: need to add notification. see: https://github.com/rukshn/pomodoro/blob/master/pomodoro.sh
+
 set -e
 
 LOG=${LOGFILE-$HOME/.p.log}
