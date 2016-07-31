@@ -35,3 +35,5 @@ alias randword 'python -c "import random; print random.choice(open(\"/usr/share/
 alias pylint 'python -c "import sys; from pylint.lint import Run; Run(sys.argv[1:])"'
 alias lvi 'nvim --noplugin'
 alias beep 'python -c "import time; print \"\a\"; time.sleep(0.5); print \"\a\""'
+
+alias push 'svn st | awk \'{print $2}\' | xargs -I X scp X wovencontrol:~'
