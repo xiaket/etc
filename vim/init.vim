@@ -7,6 +7,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'bling/vim-airline'
 Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plug 'dag/vim-fish'
+Plug 'ekalinin/Dockerfile.vim'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go'
 Plug 'hail2u/vim-css3-syntax'
