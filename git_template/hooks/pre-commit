@@ -26,6 +26,8 @@ for line in git.remote("-v"):
     if line.strip().startswith("origin"):
         url = line.strip()
         break
+else:
+    url = ""
 
 if url.find("github.com") != -1:
     name, email = GITHUB_IDENTITY
