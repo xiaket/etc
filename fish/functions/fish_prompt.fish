@@ -28,22 +28,11 @@ function __bobthefish_git_project_dir -S -d 'Print the current git project base 
   set -l git_dir (command git rev-parse --git-dir ^/dev/null); or return
 
   pushd $git_dir
-  set git_dir $PWD
+    set git_dir $PWD
   popd
 
   switch $PWD/
     case $git_dir/\*
-      # Nothing works quite right if we're inside the git dir
-      # TODO: fix the underlying issues then re-enable the stuff below
-
-      # # if we're inside the git dir, sweet. just return that.
-      # set -l toplevel (command git rev-parse --show-toplevel ^/dev/null)
-      # if [ "$toplevel" ]
-      #   switch $git_dir/
-      #     case $toplevel/\*
-      #       echo $git_dir
-      #   end
-      # end
       return
   end
 
@@ -88,8 +77,7 @@ function __bobthefish_start_segment -S -d 'Start a prompt segment'
       # If there's no background, just start one
       echo -n ' '
     case "$bg"
-      # If the background is already the same color, draw a separator
-      echo -ns $__bobthefish_right_arrow_glyph ' '
+      # do nothing here.
     case '*'
       # otherwise, draw the end of the previous segment and the start of the next
       set_color $__bobthefish_current_bg
@@ -102,8 +90,7 @@ end
 
 function __bobthefish_finish_segments -S -d 'Close open prompt segments'
   if [ "$__bobthefish_current_bg" != '' ]
-    set_color normal
-    set_color $__bobthefish_current_bg
+    set_color white
     echo -ns $__bobthefish_right_black_arrow_glyph ' '
   end
 
@@ -142,7 +129,7 @@ function __bobthefish_prompt_git -S -a current_dir -d 'Display the actual git st
   end
 
   __bobthefish_start_segment $flag_colors
-  echo -ns (__bobthefish_git_branch) $flags ' '
+  echo -ns (__bobthefish_git_branch) $flags
   set_color normal
 
   if [ "$theme_git_worktree_support" != 'yes' ]
@@ -255,13 +242,12 @@ function __non_git_dir_show -S
 
   echo -ns $parent $directory
   set_color normal
-  set -l __my_prompt_symbol \uE0B0
   if [ $last_status -gt 0 ]
     set_color e55
   else
     set_color 444
   end
-  echo -n "$__my_prompt_symbol "
+  echo -n "$__bobthefish_right_black_arrow_glyph "
   set_color normal
 end
 # ===========================
@@ -274,17 +260,10 @@ function fish_prompt -d 'bobthefish, a fish theme optimized for awesome'
 
   # Powerline glyphs
   set -l __bobthefish_branch_glyph            \uE0A0
-  set -l __bobthefish_ln_glyph                \uE0A1
-  set -l __bobthefish_padlock_glyph           \uE0A2
   set -l __bobthefish_right_black_arrow_glyph \uE0B0
-  set -l __bobthefish_right_arrow_glyph       \uE0B1
-  set -l __bobthefish_left_black_arrow_glyph  \uE0B2
-  set -l __bobthefish_left_arrow_glyph        \uE0B3
 
   # Additional glyphs
   set -l __bobthefish_detached_glyph          \u27A6
-  set -l __bobthefish_nonzero_exit_glyph      '! '
-  set -l __bobthefish_superuser_glyph         '$ '
 
   # Colors: using the solarized-dark theme
   set -l base03  002b36
