@@ -15,3 +15,6 @@ set fish_greeting ""
 set -g fish_key_bindings fish_vi_key_bindings
 
 set -g CDPATH . ~
+
+function fish_mode_prompt --description "Overwrite display of mode"
+end
