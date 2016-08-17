@@ -6,7 +6,7 @@ function gc
             read -p 'echo "Adding $file, sure?(y/n):"' -l choice
             if test "$choice" = "y"
                 git add $file
-                set added_files (echo $added_files $file)
+                set added_files $added_files $file
             end
         end
     end
