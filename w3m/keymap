@@ -20,5 +20,6 @@ keymap	\^	LINE_BEGIN
 keymap	$	LINE_END
 
 # misc
-keymap	/	SEARCH
+keymap  /   ISEARCH     
+keymap  ?   ISEARCH_BACK
 keymap	q	QUIT
