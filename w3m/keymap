@@ -1,0 +1,24 @@
+# The basics.
+keymap	h	MOVE_LEFT
+keymap	j	MOVE_DOWN
+keymap	k	MOVE_UP
+keymap	l	MOVE_RIGHT
+
+# Move faster.
+keymap	H	BACK
+keymap	J	NEXT_LINK
+keymap	K	PREV_LINK
+keymap	L	GOTO_LINK
+keymap	C-n	NEXT_PAGE
+keymap	C-d	NEXT_PAGE
+keymap	SPC	NEXT_PAGE
+keymap	C-u	PREV_PAGE
+
+# move in a single line.
+keymap	0	LINE_BEGIN
+keymap	\^	LINE_BEGIN
+keymap	$	LINE_END
+
+# misc
+keymap	/	SEARCH
+keymap	q	QUIT
