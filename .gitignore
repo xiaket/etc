@@ -6,7 +6,10 @@ bin.disabled
 vim/shada
 pronto
 snape.json
+
 fish/fish_history
-w3m/history
 fish/fish_read_history
 fish/fishd.*
+
+w3m/history
+w3m/w3mtmp*
