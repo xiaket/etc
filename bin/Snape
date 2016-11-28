@@ -57,8 +57,9 @@ def add(db, name):
 def search(db, name):
     for key in sorted(db.keys()):
         if name in key or name in db[key]:
-            print "%% %s %%" % key
+            print '\x1b[1;34m' + ("## %s ##" % key) + '\x1b[0m'
             print db[key]
+            print
 
 def main():
     db = load_db()
