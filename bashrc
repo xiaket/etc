@@ -42,7 +42,7 @@ else
     GREEN=$(tput setaf 64)
     RESET=$(tput sgr0)
 fi
-    
+
 xiaketDIR=~/.xiaket
 bashrcdir=$xiaketDIR"/etc"
 
@@ -77,14 +77,14 @@ else
     export LANG=zh_CN.UTF-8
 fi
 
- 
+
 
 # use ascii colors to show whether we are root.
 if [ $UID -eq 0 ]
 then
-    export PS1="[\[${RED}\]\u@\[$CYAN\]\h \[$BLUE\]\w\[$RESET\]]" 
+    export PS1="[\[${RED}\]\u@\[$CYAN\]\h \[$BLUE\]\w\[$RESET\]]"
 else
-    export PS1="[\[${ORANGE}\]\u\[$CYAN\]@\h \[$BLUE\]\w\[$RESET\]]" 
+    export PS1="[\[${ORANGE}\]\u\[$CYAN\]@\h \[$BLUE\]\w\[$RESET\]]"
 fi
 
 
