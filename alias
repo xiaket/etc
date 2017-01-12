@@ -17,6 +17,8 @@ then
     # BSD fix
     alias sed='gsed'
     alias awk='gawk'
+else
+    alias ls='ls $LS_OPTIONS'
 fi
 
 alias grep='grep --color'
