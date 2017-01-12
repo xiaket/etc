@@ -1,0 +1,27 @@
+source ~/.xiaket/etc/zsh/antigen.zsh
+
+antigen bundle robbyrussell/oh-my-zsh lib/
+antigen theme agnoster
+
+antigen bundle git
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle pip
+antigen bundle python
+antigen bundle colorize
+antigen bundle colored-man-pages
+antigen bundle zsh-users/zsh-completions
+
+antigen apply
+
+# fix ctrl-u
+bindkey \^U backward-kill-line
+
+cd ~
+
+# the default aliases in zsh is crazy
+unalias -m '*'
+. ~/.xiaket/etc/alias
+. ~/.xiaket/etc/bash_functions
+
+# enable powerline
+. /usr/local/lib/python2.7/dist-packages/powerline/bindings/zsh/powerline.zsh
