@@ -13,6 +13,7 @@ Plug 'fatih/vim-go'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'hdima/python-syntax'
 Plug 'hynek/vim-python-pep8-indent'
+Plug 'jiangmiao/auto-pairs'
 Plug 'plasticboy/vim-markdown'
 Plug 'scrooloose/nerdtree'
 Plug 'SirVer/ultisnips'
@@ -22,7 +23,6 @@ Plug 'tpope/vim-surround'
 "Plug 'Valloric/YouCompleteMe', {'do': './install.py'}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-ruby/vim-ruby'
-Plug 'vim-scripts/AutoClose'
 Plug 'xiaket/better-header'
 call plug#end()
 
