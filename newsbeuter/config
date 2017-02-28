@@ -1,0 +1,10 @@
+auto-reload yes
+cleanup-on-quit yes
+
+proxy deploy.avenue.pronto.com.au:80
+use-proxy yes
+
+bind-key k up
+bind-key j down
+
+keep-articles-days 365
