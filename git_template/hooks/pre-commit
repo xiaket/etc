@@ -19,7 +19,7 @@ from sh import git, pyflakes, bash
 
 
 DEFAULT_IDENTITY = ("Kent Xia", "kentx@pronto.net")
-GITHUB_IDENTITY = ("Xia Kai(夏恺)", "xiaket@gmail.com")
+GITHUB_IDENTITY = ("Kai Xia(夏恺)", "xiaket@gmail.com")
 
 
 for line in git.remote("-v"):
