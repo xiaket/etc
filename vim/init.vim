@@ -145,7 +145,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let NERDTreeIgnore = ['\.pyc$']
 
 " better header settings
-let g:BHAUTHOR = 'Kent Xia/Xia Kai <kentx@pronto.net/xiaket@gmail.com>'
+let g:BHAUTHOR = 'Kent Xia/Kai Xia <kentx@pronto.net/xiaket@gmail.com>'
 let g:BHUnder = ['~/.xiaket/repos']
 let g:BHDebug = "0"
 let g:BHEnabledSuffix = ['py', 'sh', 'rb']
