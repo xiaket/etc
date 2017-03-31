@@ -29,7 +29,7 @@ for line in git.remote("-v"):
 else:
     url = ""
 
-if url.find("github.com") != -1:
+if url.find("github.com") != -1 or url.find("bitbucket.org") != -1:
     name, email = GITHUB_IDENTITY
 else:
     name, email = DEFAULT_IDENTITY
