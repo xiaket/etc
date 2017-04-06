@@ -30,3 +30,10 @@
     lineNumber = true
 [branch]
     autosetuprebase = always
+
+[diff]
+    tool = icdiff
+[difftool]
+    prompt = false
+[difftool "icdiff"]
+    cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
