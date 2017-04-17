@@ -16,14 +16,15 @@ Plug 'hynek/vim-python-pep8-indent'
 Plug 'jiangmiao/auto-pairs'
 Plug 'plasticboy/vim-markdown'
 Plug 'scrooloose/nerdtree'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-haml'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-surround'
-"Plug 'Valloric/YouCompleteMe', {'do': './install.py'}
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-ruby/vim-ruby'
 Plug 'xiaket/better-header'
+Plug 'zchee/deoplete-jedi'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -151,6 +152,9 @@ let g:BHDebug = "0"
 let g:BHEnabledSuffix = ['py', 'sh', 'rb']
 let g:BHrbHeader = "#!/usr/bin/env ruby\n# encoding: UTF-8\n# Author:         %(author)s\n# Filename:       %(filename)s\n# Date created:   %(cdate)s\n# Last modified:  %(date)s\n#\n# Description:\n#\n"
 
+"deoplete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#jedi#python_path = '/usr/bin/python3'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key remaps
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
