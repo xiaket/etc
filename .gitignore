@@ -9,3 +9,6 @@ pronto
 w3m/history
 w3m/w3mtmp*
 w3m/w3mcache*
+
+newsbeuter/cache.*
+newsbeuter/history.*
