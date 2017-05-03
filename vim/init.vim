@@ -22,6 +22,7 @@ Plug 'tpope/vim-haml'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'vim-scripts/restore_view.vim'
 Plug 'vim-ruby/vim-ruby'
 Plug 'xiaket/better-header'
 Plug 'zchee/deoplete-jedi'
@@ -155,6 +156,9 @@ let g:BHrbHeader = "#!/usr/bin/env ruby\n# encoding: UTF-8\n# Author:         %(
 "deoplete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#sources#jedi#python_path = '/usr/bin/python3'
+
+"restore_view settings
+set viewoptions=cursor,folds,slash,unix
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key remaps
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
