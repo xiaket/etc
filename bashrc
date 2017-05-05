@@ -14,7 +14,7 @@ then
     # running on a linux virtual machine.
     COLORS=dircolors
     SED=sed
-    ADD_KEY="no"
+    ADD_KEY="yes"
     HAS_ITERM="no"
     COMPLETION_PATH=/etc/profile.d/bash_completion.sh
     YELLOW=$(tput setaf 136)
@@ -137,15 +137,18 @@ function start_agent {
     [ -f $SSH_ENV ] && return 0 || echo $content > $SSH_ENV
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add
-    /usr/bin/ssh-add ~/.ssh/id_ed25519.git
-    /usr/bin/ssh-add ~/.ssh/id_ed25519.vps
+    /usr/bin/ssh-add ~/.ssh/id_rsa
 }
+
+if [ ! -d ~/.xiaket/var/tmp ]
+then
+    mkdir -p ~/.xiaket/var/tmp
+fi
 
 if [ "x$ADD_KEY" = "xyes" ]
 then
     # Source SSH settings, if applicable
-    lockfile -1 /tmp/ssh.lock
+    lockfile -1 ~/.xiaket/var/tmp/ssh.lock
     if [ -f "${SSH_ENV}" ]; then
         . "${SSH_ENV}" > /dev/null
         ps auwxx | grep ${SSH_AGENT_PID} | grep -q ssh-agent$
@@ -157,7 +160,7 @@ then
     else
         start_agent;
     fi
-    rm -f /tmp/ssh.lock
+    rm -f ~/.xiaket/var/tmp/ssh.lock
 fi
 
 if [ "x$HAS_ITERM" = "xyes" ]
