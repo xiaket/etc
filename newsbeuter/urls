@@ -2,15 +2,12 @@ https://news.ycombinator.com/rss
 http://www.theverge.com/rss/index.xml
 http://feeds.arstechnica.com/arstechnica/features
 https://www.ozbargain.com.au/deals/feed
-http://appshopper.com/feed/?platform=mac&mode=featured
 http://appshopper.com/feed/?platform=iPhone&mode=featured
 https://engineering.instagram.com/feed
 http://engineering.bittorrent.com/feed/
-https://blog.box.com/blog/feed
 https://deis.com/feed.xml
 http://feeds.feedburner.com/AmazonWebServicesBlog
 https://developers.500px.com/feed
-https://www.elastic.co/blog/feed
 http://tech.grammarly.com/blog/rss.xml
 http://engineering.ifttt.com/feed.xml
 https://githubengineering.com/atom.xml
@@ -18,3 +15,4 @@ https://engineering.quora.com/rss
 http://www.paypal-engineering.com/feed/
 https://engineering.linkedin.com/blog.rss
 https://smalldata.tech/blog/rss
+https://www.haproxy.com/blog/feed/
