@@ -1,10 +1,21 @@
 auto-reload yes
 cleanup-on-quit yes
 
-proxy deploy.avenue.pronto.com.au:80
+proxy 10.30.0.1:8118
 use-proxy yes
 
 bind-key k up
 bind-key j down
 
 keep-articles-days 365
+
+color background   default   default
+color listnormal   default   default
+color listfocus    black     yellow
+color info         default   black
+color article      default   default
+
+# highlights
+highlight article "^(Title):.*$" blue default
+highlight article "https?://[^ ]+" red default
+highlight article "\\[image\\ [0-9]+\\]" green default
