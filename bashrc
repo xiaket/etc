@@ -2,6 +2,7 @@
 # The basics #
 ##############
 [ -z "$PS1" ] && return
+umask 0022
 
 # explicitly enable term colors.
 export TERM="xterm-256color"
