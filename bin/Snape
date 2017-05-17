@@ -11,6 +11,7 @@ Description:
     A commandline snippet manager.
 Changelog:
 """
+from __future__ import print_function
 import json
 import os
 import readline
@@ -36,14 +37,10 @@ def load_db():
 
 def list_all(db):
     for name in sorted(db.keys()):
-        print '\x1b[1;34m' + ("## %s ##" % name) + '\x1b[0m'
-        print '```'
-        print db[name]
-        print '```'
-        print
+        output_pair(name, db[name])
 
 def add(db, name):
-    print "Enter/Paste your content. Ctrl-D to save it."
+    print("Enter/Paste your content. Ctrl-D to save it.")
     contents = []
     while True:
         try:
@@ -60,11 +57,14 @@ def add(db, name):
 def search(db, name):
     for key in sorted(db.keys()):
         if name in key or name in db[key]:
-            print '\x1b[1;34m' + ("## %s ##" % key) + '\x1b[0m'
-            print '```'
-            print db[key]
-            print '```'
-            print
+            output_pair(key, db[key])
+
+def output_pair(key, value):
+    print('\x1b[1;34m' + ("## %s ##" % key) + '\x1b[0m')
+    print('```')
+    print(value)
+    print('```')
+    print()
 
 def main():
     db = load_db()
@@ -74,13 +74,13 @@ def main():
         rest = " ".join(sys.argv[1:])
         first = sys.argv[1]
         if rest in db:
-            print "%s: \n%s" % (rest, db[rest])
+            print("%s: \n%s" % (rest, db[rest]))
         elif first == "add" and len(sys.argv) > 2:
             add(db, " ".join(sys.argv[2:]))
         elif first == "search" and len(sys.argv) > 2:
             search(db, " ".join(sys.argv[2:]))
         else:
-            print USAGE
+            print(USAGE)
             sys.exit(1)
 
 
