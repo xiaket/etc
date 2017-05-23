@@ -1,0 +1,13 @@
+{
+ "env": {
+  "COMPLETIONS_MENU_ROWS": 7,
+  "PATH": ["/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin", "/home/xiaket/.xiaket/etc/bin"]
+ },
+ "xontribs": [
+  "bashisms",
+  "docker_tabcomplete",
+  "jedi",
+  "prompt_ret_code",
+  "powerline"
+ ]
+}
