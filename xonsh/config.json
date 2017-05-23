@@ -1,13 +1,34 @@
 {
  "env": {
+  "CASE_SENSITIVE_COMPLETIONS": false,
   "COMPLETIONS_MENU_ROWS": 7,
-  "PATH": ["/usr/local/sbin", "/usr/local/bin", "/usr/sbin", "/usr/bin", "/sbin", "/bin", "/home/xiaket/.xiaket/etc/bin"]
+  "HISTCONTROL": "ignoredups",
+  "INDENT": "  ",
+  "PATH": [
+   "/home/xiaket/.xiaket/etc/bin",
+   "/usr/local/sbin",
+   "/usr/local/bin",
+   "/usr/sbin",
+   "/usr/bin",
+   "/sbin",
+   "/bin"
+  ],
+  "SUGGEST_MAX_NUM": 3,
+  "UPDATE_COMPLETIONS_ON_KEYPRESS": true,
+  "VC_HG_SHOW_BRANCH": false,
+  "XONSH_AUTOPAIR": true
  },
+ "foreign_shells": [
+  {
+   "shell": "bash"
+  }
+ ],
  "xontribs": [
   "bashisms",
   "docker_tabcomplete",
   "jedi",
+  "powerline",
   "prompt_ret_code",
-  "powerline"
+  "z"
  ]
 }
