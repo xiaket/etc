@@ -27,8 +27,8 @@
   "bashisms",
   "docker_tabcomplete",
   "jedi",
-  "powerline",
   "prompt_ret_code",
-  "z"
+  "z",
+  "powerline"
  ]
 }
