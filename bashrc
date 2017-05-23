@@ -58,7 +58,10 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 . $bashrcdir/alias
 
 # For things that can only be done as a bash function.
-. $bashrcdir/bash_functions
+if [ -f $bashrcdir/bash_functions ]
+then
+    . $bashrcdir/bash_functions
+fi
 
 # For Pronto settings
 if [ -f $bashrcdir/pronto ]
