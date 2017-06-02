@@ -25,6 +25,7 @@
   "linux dir in Windows": "C:\\Users\\kentx\\AppData\\Local\\lxss\\home\\xiaket",
   "list all submodules": "git submodule foreach git pull origin master",
   "load python code from file without import": "synctaginfo = imp.new_module('synctaginfo')\nexec content in synctaginfo.__dict__\ntaginfo = synctaginfo.synctaginfo",
+  "private network address space": "        10.0.0.0        -   10.255.255.255\n        172.16.0.0      -   172.31.255.255\n        192.168.0.0     -   192.168.255.255",
   "python post json": "import requests, json\nurl = 'http://127.0.0.1:27182/api/account'\nheaders = {'Content-type': 'application/json', 'Accept': 'text/plain'}\ndata = {'name': 1, 'param': 2}\nresponse = requests.post(url, data=json.dumps(data), headers=headers}",
   "python run overrided method from superclass": "getattr(super(self.__class, self), sys._getframe().f_code.co_name)()",
   "requests disable logging": "logging.getLogger('requests').setLevel(logging.WARNING)",
