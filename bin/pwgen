@@ -21,6 +21,7 @@ LETTERS_LOWER = string.ascii_lowercase
 LETTERS_UPPER = string.ascii_uppercase
 DIGITS = string.digits
 
+
 def generate_one(length):
     characters = []
     characters.append(random.choice(QUOTATIONS))
@@ -55,10 +56,10 @@ def main():
     except IndexError:
         length = 16
 
-    for i in xrange(5):
-        for j in xrange(4):
-            print generate_one(length),
-        print ""
+    for i in range(5):
+        for j in range(4):
+            sys.stdout.write(generate_one(length) + " ")
+        sys.stdout.write("\n")
 
 
 if __name__ == '__main__':
