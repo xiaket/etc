@@ -55,7 +55,7 @@ def add(db, name):
 
 def search(db, name):
     for key in sorted(db.keys()):
-        if name in key or name in db[key]:
+        if name in key.lower() or name in db[key].lower():
             output_pair(key, db[key])
 
 def output_pair(key, value):
