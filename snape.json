@@ -2,6 +2,7 @@
   "UNIX time to datetime": "from datetime import datetime\ndatetime.fromtimestamp(1409638930)",
   "Ubuntu add normal user": "useradd -m -U -s /bin/bash $username",
   "add submodule": "git submodule add ~/submd/repos/lib1.git libs/lib1",
+  "ansible keep remote files": "export ANSIBLE_KEEP_REMOTE_FILES=1",
   "awk average columns": "awk '{ total += $1; count++} END {print total/count}' filename",
   "awk delete line with pattern": "echo $line\n/websites/webapps/Auski_Test/Auski_Test_log\ncat /etc/fstab | awk -v l=$line '{if($1!=l) print $0}'",
   "awk print line if field not starts with": "awk '$5 !~ /^127.0.0.1/'",
