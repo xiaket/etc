@@ -18,7 +18,7 @@ import sys
 from sh import git, pyflakes, bash
 
 
-DEFAULT_IDENTITY = ("Kent Xia", "kentx@pronto.net")
+DEFAULT_IDENTITY = ("Kai Xia", "kai.xia@shinesolutions.com")
 GITHUB_IDENTITY = ("Kai Xia(夏恺)", "xiaket@gmail.com")
 
 
