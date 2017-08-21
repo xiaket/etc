@@ -1,9 +1,6 @@
 auto-reload yes
 cleanup-on-quit yes
 
-proxy 10.30.0.1:8118
-use-proxy yes
-
 bind-key k up
 bind-key j down
 
