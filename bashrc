@@ -165,9 +165,3 @@ then
     fi
     rm -f ~/.xiaket/var/tmp/ssh.lock
 fi
-
-if [ "x$HAS_ITERM" = "xyes" ]
-then
-    # For iTerm 3 shell integration.
-    . ~/.iterm2_shell_integration.bash
-fi
