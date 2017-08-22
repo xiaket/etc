@@ -147,8 +147,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let NERDTreeIgnore = ['\.pyc$']
 
 " better header settings
-let g:BHAUTHOR = 'Kent Xia/Kai Xia <kentx@pronto.net/xiaket@gmail.com>'
-let g:BHUnder = ['~/.xiaket/repos']
+let g:BHAUTHOR = 'Kai Xia <kai.xia@shinesolutions.com/xiaket@gmail.com>'
+let g:BHUnder = ['~/.xiaket/shared/bitbucket', '~/.xiaket/shared/github']
 let g:BHDebug = "0"
 let g:BHEnabledSuffix = ['py', 'sh', 'rb']
 let g:BHrbHeader = "#!/usr/bin/env ruby\n# encoding: UTF-8\n# Author:         %(author)s\n# Filename:       %(filename)s\n# Date created:   %(cdate)s\n# Last modified:  %(date)s\n#\n# Description:\n#\n"
