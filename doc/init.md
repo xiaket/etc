@@ -10,6 +10,7 @@ gawk
 gnu-sed
 gnu-tar
 gnutls
+jq
 neovim
 packer
 procmail
