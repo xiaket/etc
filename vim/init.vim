@@ -155,7 +155,6 @@ let g:BHrbHeader = "#!/usr/bin/env ruby\n# encoding: UTF-8\n# Author:         %(
 
 "deoplete
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#jedi#python_path = '/usr/bin/python3'
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 "restore_view settings
