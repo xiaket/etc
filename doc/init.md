@@ -62,8 +62,10 @@ Install Alfred 2 manually since I do not have powerpack for 3.
 
 ~/.xiaket/etc/bashrc -> ~/.bashrc
 ~/.xiaket/etc/gitconfig -> ~/.gitconfig
+~/.xiaket/etc/inputrc ~/.inputrc
 ~/.xiaket/etc/karabiner -> ~/.config/karabiner
 ~/.xiaket/etc/newsbeuter -> ~/.newsbeuter
+~/.xiaket/etc/pythonrc ~/.pythonrc
 ~/.xiaket/etc/snape.json ~/.snape.json
 ~/.xiaket/etc/vim -> ~/.vim
 ~/.xiaket/etc/vim -> ~/.config/nvim 
