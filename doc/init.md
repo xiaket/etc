@@ -80,3 +80,6 @@ Install Alfred 2 manually since I do not have powerpack for 3.
 
 grammarly
 ublock
+
+## Ruby setups
+sudo gem install bundler --no-ri --no-rdoc
