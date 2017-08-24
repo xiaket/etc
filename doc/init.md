@@ -73,6 +73,8 @@ Install Alfred 2 manually since I do not have powerpack for 3.
 ~/.xiaket/shared/bitbucket -> ~/.BITBUCKET
 ~/.xiaket/shared/github -> ~/.GITHUB
 ~/.xiaket/shared/ssh -> ~/.ssh
+/usr/local/bin/python3 -> /usr/local/bin/python
+/usr/local/bin/pip3 -> /usr/local/bin/pip
 
 ## Safari extensions
 
