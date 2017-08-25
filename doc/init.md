@@ -20,6 +20,10 @@ tig
 vagrant-completion
 wget
 
+## Extra setups for homebrew
+
+brew tap caskroom/cask
+
 ## Homebrew cask apps
 
 dash
