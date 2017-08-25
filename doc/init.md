@@ -42,6 +42,7 @@ virtualbox-extension-pack
 ## pip3 packages:
 
 ansible
+icdiff
 neovim
 pyflakes
 requests
