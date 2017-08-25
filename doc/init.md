@@ -18,6 +18,7 @@ python3
 shellcheck
 tig
 vagrant-completion
+wget
 
 ## Homebrew cask apps
 
