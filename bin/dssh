@@ -1,7 +1,0 @@
-#!/bin/bash
-
-hosts="/Users/xiaket/.ssh/known_hosts"
-
-line_number="$1"
-
-gsed -i ""$line_number"d" $hosts
