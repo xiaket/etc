@@ -59,7 +59,7 @@ defaults write -g KeyRepeat -int 1
 
 ## Misc
 
-mkdir -p ~/.xiaket/shared/{bitbucket,github,openvpn,ssh}
+mkdir -p ~/.xiaket/shared/{bitbucket,github,gitlab,openvpn,ssh}
 mkdir -p ~/.config/
 mkdir -p ~/.vim/backup
 mkdir -p ~/.xiaket/var/{run,tmp}
@@ -81,6 +81,7 @@ Install Alfred 2 manually since I do not have powerpack for 3.
 ~/.xiaket/etc/vim/init.vim -> ~/.vimrc
 ~/.xiaket/shared/bitbucket -> ~/.BITBUCKET
 ~/.xiaket/shared/github -> ~/.GITHUB
+~/.xiaket/shared/gitlab -> ~/.Gitlab
 ~/.xiaket/shared/ssh -> ~/.ssh
 /usr/local/bin/python3 -> /usr/local/bin/python
 /usr/local/bin/pip3 -> /usr/local/bin/pip
