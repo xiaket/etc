@@ -140,7 +140,7 @@ function start_agent {
     [ -f $SSH_ENV ] && return 0 || echo $content > $SSH_ENV
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add ~/.ssh/id_rsa
+    /usr/bin/ssh-add ~/.ssh/telstra_ed25519
 }
 
 if [ ! -d ~/.xiaket/var/tmp ]
