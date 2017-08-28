@@ -46,8 +46,9 @@ fi
 
 xiaketDIR=~/.xiaket
 bashrcdir=$xiaketDIR"/etc"
+shinedir=$xiaketDIR"/shine"
 
-export PATH="~/.xiaket/shine/bin:~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/opt/coreutils/bin"
+export PATH="$shinedir/bin:~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/opt/coreutils/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 ############
@@ -63,10 +64,10 @@ then
     . $bashrcdir/bash_functions
 fi
 
-# For Pronto settings
-if [ -f $bashrcdir/pronto ]
+# For Shine settings
+if [ -f "$shinedir/etc/bashrc" ]
 then
-    . $bashrcdir/pronto
+    . "$shinedir/etc/bashrc"
 fi
 
 # For bash completion.
