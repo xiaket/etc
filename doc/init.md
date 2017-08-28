@@ -93,3 +93,7 @@ ublock
 
 ## Ruby setups
 sudo gem install bundler --no-ri --no-rdoc
+
+## Shine specific packages
+
+pip install aws-google-auth
