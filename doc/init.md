@@ -10,6 +10,7 @@ gawk
 gnu-sed
 gnu-tar
 gnutls
+graphviz
 jq
 neovim
 openvpn
@@ -45,9 +46,11 @@ virtualbox-extension-pack
 ansible
 icdiff
 neovim
+psutil
 pyflakes
 requests
 sh
+termcolor
 
 ## Defaults to write
 
