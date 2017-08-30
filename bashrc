@@ -143,6 +143,7 @@ function start_agent {
     . "${SSH_ENV}" > /dev/null
     /usr/bin/ssh-add ~/.ssh/telstra_git_ed25519
     /usr/bin/ssh-add ~/.ssh/shine_git_ed25519
+    /usr/bin/ssh-add ~/.ssh/sandpit_rsa
 }
 
 if [ ! -d ~/.xiaket/var/tmp ]
