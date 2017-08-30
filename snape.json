@@ -8,6 +8,7 @@
   "awk print line if field not starts with": "awk '$5 !~ /^127.0.0.1/'",
   "awk standard deviation": "awk '{x+=$0;y+=$0^2}END{print sqrt(y/NR-(x/NR)^2)}' filename",
   "awk sum columns": "awk '{ total += $1; count++} END {print total}' filename",
+  "aws ami query": "aws ec2 describe-images --image-id ami-23456789",
   "bash get script directory": "CURRENT_DIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"",
   "convert pfx to normal ssl certificates": "openssl pkcs12 -in domain.pfx -clcerts -nokeys -out domain.cer\nopenssl pkcs12 -in domain.pfx -nocerts -nodes  -out domain.key\nopenssl pkcs12 -in domain.pfx -out domain.crt -nodes -nokeys -cacerts",
   "debug SSL problem": "openssl s_client -connect www.test.com:443 -prexit",
