@@ -11,7 +11,7 @@ cwd=`pwd`
 
 if [ "x$cwd" = "x/Users/xiaket" ]
 then
-    gls $LS_OPTIONS --hide="VirtualBox VMs" --hide="Applications*" --hide="Books" --hide="Desktop" --hide="Library" --hide="Music" --hide="Movies" --hide="Pictures" --hide="Public" --hide="Documents" $*
+    gls $LS_OPTIONS --hide="VirtualBox VMs" --hide="Applications*" --hide="Books" --hide="Desktop" --hide="Dropbox" --hide="Library" --hide="Music" --hide="Movies" --hide="Pictures" --hide="Public" --hide="Documents" $*
 else
     gls $LS_OPTIONS $*
 fi
