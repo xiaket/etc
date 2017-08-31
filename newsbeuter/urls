@@ -3,6 +3,7 @@ http://www.theverge.com/rss/index.xml
 http://feeds.arstechnica.com/arstechnica/features
 https://www.ozbargain.com.au/deals/feed
 http://appshopper.com/feed/?platform=iPhone&mode=featured
+http://appshopper.com/feed/?platform=mac&mode=featured
 https://engineering.instagram.com/feed
 http://engineering.bittorrent.com/feed/
 https://deis.com/feed.xml
@@ -20,3 +21,9 @@ http://blog.codingnow.com/atom.xml
 https://blog.golang.org/feed.atom
 https://salttiger.com/feed/
 https://www.confluent.io/feed/
+http://onevcat.com/rss
+http://www.ifanr.com/feed
+http://www.jefftk.com/news.rss
+http://www.ruanyifeng.com/blog/atom.xml
+http://www.matrix67.com/blog/feed
+http://coolshell.cn/feed
