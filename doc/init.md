@@ -29,6 +29,7 @@ brew tap caskroom/cask
 ## Homebrew cask apps
 
 dash
+dropbox
 itsycal
 grammarly
 karabiner-elements
