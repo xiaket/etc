@@ -6,7 +6,6 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'bling/vim-airline'
 Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
-Plug 'dag/vim-fish'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go'
@@ -19,7 +18,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-haml'
-Plug 'tpope/vim-rails'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/restore_view.vim'
@@ -139,7 +137,7 @@ let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 " UltiSnip settings.
-let g:UltiSnipsSnippetDirectories=["/home/xiaket/.vim/UltiSnips"]
+let g:UltiSnipsSnippetDir="~/.vim/UltiSnips"
 let g:UltiSnipsDoHash=0
 
 " NERD configurations
