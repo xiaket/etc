@@ -4,6 +4,7 @@ vim/plugged
 vim/.netrwhist
 bin.disabled
 vim/shada
+vim/view
 pronto
 
 w3m/history
