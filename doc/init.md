@@ -32,6 +32,7 @@ dash
 dropbox
 itsycal
 grammarly
+iina
 karabiner-elements
 omnifocus
 spectacle
@@ -52,6 +53,7 @@ pyflakes
 requests
 sh
 termcolor
+troposphere
 
 ## Defaults to write
 
