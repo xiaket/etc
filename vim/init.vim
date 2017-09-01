@@ -72,10 +72,11 @@ set lazyredraw
 set showmatch
 " Tab and indent
 set expandtab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 set smartindent
+autocmd FileType py set tabstop=4 softtabstop=4 shiftwidth=4
 autocmd FileType make set noexpandtab shiftwidth=8
 " Enable folding
 set foldmethod=indent
