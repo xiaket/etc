@@ -106,6 +106,11 @@ autocmd InsertLeave * :call RelativeLineNumber("relativenumber")
 autocmd FocusLost * :call RelativeLineNumber("number")
 autocmd CursorMoved * :call RelativeLineNumber("relativenumber")
 
+" file headers
+au BufNewFile *.py 0r ~/.vim/headers/py.header
+au BufNewFile *.sh 0r ~/.vim/headers/sh.header
+au BufNewFile *.rb 0r ~/.vim/headers/rb.header
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin tweaks.
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
