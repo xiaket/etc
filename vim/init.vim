@@ -22,7 +22,6 @@ Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/restore_view.vim'
 Plug 'vim-ruby/vim-ruby'
-Plug 'xiaket/better-header'
 Plug 'zchee/deoplete-jedi'
 call plug#end()
 
@@ -143,13 +142,6 @@ let g:UltiSnipsDoHash=0
 " NERD configurations
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeIgnore = ['\.pyc$']
-
-" better header settings
-let g:BHAUTHOR = 'Kai Xia <kai.xia@shinesolutions.com/xiaket@gmail.com>'
-let g:BHUnder = ['~/.xiaket/shared/bitbucket', '~/.xiaket/shared/github']
-let g:BHDebug = "0"
-let g:BHEnabledSuffix = ['py', 'sh', 'rb']
-let g:BHrbHeader = "#!/usr/bin/env ruby\n# encoding: UTF-8\n# Author:         %(author)s\n# Filename:       %(filename)s\n# Date created:   %(cdate)s\n# Last modified:  %(date)s\n#\n# Description:\n#\n"
 
 "deoplete
 let g:deoplete#enable_at_startup = 1
