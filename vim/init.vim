@@ -45,6 +45,21 @@ function RelativeLineNumber(target)
     endif
 endfunction
 
+function AppendHeader()
+  " We would write header for these filetypes
+  if !exists("g:HeaderTypes")
+    let g:HeaderTypes = []
+  endif
+
+  let l:buffer_suffix = expand('%:e')
+
+  if index(g:HeaderTypes, l:buffer_suffix) == -1
+    return
+  else
+    execute "0r ~/.vim/headers/" . l:buffer_suffix . ".header"
+  endif
+endfunction
+
 function ToggleLineNumber()
     if !exists("b:lnstatus")
         let b:lnstatus = "number"
@@ -108,10 +123,8 @@ autocmd FocusLost * :call RelativeLineNumber("number")
 autocmd CursorMoved * :call RelativeLineNumber("relativenumber")
 
 " file headers
-au BufNewFile *.py 0r ~/.vim/headers/py.header
-au BufNewFile *.sh 0r ~/.vim/headers/sh.header
-au BufNewFile *.rb 0r ~/.vim/headers/rb.header
-
+let g:HeaderTypes = ["py", "rb", "sh"]
+au BufNewFile * call AppendHeader()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin tweaks.
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
