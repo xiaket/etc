@@ -47,17 +47,15 @@ endfunction
 
 function AppendHeader()
   " We would write header for these filetypes
-  if !exists("g:HeaderTypes")
-    let g:HeaderTypes = []
+  if !exists("g:Headers")
+    let g:Headers = {}
   endif
 
-  let l:buffer_suffix = expand('%:e')
-
-  if index(g:HeaderTypes, l:buffer_suffix) == -1
-    return
-  else
-    execute "0r ~/.vim/headers/" . l:buffer_suffix . ".header"
-  endif
+  " get the suffix of the buffer, get the header from the defined dictionary,
+  " join the content of the list with newline and insert the result string to
+  " the start of the buffer.
+  " If suffix is not found in dictionary, an empty list(empty string) is used.
+  call setline(".", get(g:Headers, expand('%:e'), []))
 endfunction
 
 function ToggleLineNumber()
@@ -123,7 +121,12 @@ autocmd FocusLost * :call RelativeLineNumber("number")
 autocmd CursorMoved * :call RelativeLineNumber("relativenumber")
 
 " file headers
-let g:HeaderTypes = ["py", "rb", "sh"]
+" empty line in the list is converted to a newline
+let g:Headers = {
+  \"py": ["#!/usr/bin/env python", "#encoding=utf8", "", ""],
+  \"rb": ["#!/usr/bin/env ruby", "#encoding: utf-8", "", ""],
+  \"sh": ["#!/bin/bash", "", "set -o errexit", "set -o nounset", "set -o pipefail", "", ""],
+\}
 au BufNewFile * call AppendHeader()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin tweaks.
