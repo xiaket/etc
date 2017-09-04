@@ -2,23 +2,32 @@
 
 ## Homebrew recepies
 
+aria2
 bash
 bash-completion
 coreutils
+ffmpeg
 findutils
 gawk
 gnu-sed
 gnu-tar
 gnutls
+go
 graphviz
 jq
+mtr
 neovim
+newsbeuter
 openvpn
 packer
 procmail
 python3
+ruby
 shellcheck
+sqlite
 tig
+tree
+unrar
 vagrant-completion
 wget
 
