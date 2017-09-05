@@ -77,7 +77,7 @@ defaults write -g KeyRepeat -int 1
 mkdir -p ~/.xiaket/shared/{bitbucket,github,gitlab,openvpn,ssh}
 mkdir -p ~/.config/
 mkdir -p ~/.vim/backup
-mkdir -p ~/.xiaket/var/{run,tmp}
+mkdir -p ~/.xiaket/var/{log,run,tmp}
 mkdir -p ~/Library/Application\ Support/iTerm/Scripts && ln -s ~/.xiaket/etc/bin/rename_tab.scpt ~/Library/Application\ Support/iTerm/Scripts/rename_tab.scpt
 mkdir -p ~/Library/Python/2.7/lib/python/site-packages && echo 'import site; site.addsitedir("/usr/local/lib/python2.7/site-packages")' >> ~/Library/Python/2.7/lib/python/site-packages/homebrew.pth
 Install Alfred 2 manually since I do not have powerpack for 3.
