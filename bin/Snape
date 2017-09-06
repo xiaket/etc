@@ -46,6 +46,10 @@ def add(db, name):
             line = input("")
         except EOFError:
             break
+        except KeyboardInterrupt:
+            print('\nUser cancelled, not saving database.')
+            sys.exit(1)
+
         contents.append(line)
 
     db[name] = "\n".join(contents)
