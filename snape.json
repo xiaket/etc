@@ -43,5 +43,6 @@
   "tell innodb and myisam": "SHOW TABLE STATUS WHERE Name = 'tablename';",
   "unzip archive with non-ascii charset": "unar -f -e gb18030 *.zip",
   "upgrade all pip packages": "python -c 'import pip,subprocess; [subprocess.call(\"pip install -U \" + d.project_name, shell=True) for d in pip.get_installed_distributions()]'",
+  "user dynamodb as lock": "aws dynamodb put-item --table-name MusicCollection --item '{\"Artist\": {\"S\": \"Obscure Indie Band\"}}' --condition-expression \"attribute_not_exists(Artist)\"",
   "validate json file": "cat lisen.json | python -c \"import json, sys; print json.loads(sys.stdin.read())\""
 }
