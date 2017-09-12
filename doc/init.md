@@ -38,6 +38,7 @@ brew tap caskroom/cask
 ## Homebrew cask apps
 
 dash
+djview
 dropbox
 itsycal
 grammarly
