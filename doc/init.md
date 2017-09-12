@@ -47,6 +47,7 @@ karabiner-elements
 omnifocus
 spectacle
 steam
+tad
 typora
 vagrant
 vagrant-manager
