@@ -2,6 +2,7 @@
 
 ## Homebrew recepies
 
+aacgain
 aria2
 bash
 bash-completion
