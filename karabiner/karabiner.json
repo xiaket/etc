@@ -294,6 +294,27 @@
                                 "type": "basic"
                             }
                         ]
+                    },
+                    {
+                        "description": "Play/Pause by right command + P",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "p",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "right_command"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "play_or_pause"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
                     }
                 ]
             },
@@ -328,7 +349,7 @@
             "name": "Default profile",
             "selected": true,
             "simple_modifications": {
-              "caps_lock": "escape"
+                "caps_lock": "escape"
             },
             "virtual_hid_keyboard": {
                 "caps_lock_delay_milliseconds": 0,
