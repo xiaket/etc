@@ -40,6 +40,7 @@ brew tap caskroom/cask
 
 ## Homebrew cask apps
 
+ccmenu
 dash
 djview
 dropbox
