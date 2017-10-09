@@ -9,7 +9,7 @@
 
 cwd=`pwd`
 
-if [ "x$cwd" = "x/Users/xiaket" ]
+if [ "x$cwd" = "x$HOME" ]
 then
     gls $LS_OPTIONS --hide="VirtualBox VMs" --hide="Applications*" --hide="Books" --hide="Desktop" --hide="Dropbox" --hide="Library" --hide="Music" --hide="Movies" --hide="Pictures" --hide="Public" --hide="Documents" $*
 else
