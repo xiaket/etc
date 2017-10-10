@@ -1,8 +1,12 @@
 import atexit
 import os
-import readline
 import rlcompleter
 import sys
+
+if sys.version_info[0] == 2:
+    import gnureadline as readline
+else:
+    import readline
 
 
 HISTORYPATH = os.path.expanduser("~/.pyhistory")
