@@ -1,6 +1,5 @@
 import atexit
 import os
-import random
 import readline
 import rlcompleter
 import sys
@@ -23,11 +22,14 @@ class ColorChanger(object):
         self.color = self
 
     def __call__(self, value):
+        import random
+        import sys
         if value != None:
             print(value)
         choice = random.randint(90, 98)
         sys.ps1 = '\001\033[' + str(choice) + 'm\002>\001\033[0m\002 '
         sys.ps2 = '  '
+        del random, sys
 
 sys.displayhook = ColorChanger()
 
@@ -35,4 +37,4 @@ sys.ps1 = '> '
 sys.ps2 = '  '
 
 atexit.register(save_history, HISTORYPATH)
-del os, atexit, readline, rlcompleter, save_history, HISTORYPATH
+del os, atexit, readline, rlcompleter, save_history, HISTORYPATH, ColorChanger, sys
