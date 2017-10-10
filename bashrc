@@ -46,9 +46,9 @@ fi
 
 xiaketDIR=~/.xiaket
 bashrcdir=$xiaketDIR"/etc"
-shinedir=$xiaketDIR"/shine"
+altdir=$xiaketDIR"/alt"
 
-export PATH="$shinedir/bin:~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/opt/coreutils/bin"
+export PATH="$altdir/bin:~/.xiaket/etc/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/opt/coreutils/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 ############
@@ -64,12 +64,6 @@ then
     . $bashrcdir/bash_functions
 fi
 
-# For Shine settings
-if [ -f "$shinedir/etc/bashrc" ]
-then
-    . "$shinedir/etc/bashrc"
-fi
-
 # For bash completion.
 . $COMPLETION_PATH
 
@@ -81,8 +75,6 @@ then
 else
     export LANG=zh_CN.UTF-8
 fi
-
-
 
 # use ascii colors to show whether we are root.
 if [ $UID -eq 0 ]
@@ -141,9 +133,8 @@ function start_agent {
     [ -f $SSH_ENV ] && return 0 || echo $content > $SSH_ENV
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add ~/.ssh/telstra_git_ed25519
-    /usr/bin/ssh-add ~/.ssh/shine_git_ed25519
-    /usr/bin/ssh-add ~/.ssh/sandpit_rsa
+    /usr/bin/ssh-add ~/.ssh/*ed25519
+    /usr/bin/ssh-add ~/.ssh/*rsa
 }
 
 if [ ! -d ~/.xiaket/var/tmp ]
@@ -167,4 +158,10 @@ then
         start_agent;
     fi
     rm -f ~/.xiaket/var/tmp/ssh.lock
+fi
+
+# For Alternative settings
+if [ -f "$altdir/etc/bashrc" ]
+then
+    . "$altdir/etc/bashrc"
 fi
