@@ -123,7 +123,7 @@ autocmd CursorMoved * :call RelativeLineNumber("relativenumber")
 " file headers
 " empty line in the list is converted to a newline
 let g:Headers = {
-  \"py": ["#!/usr/bin/env python", "#encoding=utf8", "", ""],
+  \"py": ["#!/usr/bin/env python", "# encoding=utf8", "", ""],
   \"rb": ["#!/usr/bin/env ruby", "#encoding: utf-8", "", ""],
   \"sh": ["#!/bin/bash", "", "set -o errexit", "set -o nounset", "set -o pipefail", "", ""],
 \}
