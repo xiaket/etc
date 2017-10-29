@@ -10,6 +10,7 @@
   "awk sum columns": "awk '{ total += $1; count++} END {print total}' filename",
   "aws ami query": "aws ec2 describe-images --image-id ami-23456789",
   "bash get script directory": "CURRENT_DIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"",
+  "convert git commit to patch": "git format-patch -1 <sha>   # This will generate a patch file\ngit apply --stat file.patch # show apply patch stats, will not change the codebase\ngit am < file.patch         # Apply patch as a commit",
   "convert pfx to normal ssl certificates": "openssl pkcs12 -in domain.pfx -clcerts -nokeys -out domain.cer\nopenssl pkcs12 -in domain.pfx -nocerts -nodes  -out domain.key\nopenssl pkcs12 -in domain.pfx -out domain.crt -nodes -nokeys -cacerts",
   "debug SSL problem": "openssl s_client -connect www.test.com:443 -prexit",
   "decimal to hex": "hex(dec)[2:]",
