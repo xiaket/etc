@@ -20,6 +20,7 @@ mtr
 neovim
 newsbeuter
 openvpn
+p7zip
 packer
 procmail
 python3
