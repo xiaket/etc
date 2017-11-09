@@ -24,6 +24,7 @@
   "get local ipaddr": "def get_ipaddr(host=\"www.163.com\"):\n    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\n    try:\n        udp_socket.connect((host, 9))\n        ipaddress = udp_socket.getsockname()[0]\n    except socket.error:\n        raise\n    finally:\n        del udp_socket\n        return ipaddress\n",
   "git diff local and server": "git diff origin/master master",
   "git remove remote branch": "git push origin --delete <branch name>",
+  "git setup user and email": "git config user.email \"xiaket@gmail.com\"\ngit config user.name \"Kai Xia\"",
   "increase inotify watchers": "echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p",
   "linux dir in Windows": "C:\\Users\\kentx\\AppData\\Local\\lxss\\home\\xiaket",
   "list all submodules": "git submodule foreach git pull origin master",
