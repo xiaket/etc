@@ -68,6 +68,10 @@ sh
 termcolor
 troposphere
 
+## go packages:
+
+go get -u github.com/bndw/pick
+
 ## Defaults to write
 
 defaults write com.apple.dashboard mcx-disabled -bool TRUE;killall Dock
