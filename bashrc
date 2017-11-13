@@ -84,6 +84,9 @@ else
     export PS1="[\[${ORANGE}\]\u\[$CYAN\]@\h \[$BLUE\]\w\[$RESET\]]"
 fi
 
+# for fzf
+set rtp+=/usr/local/opt/fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 ################
 # bash history #

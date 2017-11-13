@@ -9,6 +9,7 @@ bash-completion
 coreutils
 ffmpeg
 findutils
+fzf
 gawk
 gnu-sed
 gnu-tar
