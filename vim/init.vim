@@ -14,15 +14,14 @@ Plug 'hdima/python-syntax'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'jiangmiao/auto-pairs'
 Plug 'plasticboy/vim-markdown'
+Plug 'roxma/nvim-completion-manager'
 Plug 'scrooloose/nerdtree'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-haml'
 Plug 'tpope/vim-surround'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'vim-scripts/restore_view.vim'
 Plug 'vim-ruby/vim-ruby'
-Plug 'zchee/deoplete-jedi'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
