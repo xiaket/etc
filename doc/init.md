@@ -7,6 +7,7 @@ aria2
 bash
 bash-completion
 coreutils
+exercism
 ffmpeg
 findutils
 fzf
