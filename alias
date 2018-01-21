@@ -53,6 +53,8 @@ alias py='python3'
 alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias lsvn='/usr/bin/svn'
 alias gc='git commit -vs'
+alias ga='git add'
+alias boat='newsboat'
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias randport='python -c "import random; print random.randint(1025, 32768)"'
