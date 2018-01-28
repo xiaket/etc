@@ -1,8 +1,12 @@
 auto-reload yes
 cleanup-on-quit yes
 
+browser open -a /Applications/Safari.app %u
+
 bind-key k up
 bind-key j down
+bind-key H home
+bind-key G end
 
 keep-articles-days 365
 
