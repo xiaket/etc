@@ -1,25 +1,37 @@
-import atexit
-import os
 import rlcompleter
 import sys
 
-if sys.version_info[0] == 2:
+try:
     import gnureadline as readline
-else:
-    import readline
+    has_readline = True
+except ImportError:
+    try:
+        import readline
+        has_readline = True
+    except ImportError:
+        has_readline = False
 
 
-HISTORYPATH = os.path.expanduser("~/.pyhistory")
-if not os.path.isfile(HISTORYPATH):
-    open(HISTORYPATH, 'w').close()
-readline.parse_and_bind('tab:complete')
+if has_readline:
+    import atexit
+    import os
 
+    HISTORYPATH = os.path.expanduser("~/.pyhistory")
+    if not os.path.isfile(HISTORYPATH):
+        open(HISTORYPATH, 'w').close()
+    readline.parse_and_bind('tab:complete')
 
-def save_history(HISTORYPATH):
-    import readline
-    readline.write_history_file(HISTORYPATH)
+    def save_history(history_file):
+        try:
+            import gnureadline as readline
+        except ImportError:
+            import readline
+        readline.write_history_file(history_file)
 
-readline.read_history_file(HISTORYPATH)
+    readline.read_history_file(HISTORYPATH)
+    atexit.register(save_history, HISTORYPATH)
+
+    del atexit, os, readline, has_readline, save_history, HISTORYPATH
 
 class ColorChanger(object):
     def __init__(self):
@@ -40,5 +52,4 @@ sys.displayhook = ColorChanger()
 sys.ps1 = '> '
 sys.ps2 = '  '
 
-atexit.register(save_history, HISTORYPATH)
-del os, atexit, readline, rlcompleter, save_history, HISTORYPATH, ColorChanger, sys
+del rlcompleter, ColorChanger, sys
