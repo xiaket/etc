@@ -78,6 +78,8 @@ endfunction
 " encoding and formats.
 set fileencodings=utf-8,gbk,ucs-bom,cp936
 set fileformats=unix,dos,mac
+" Do not change eol setting of the current file
+set nofixendofline
 " Do not redraw while running macros (much faster).
 set lazyredraw
 " Search related.
