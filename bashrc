@@ -48,7 +48,8 @@ xiaketDIR=~/.xiaket
 bashrcdir=$xiaketDIR"/etc"
 altdir=$xiaketDIR"/alt"
 
-export PATH="$altdir/bin:~/.xiaket/etc/bin:~/Library/Python/2.7/bin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/sbin:/usr/local/opt/coreutils/bin"
+# PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
+export PATH="$altdir/bin:~/.xiaket/etc/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin/usr/sbin:~/Library/Python/2.7/bin:/usr/local/opt/coreutils/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 ############
