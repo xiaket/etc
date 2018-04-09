@@ -12,14 +12,11 @@ http://feeds.feedburner.com/AwsDevopsBlog
 http://feeds.feedburner.com/AWSSecurity
 https://aws.amazon.com/blogs/mt/feed/
 https://developers.500px.com/feed
-http://tech.grammarly.com/blog/rss.xml
 http://engineering.ifttt.com/feed.xml
 https://githubengineering.com/atom.xml
-https://engineering.quora.com/rss
 http://www.paypal-engineering.com/feed/
 https://engineering.linkedin.com/blog.rss
 https://smalldata.tech/blog/rss
-https://www.haproxy.com/blog/feed/
 http://blog.codingnow.com/atom.xml
 https://blog.golang.org/feed.atom
 https://salttiger.com/feed/
@@ -39,3 +36,4 @@ https://aws.amazon.com/new/feed/
 https://medium.com/feed/chronicle-blog
 http://www.cnblogs.com/index-html/rss
 https://eng.lyft.com/feed
+http://akaptur.com/atom.xml
