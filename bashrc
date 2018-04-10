@@ -45,7 +45,7 @@ else
 fi
 
 xiaketDIR=~/.xiaket
-bashrcdir=$xiaketDIR"/etc"
+etcdir=$xiaketDIR"/etc"
 altdir=$xiaketDIR"/alt"
 
 # PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
@@ -57,12 +57,12 @@ export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 #############
 
 # For things that can be used as alias
-. $bashrcdir/alias
+. "$etcdir"/alias
 
 # For things that can only be done as a bash function.
-if [ -f $bashrcdir/bash_functions ]
+if [ -f "$etcdir"/bash_functions ]
 then
-    . $bashrcdir/bash_functions
+    . "$etcdir"/bash_functions
 fi
 
 # For bash completion.
@@ -108,10 +108,12 @@ export PROMPT_COMMAND="history -a; history -n"
 #########################
 
 # Setup Python PATH, so our python libraries would be portable.
-export PYTHONPATH="$PYTHONPATH:${xiaketDIR}/python/"
+export PYTHONPATH="$PYTHONPATH:${etcdir}/python/"
 export PYTHONSTARTUP=~/.pythonrc
 export PYTHONDONTWRITEBYTECODE="False"
 export GOPATH="${xiaketDIR}/go"
+
+# user nvim for everything
 export SVN_EDITOR=nvim
 export GIT_EDITOR=nvim
 export VISUAL=nvim

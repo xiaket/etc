@@ -4,8 +4,8 @@ sys.exit()
 endsnippet
 
 snippet interact
-import code
-code.interact(local=locals())
+from xiaket.interact import shell
+shell(globals(), locals())
 endsnippet
 
 snippet datetime
