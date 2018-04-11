@@ -6,6 +6,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'bling/vim-airline'
 Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
+Plug 'davidhalter/jedi-vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'ervandew/supertab'
 Plug 'fatih/vim-go'
@@ -195,3 +196,8 @@ cnoremap <C-N> <Down>
 
 " auto save on bufleave and lose focus.
 autocmd BufLeave,FocusLost * silent! wall
+
+" jedi-vim configurations
+let g:mapleader = ","
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#use_tabs_not_buffers = 1
