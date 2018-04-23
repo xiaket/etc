@@ -65,6 +65,8 @@ then
     . "$etcdir"/bash_functions
 fi
 
+export PROMPT_COMMAND='history -a; history -n; PS1="${BLUE}["$(mypwd)"]${RESET}"'
+
 # For bash completion.
 . $COMPLETION_PATH
 
@@ -75,14 +77,6 @@ then
     export LANG=en_US.UTF-8
 else
     export LANG=zh_CN.UTF-8
-fi
-
-# use ascii colors to show whether we are root.
-if [ $UID -eq 0 ]
-then
-    export PS1="[\[${RED}\]\u@\[$CYAN\]\h \[$BLUE\]\w\[$RESET\]]"
-else
-    export PS1="[\[${ORANGE}\]\u\[$CYAN\]@\h \[$BLUE\]\w\[$RESET\]]"
 fi
 
 # for fzf
@@ -101,7 +95,6 @@ export HISTSIZE=99999
 export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
 # append to the history file, don't overwrite it
 shopt -s histappend
-export PROMPT_COMMAND="history -a; history -n"
 
 #########################
 # environment variables #
