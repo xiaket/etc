@@ -70,7 +70,7 @@ then
     . "$etcdir"/bash_functions
 fi
 
-export PROMPT_COMMAND='history -a; history -n; PS1="${BLUE}["$(mypwd)"]${RESET}"'
+export PROMPT_COMMAND='if [ $? -eq 0 ]; then col=${GREEN}; else col=${RED}; fi; history -a; history -n; PS1="${col}[${BLUE}"$(mypwd)"${col}]${RESET}"'
 
 # For bash completion.
 . $COMPLETION_PATH
