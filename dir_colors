@@ -153,17 +153,17 @@ EXEC   00;38;5;046      # a little brighter than usual.
 .conf            00;38;5;015
 
 # "unimportant" files as logs and backups (base01)
-.bak        00;38;5;235
-.aux        00;38;5;235
-*~          00;38;5;235
-*#          00;38;5;235
-.part       00;38;5;235
-.incomplete 00;38;5;235
-.swp        00;38;5;235
-.tmp        00;38;5;235
-.temp       00;38;5;235
-.o          00;38;5;235
-.pyc        00;38;5;235
+.bak        00;38;5;236
+.aux        00;38;5;236
+*~          00;38;5;236
+*#          00;38;5;236
+.part       00;38;5;236
+.incomplete 00;38;5;236
+.swp        00;38;5;236
+.tmp        00;38;5;236
+.temp       00;38;5;236
+.o          00;38;5;236
+.pyc        00;38;5;236
 
 # Audio formats (orange)
 .aac    00;38;5;090
