@@ -4,6 +4,11 @@
 [ -z "$PS1" ] && return
 umask 0022
 
+# Global settings.
+
+# Prepend cd to directory names automatically
+shopt -s autocd 2> /dev/null
+
 # explicitly enable term colors.
 export TERM="xterm-256color"
 
@@ -49,7 +54,7 @@ etcdir=$xiaketDIR"/etc"
 altdir=$xiaketDIR"/alt"
 
 # PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
-export PATH="$altdir/bin:~/.xiaket/etc/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin/usr/sbin:~/Library/Python/2.7/bin:/usr/local/opt/coreutils/bin"
+export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin/usr/sbin:~/Library/Python/2.7/bin:/usr/local/opt/coreutils/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 
 ############
