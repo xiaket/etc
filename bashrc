@@ -47,6 +47,9 @@ else
     CYAN=$(tput setaf 37)
     GREEN=$(tput setaf 64)
     RESET=$(tput sgr0)
+    CRIMSON=$(tput setaf 124)
+    AQUA=$(tput setaf 33)
+    LIME=$(tput setaf 34)
 fi
 
 xiaketDIR=~/.xiaket
@@ -70,7 +73,7 @@ then
     . "$etcdir"/bash_functions
 fi
 
-export PROMPT_COMMAND='if [ $? -eq 0 ]; then col=${GREEN}; else col=${RED}; fi; history -a; history -n; PS1="${col}[${BLUE}"$(mypwd)"${col}]${RESET}"'
+export PROMPT_COMMAND='if [ $? -eq 0 ]; then col=${LIME}; else col=${CRIMSON}; fi; history -a; history -n; PS1="${col}[${AQUA}"$(mypwd)"${col}]${RESET}"'
 
 # For bash completion.
 . $COMPLETION_PATH
