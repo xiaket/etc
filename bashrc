@@ -73,7 +73,24 @@ then
     . "$etcdir"/bash_functions
 fi
 
-export PROMPT_COMMAND='if [ $? -eq 0 ]; then col=${LIME}; else col=${CRIMSON}; fi; history -a; history -n; PS1="${col}[${AQUA}"$(mypwd)"${col}]${RESET}"'
+function prompt {
+  if [ $? -eq 0 ]
+  then
+    col=${LIME}
+  else
+    col=${CRIMSON}
+  fi
+  history -a; history -n;
+  base="${col}[${AQUA}"$(mypwd)"${col}]${RESET}"
+  if [ -n "${VIRTUAL_ENV}" ] && [[ "$PATH" == "${VIRTUAL_ENV}"* ]]
+  then
+    PS1="${ORANGE}^${RESET}${base}"
+  else
+    PS1="${base}"
+  fi
+}
+
+export PROMPT_COMMAND='prompt'
 
 # For bash completion.
 . $COMPLETION_PATH
