@@ -42,10 +42,12 @@ class ColorChanger(object):
         import sys
         if value != None:
             print(value)
-        choice = random.randint(90, 98)
+        choices = [31, 32, 33, 34, 35, 36, 37, 92, 93, 96]
+        choice = random.choice(choices)
         sys.ps1 = '\001\033[' + str(choice) + 'm\002>\001\033[0m\002 '
         sys.ps2 = '  '
         del random, sys
+
 
 sys.displayhook = ColorChanger()
 
