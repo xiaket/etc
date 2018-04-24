@@ -138,10 +138,10 @@ function prompt {
   fi
   history -a; history -n;
   PS1="${col}[${AQUA}"$(mypwd)
-  gitst=$(prompt_git)
+  gitst=$(prompt_git ${ORANGE} ${YELLOW})
   if [ -n "$gitst" ]
   then
-    PS1+=" ${ORANGE}${gitst}"
+    PS1+=" ${gitst}"
   fi
   if [ -n "${VIRTUAL_ENV}" ] && [[ "$PATH" == "${VIRTUAL_ENV}"* ]]
   then
