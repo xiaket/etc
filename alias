@@ -40,6 +40,7 @@ alias gti='git'
 
 # Acesssibilities
 alias md='mkdir -p'
+alias g='git'
 alias which='type -p'
 alias ..='cd ..'
 alias ...='cd ../..'

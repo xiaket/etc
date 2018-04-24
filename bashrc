@@ -203,6 +203,9 @@ export EDITOR=nvim
 export LS_OPTIONS='--color=always'
 eval `"$COLORS" "$HOME/.xiaket/etc/dir_colors"`
 
+# Don’t clear the screen after quitting a manual page.
+export MANPAGER='less -X';
+
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
