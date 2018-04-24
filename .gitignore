@@ -13,3 +13,5 @@ w3m/w3mcache*
 
 newsboat/cache.*
 newsboat/history.*
+
+ptpython/history
