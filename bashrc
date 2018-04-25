@@ -41,17 +41,17 @@ else
     ADD_KEY="yes"
     HAS_ITERM="yes"
     COMPLETION_PATH=/usr/local/etc/bash_completion
-    YELLOW=$(tput setaf 136)
-    ORANGE=$(tput setaf 166)
-    RED=$(tput setaf 160)
-    MAGENTA=$(tput setaf 125)
-    VIOLET=$(tput setaf 61)
-    BLUE=$(tput setaf 33)
-    CYAN=$(tput setaf 37)
-    GREEN=$(tput setaf 64)
-    RESET=$(tput sgr0)
-    CRIMSON=$(tput setaf 124)
-    LIME=$(tput setaf 34)
+    YELLOW="\[$(tput setaf 136)\]"
+    ORANGE="\[$(tput setaf 166)\]"
+    RED="\[$(tput setaf 160)\]"
+    MAGENTA="\[$(tput setaf 125)\]"
+    VIOLET="\[$(tput setaf 61)\]"
+    BLUE="\[$(tput setaf 33)\]"
+    CYAN="\[$(tput setaf 37)\]"
+    GREEN="\[$(tput setaf 64)\]"
+    RESET="\[$(tput sgr0)\]"
+    CRIMSON="\[$(tput setaf 124)\]"
+    LIME="\[$(tput setaf 34)\]"
 fi
 
 xiaketDIR=~/.xiaket
