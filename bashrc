@@ -51,7 +51,6 @@ else
     GREEN=$(tput setaf 64)
     RESET=$(tput sgr0)
     CRIMSON=$(tput setaf 124)
-    AQUA=$(tput setaf 33)
     LIME=$(tput setaf 34)
 fi
 
@@ -137,7 +136,7 @@ function prompt {
     col=${CRIMSON}
   fi
   history -a; history -n;
-  PS1="${col}[${AQUA}"$(mypwd)
+  PS1="${col}[${BLUE}"$(mypwd)
   gitst=$(prompt_git ${ORANGE} ${YELLOW})
   if [ -n "$gitst" ]
   then
