@@ -78,6 +78,8 @@ fi
 
 _xiaket_prompt_git() {
   # copied from https://github.com/mathiasbynens/dotfiles/blob/master/.bash_prompt
+  # I had tried to implement this in golang using goroutine but there's no
+  # observable performance boost.
   local s=''
   local branchName=''
 
