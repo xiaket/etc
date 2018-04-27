@@ -76,59 +76,55 @@ then
 fi
 
 
-prompt_git() {
+_xiaket_prompt_git() {
   # copied from https://github.com/mathiasbynens/dotfiles/blob/master/.bash_prompt
-	local s='';
-	local branchName='';
+  local s=''
+  local branchName=''
 
-	# Check if the current directory is in a Git repository.
-	if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ]; then
+  if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ]; then
+    if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
+      # Ensure the index is up to date.
+      git update-index --really-refresh -q &>/dev/null;
 
-		# check if the current directory is in .git before running git checks
-		if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
+      # Check for uncommitted changes in the index.
+      if ! $(git diff --quiet --ignore-submodules --cached); then
+        s+='+'
+      fi;
 
-			# Ensure the index is up to date.
-			git update-index --really-refresh -q &>/dev/null;
+      # Check for unstaged changes.
+      if ! $(git diff-files --quiet --ignore-submodules --); then
+        s+='!'
+      fi;
 
-			# Check for uncommitted changes in the index.
-			if ! $(git diff --quiet --ignore-submodules --cached); then
-				s+='+';
-			fi;
+      # Check for untracked files.
+      if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+        s+='?'
+      fi;
 
-			# Check for unstaged changes.
-			if ! $(git diff-files --quiet --ignore-submodules --); then
-				s+='!';
-			fi;
+      # Check for stashed files.
+      if $(git rev-parse --verify refs/stash &>/dev/null); then
+        s+='$'
+      fi;
 
-			# Check for untracked files.
-			if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-				s+='?';
-			fi;
+    fi;
 
-			# Check for stashed files.
-			if $(git rev-parse --verify refs/stash &>/dev/null); then
-				s+='$';
-			fi;
+    # Get the short symbolic ref.
+    # If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
+    # Otherwise, just give up.
+    branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
+      git rev-parse --short HEAD 2> /dev/null || \
+      echo '(unknown)')";
 
-		fi;
+    [ -n "${s}" ] && s=" [${s}]";
 
-		# Get the short symbolic ref.
-		# If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
-		# Otherwise, just give up.
-		branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
-			git rev-parse --short HEAD 2> /dev/null || \
-			echo '(unknown)')";
-
-		[ -n "${s}" ] && s=" [${s}]";
-
-		echo -e "${1}${branchName}${2}${s}";
-	else
-		return;
-	fi;
+    echo -e "${1}${branchName}${2}${s}";
+  else
+    return;
+  fi;
 }
 
 
-function prompt {
+function _xiaket_prompt {
   if [ $? -eq 0 ]
   then
     col=${LIME}
@@ -137,11 +133,8 @@ function prompt {
   fi
   history -a; history -n;
   PS1="${col}[${BLUE}"$(mypwd ${MAGENTA})
-  gitst=$(prompt_git ${ORANGE} ${YELLOW})
-  if [ -n "$gitst" ]
-  then
-    PS1+=" ${gitst}"
-  fi
+  gitst=$(_xiaket_prompt_git ${ORANGE} ${YELLOW})
+  [ -n "$gitst" ] && PS1+=" ${gitst}"
   if [ -n "${VIRTUAL_ENV}" ] && [[ "$PATH" == "${VIRTUAL_ENV}"* ]]
   then
     PS1="${ORANGE}^${RESET}${PS1}"
@@ -149,7 +142,7 @@ function prompt {
   PS1+="${col}]${RESET}"
 }
 
-export PROMPT_COMMAND='prompt'
+export PROMPT_COMMAND='_xiaket_prompt'
 
 # For bash completion.
 . $COMPLETION_PATH
