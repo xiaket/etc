@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+	color := os.Args[1]
 	dir, _ := os.Getwd()
 	dir = strings.Replace(dir, os.Getenv("HOME"), "~", 1)
 	paths := strings.Split(dir, "/")
@@ -22,7 +23,7 @@ func main() {
 			}
 		}
 	}
-	short_name := strings.Join(short_paths, "/")
-
-	fmt.Println(short_name)
+	short_name := strings.Join(short_paths[:len(paths)-1], "/")
+	short_name += "/" + color + short_paths[len(paths)-1]
+	fmt.Printf(short_name)
 }

@@ -136,7 +136,7 @@ function prompt {
     col=${CRIMSON}
   fi
   history -a; history -n;
-  PS1="${col}[${BLUE}"$(mypwd)
+  PS1="${col}[${BLUE}"$(mypwd ${MAGENTA})
   gitst=$(prompt_git ${ORANGE} ${YELLOW})
   if [ -n "$gitst" ]
   then
