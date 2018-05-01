@@ -49,9 +49,10 @@ else
     BLUE="\[$(tput setaf 33)\]"
     CYAN="\[$(tput setaf 37)\]"
     GREEN="\[$(tput setaf 64)\]"
-    RESET="\[$(tput sgr0)\]"
     CRIMSON="\[$(tput setaf 124)\]"
     LIME="\[$(tput setaf 34)\]"
+    WHITE="\[$(tput setaf 15)\]"
+    RESET="\[$(tput sgr0)\]"
 fi
 
 xiaketDIR=~/.xiaket
@@ -134,9 +135,10 @@ function _xiaket_prompt {
     col=${CRIMSON}
   fi
   history -a; history -n;
-  PS1="${col}[${BLUE}"$(mypwd ${MAGENTA})
+  PS1="${col}[${BLUE}"$(mypwd ${WHITE})
   gitst=$(_xiaket_prompt_git ${ORANGE} ${YELLOW})
   [ -n "$gitst" ] && PS1+=" ${gitst}"
+=======
   if [ -n "${VIRTUAL_ENV}" ] && [[ "$PATH" == "${VIRTUAL_ENV}"* ]]
   then
     PS1="${ORANGE}^${RESET}${PS1}"
