@@ -57,6 +57,7 @@ alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias gc='git commit -vs'
 alias ga='git add'
 alias boat='newsboat'
+alias rerc='. ~/.bashrc'
 alias pipfix='pip install -U prompt_toolkit ptpython neovim'
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
