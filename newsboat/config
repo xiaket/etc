@@ -11,12 +11,14 @@ bind-key G end
 keep-articles-days 365
 
 color background   default   default
-color listnormal   default   default
-color listfocus    black     yellow
-color info         default   black
+color listnormal   color240 default
+color listfocus    white color27
+color info         white   color240
 color article      default   default
+color listnormal_unread color226 default
+color listfocus_unread color226 color27
 
 # highlights
-highlight article "^(Title):.*$" blue default
+highlight article "^(Title):.*$" color27 default
 highlight article "https?://[^ ]+" red default
 highlight article "\\[image\\ [0-9]+\\]" green default
