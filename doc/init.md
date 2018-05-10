@@ -74,6 +74,7 @@ troposphere
 ## go packages:
 
 go get -u github.com/bndw/pick
+go get -u github.com/mgutz/ansi
 
 ## Defaults to write
 

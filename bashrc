@@ -76,57 +76,6 @@ then
     . "$etcdir"/bash_functions
 fi
 
-
-_xiaket_prompt_git() {
-  # copied from https://github.com/mathiasbynens/dotfiles/blob/master/.bash_prompt
-  # I had tried to implement this in golang using goroutine but there's no
-  # observable performance boost.
-  if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") != '0' ]; then
-    return
-  fi
-
-  local s=''
-  if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
-    # Ensure the index is up to date.
-    git update-index --really-refresh -q &>/dev/null;
-
-    # Check for uncommitted changes in the index.
-    if ! $(git diff --quiet --ignore-submodules --cached); then
-      s+='+'
-    fi;
-
-    # Check for unstaged changes.
-    if ! $(git diff-files --quiet --ignore-submodules --); then
-      s+='!'
-    fi;
-
-    # Check for untracked files.
-    if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-      s+='?'
-    fi;
-
-    # Check for stashed files.
-    if $(git rev-parse --verify refs/stash &>/dev/null); then
-      s+='$'
-    fi;
-  fi;
-
-  # Get the short symbolic ref.
-  # If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
-  # Otherwise, just give up.
-  branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
-    git rev-parse --short HEAD 2> /dev/null || \
-    echo '(unknown)')";
-
-  # use a single char for the branch prefix.
-  branchName="$(echo $branchName | sed 's/feature/𝞿/g; s/bugfix/𝛃/g')"
-
-  [ -n "${s}" ] && s=" [${s}]";
-
-  echo -e "${1}${branchName}${2}${s}";
-}
-
-
 function _xiaket_prompt {
   if [ $? -eq 0 ]
   then
@@ -134,15 +83,13 @@ function _xiaket_prompt {
   else
     col=${CRIMSON}
   fi
-  history -a; history -n;
-  PS1="${col}[${BLUE}"$(mypwd ${WHITE})
-  gitst=$(_xiaket_prompt_git ${ORANGE} ${YELLOW})
-  [ -n "$gitst" ] && PS1+=" ${gitst}"
+  PS1="${col}[$(my_prompt)"
   if [ -n "${VIRTUAL_ENV}" ] && [[ "$PATH" == "${VIRTUAL_ENV}"* ]]
   then
     PS1="${ORANGE}^${RESET}${PS1}"
   fi
   PS1+="${col}]${RESET}"
+  history -a; history -n;
 }
 
 export PROMPT_COMMAND='_xiaket_prompt'
