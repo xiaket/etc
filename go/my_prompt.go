@@ -23,7 +23,25 @@ func ColorIt(name string) func(string) string {
 	if color == "" {
 		color = default_colors[name]
 	}
-	return ansi.ColorFunc(color)
+
+	nested := func(msg string) string {
+		return ansi.ColorFunc("reset")(ansi.ColorFunc(color)(msg))
+	}
+	return nested
+}
+
+func GitSymbol(name string) string {
+	var default_symbols = map[string]string{
+		"GIT_UNCOMMITED": "+",
+		"GIT_UNSTAGED":   "!",
+		"GIT_UNTRACKED":  "?",
+		"GIT_STASHED":    "\\$",
+	}
+	symbol := os.Getenv(name)
+	if symbol == "" {
+		symbol = default_symbols[name]
+	}
+	return symbol
 }
 
 // GitSearch will tell us whether we are in a git root and in a git tree.
@@ -42,6 +60,9 @@ func GitSearch() (bool, bool) {
 	return false, false
 }
 
+// Cwd would output the current path, and reduce the length of the output.
+// Example:
+// /usr/local/lib/python2.7/site-packages -> /us/lo/li/py/site-packages
 func Cwd() string {
 	ShortPath := ColorIt("COLOR_SHORTPATH")
 	CurrentPath := ColorIt("COLOR_CURRENTPATH")
@@ -72,6 +93,7 @@ func Cwd() string {
 	return short_name
 }
 
+// BranchName will give the name of the branch.
 func BranchName() string {
 	var out bytes.Buffer
 	cmd := exec.Command("git", "symbolic-ref", "--quiet", "--short", "HEAD")
@@ -88,6 +110,8 @@ func BranchName() string {
 	}
 }
 
+// PrettyBranchName will replace repetitive names in the branch and
+// truncate longer names.
 func PrettyBranchName(name string) string {
 	const truncate = 15
 	name = strings.Trim(name, "\n")
@@ -100,6 +124,7 @@ func PrettyBranchName(name string) string {
 	}
 }
 
+// GitSt will output the current git status.
 func GitSt() string {
 	// Commands copied from:
 	// https://github.com/mathiasbynens/dotfiles/blob/master/.bash_prompt
@@ -111,28 +136,27 @@ func GitSt() string {
 
 	err := exec.Command("git", "diff", "--quiet", "--ignore-submodules", "--cached").Run()
 	if err != nil {
-		status += "+"
+		status += GitSymbol("GIT_UNCOMMITED")
 	}
 
 	err = exec.Command("git", "diff-files", "--quiet", "--ignore-submodules", "--").Run()
 	if err != nil {
-		status += "!"
+		status += GitSymbol("GIT_UNSTAGED")
 	}
 
 	err = exec.Command("git", "rev-parse", "--verify", "refs/stash").Run()
 	if err == nil {
-		status += "$"
+		status += GitSymbol("GIT_STASHED")
 	}
 
 	output, _ := exec.Command("git", "ls-files", "--others", "--exclude-standard").Output()
 	if len(output) != 0 {
-		status += "?"
+		status += GitSymbol("GIT_UNTRACKED")
 	}
 
 	if len(status) != 0 {
 		status = GitStatus(" " + status)
 	}
-
 	return status
 }
 
