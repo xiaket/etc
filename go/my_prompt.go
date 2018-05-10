@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/mgutz/ansi"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -23,11 +22,13 @@ func ColorIt(name string) func(string) string {
 	if color == "" {
 		color = default_colors[name]
 	}
-
-	nested := func(msg string) string {
-		return ansi.ColorFunc("reset")(ansi.ColorFunc(color)(msg))
+	return func(msg string) string {
+		buf := bytes.NewBufferString("\\[\033[")
+		buf.WriteString("38;5;" + color)
+		buf.WriteRune('m')
+		buf.WriteString("\\]" + msg)
+		return buf.String()
 	}
-	return nested
 }
 
 func GitSymbol(name string) string {
