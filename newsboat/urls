@@ -15,6 +15,7 @@ http://www.jefftk.com/news.rss
 http://www.matrix67.com/blog/feed
 http://www.brendangregg.com/blog/rss.xml
 http://www.cnblogs.com/index-html/rss
+https://alok.github.io/feed.xml
 http://akaptur.com/atom.xml
 http://feeds.feedburner.com/AmazonWebServicesBlog
 http://feeds.feedburner.com/AwsDevopsBlog
@@ -31,7 +32,6 @@ http://www.paypal-engineering.com/feed/
 https://engineering.linkedin.com/blog.rss
 https://smalldata.tech/blog/rss
 https://blog.golang.org/feed.atom
-https://alok.github.io/feed.xml
 https://www.confluent.io/feed/
 http://coolshell.cn/feed
 https://www.commandercoriander.net/index.xml
