@@ -109,7 +109,6 @@ _xiaket_prompt_git() {
     if $(git rev-parse --verify refs/stash &>/dev/null); then
       s+='$'
     fi;
-
   fi;
 
   # Get the short symbolic ref.
@@ -118,6 +117,9 @@ _xiaket_prompt_git() {
   branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
     git rev-parse --short HEAD 2> /dev/null || \
     echo '(unknown)')";
+
+  # use a single char for the branch prefix.
+  branchName="$(echo $branchName | sed 's/feature/𝞿/g; s/bugfix/𝛃/g')"
 
   [ -n "${s}" ] && s=" [${s}]";
 
