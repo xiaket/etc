@@ -1,4 +1,4 @@
-if [ ! "x`uname -s`" = "xLinux" ]
+if [ "x$HAS_MAC" = "xyes" ]
 then
     # GNU rules.
     alias ls='myls'

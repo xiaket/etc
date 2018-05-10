@@ -14,45 +14,17 @@ shopt -s cdspell
 
 # explicitly enable term colors.
 export TERM="xterm-256color"
-
+ 
 if [ "x`uname -s`" = "xLinux" ]
 then
     export MAN_POSIXLY_CORRECT=1
-
+    HAS_MAC="yes"
     # running on a linux virtual machine.
     COLORS=dircolors
-    SED=sed
-    ADD_KEY="yes"
-    HAS_ITERM="no"
-    COMPLETION_PATH=/etc/profile.d/bash_completion.sh
-    YELLOW=$(tput setaf 136)
-    ORANGE=$(tput setaf 166)
-    RED=$(tput setaf 160)
-    MAGENTA=$(tput setaf 125)
-    VIOLET=$(tput setaf 61)
-    BLUE=$(tput setaf 33)
-    CYAN=$(tput setaf 37)
-    GREEN=$(tput setaf 64)
-    RESET=$(tput sgr0)
 else
     # running on a macOS machine.
+    HAS_MAC="no"
     COLORS=gdircolors
-    SED=gsed
-    ADD_KEY="yes"
-    HAS_ITERM="yes"
-    COMPLETION_PATH=/usr/local/etc/bash_completion
-    YELLOW="\[$(tput setaf 136)\]"
-    ORANGE="\[$(tput setaf 166)\]"
-    RED="\[$(tput setaf 160)\]"
-    MAGENTA="\[$(tput setaf 125)\]"
-    VIOLET="\[$(tput setaf 61)\]"
-    BLUE="\[$(tput setaf 33)\]"
-    CYAN="\[$(tput setaf 37)\]"
-    GREEN="\[$(tput setaf 64)\]"
-    CRIMSON="\[$(tput setaf 124)\]"
-    LIME="\[$(tput setaf 34)\]"
-    WHITE="\[$(tput setaf 15)\]"
-    RESET="\[$(tput sgr0)\]"
 fi
 
 xiaketDIR=~/.xiaket
@@ -62,6 +34,7 @@ altdir=$xiaketDIR"/alt"
 # PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
 export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin/usr/sbin:~/Library/Python/2.7/bin:/usr/local/opt/coreutils/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+export LANG=en_US.UTF-8
 
 ############
 # sourcing #
@@ -77,6 +50,10 @@ then
 fi
 
 function _xiaket_prompt {
+  ORANGE="\[$(tput setaf 166)\]"
+  CRIMSON="\[$(tput setaf 124)\]"
+  LIME="\[$(tput setaf 34)\]"
+  RESET="\[$(tput sgr0)\]"
   if [ $? -eq 0 ]
   then
     col=${LIME}
@@ -95,16 +72,8 @@ function _xiaket_prompt {
 export PROMPT_COMMAND='_xiaket_prompt'
 
 # For bash completion.
-. $COMPLETION_PATH
+. "$etcdir"/bash_completion
 
-# If we are logging through tty, set locale to en_US.UTF-8
-TTY=`tty | grep tty -c`
-if [ $TTY == 1 ] || [ "x$OSTYPE" = "xlinux" ]
-then
-    export LANG=en_US.UTF-8
-else
-    export LANG=zh_CN.UTF-8
-fi
 
 # for fzf
 set rtp+=/usr/local/opt/fzf
@@ -166,28 +135,21 @@ function start_agent {
     /usr/bin/ssh-add ~/.ssh/*rsa
 }
 
-if [ ! -d ~/.xiaket/var/tmp ]
-then
-    mkdir -p ~/.xiaket/var/tmp
-fi
-
-if [ "x$ADD_KEY" = "xyes" ]
-then
-    # Source SSH settings, if applicable
-    lockfile -1 ~/.xiaket/var/tmp/ssh.lock
-    if [ -f "${SSH_ENV}" ]; then
-        . "${SSH_ENV}" > /dev/null
-        ps auwxx | grep ${SSH_AGENT_PID} | grep -q ssh-agent$
-        if [ $? -ne 0 ]
-        then
-            rm -f ${SSH_ENV}
-            start_agent
-        fi
-    else
-        start_agent;
+# Source SSH settings, if applicable
+[ ! -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
+lockfile -1 ~/.xiaket/var/tmp/ssh.lock
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    ps ${SSH_AGENT_PID} | grep -q ssh-agent$
+    if [ $? -ne 0 ]
+    then
+        rm -f ${SSH_ENV}
+        start_agent
     fi
-    rm -f ~/.xiaket/var/tmp/ssh.lock
+else
+    start_agent;
 fi
+rm -f ~/.xiaket/var/tmp/ssh.lock
 
 # For Alternative settings
 if [ -f "$altdir/etc/bashrc" ]
