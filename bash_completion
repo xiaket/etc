@@ -41,14 +41,11 @@ fi
 #
 [ -n "$BASH_COMPLETION" ] || BASH_COMPLETION=~/.xiaket/etc/bash_completion
 [ -n "$BASH_COMPLETION_DIR" ] || BASH_COMPLETION_DIR=/usr/local/etc/bash_completion.d
-[ -n "$BASH_COMPLETION_COMPAT_DIR" ] || BASH_COMPLETION_COMPAT_DIR=/usr/local/etc/bash_completion.d
-readonly BASH_COMPLETION BASH_COMPLETION_DIR BASH_COMPLETION_COMPAT_DIR
+readonly BASH_COMPLETION BASH_COMPLETION_DIR
 
 # Set a couple of useful vars
 #
-UNAME=$( uname -s )
-# strip OS type and version under Cygwin (e.g. CYGWIN_NT-5.1 => Cygwin)
-UNAME=${UNAME/CYGWIN_*/Cygwin}
+UNAME=${ARCH}
 
 case ${UNAME} in
     Linux|GNU|GNU/*) USERLAND=GNU ;;
@@ -65,20 +62,9 @@ shopt -s extglob progcomp
 complete -d pushd
 
 # The following section lists completions that are redefined later
-# Do NOT break these over multiple lines.
-#
-# START exclude -- do NOT remove this line
-# bzcmp, bzdiff, bz*grep, bzless, bzmore intentionally not here, see Debian: #455510
-complete -f -X '!*.@(zip|[ejw]ar|exe|pk3|wsz|zargo|xpi|sxw|o[tx]t|od[fgpst]|epub|apk)' unzip zipinfo
-complete -f -X '*.Z' compress
-# zcmp, zdiff, z*grep, zless, zmore intentionally not here, see Debian: #455510
-complete -f -X '!*.@(Z|[gGd]z|t[ag]z)' gunzip zcat unpigz
-complete -f -X '!*.Z' uncompress
-# lzcmp, lzdiff intentionally not here, see Debian: #455510
+complete -f -X '!*.@(zip|[ejw]ar|exe|o[tx]t|od[fgpst]|epub)' unzip
+complete -f -X '!*.@(Z|[gGd]z|t[ag]z)' gunzip zcat
 complete -f -X '*.@(o|so|so.!(conf)|a|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)' vi vim view
-# konqueror not here on purpose, it's more than a web/html browser
-complete -f -X '!*.[rs]pm' rpm2cpio
-# FINISH exclude -- do not remove this line
 
 # start of section containing compspecs that can be handled within bash
 
@@ -812,37 +798,18 @@ _expand()
 }
 
 # This function completes on process IDs.
-# AIX and Solaris ps prefers X/Open syntax.
-[[ $UNAME == SunOS || $UNAME == AIX ]] &&
-_pids()
-{
-    COMPREPLY=( $( compgen -W '$( command ps -efo pid | sed 1d )' -- "$cur" ))
-} ||
 _pids()
 {
     COMPREPLY=( $( compgen -W '$( command ps axo pid= )' -- "$cur" ) )
 }
 
 # This function completes on process group IDs.
-# AIX and SunOS prefer X/Open, all else should be BSD.
-[[ $UNAME == SunOS || $UNAME == AIX ]] &&
-_pgids()
-{
-    COMPREPLY=( $( compgen -W '$( command ps -efo pgid | sed 1d )' -- "$cur" ))
-} ||
 _pgids()
 {
     COMPREPLY=( $( compgen -W '$( command ps axo pgid= )' -- "$cur" ))
 }
 
 # This function completes on process names.
-# AIX and SunOS prefer X/Open, all else should be BSD.
-[[ $UNAME == SunOS || $UNAME == AIX ]] &&
-_pnames()
-{
-    COMPREPLY=( $( compgen -X '<defunct>' -W '$( command ps -efo comm | \
-        sed -e 1d -e "s:.*/::" -e "s/^-//" | sort -u )' -- "$cur" ) )
-} ||
 _pnames()
 {
     # FIXME: completes "[kblockd/0]" to "0". Previously it was completed
@@ -1113,11 +1080,6 @@ _dvd_devices()
 
 # start of section containing completion functions for external programs
 
-# a little help for FreeBSD ports users
-[ $UNAME = FreeBSD ] && complete -W 'index search fetch fetch-list extract \
-    patch configure build install reinstall deinstall clean clean-depends \
-    kernel buildworld' make
-
 # This function provides simple user@host completion
 #
 _user_at_host() {
@@ -1309,64 +1271,7 @@ _known_hosts_real()
     return 0
 } # _known_hosts_real()
 
-complete -F _known_hosts traceroute traceroute6 tracepath tracepath6 ping \
-    ping6 fping fping6 telnet host nslookup rsh rlogin ftp dig mtr \
-    ssh-installkeys showmount
-
-# This meta-cd function observes the CDPATH variable, so that cd additionally
-# completes on directories under those specified in CDPATH.
-#
-_cd()
-{
-    local cur IFS=$'\n' i j k
-    _get_comp_words_by_ref cur
-
-    # try to allow variable completion
-    if [[ "$cur" == ?(\\)\$* ]]; then
-        COMPREPLY=( $( compgen -v -P '$' -- "${cur#?(\\)$}" ) )
-        return 0
-    fi
-
-    _compopt_o_filenames
-
-    # Use standard dir completion if no CDPATH or parameter starts with /,
-    # ./ or ../
-    if [[ -z "${CDPATH:-}" || "$cur" == ?(.)?(.)/* ]]; then
-        _filedir -d
-        return 0
-    fi
-
-    local -r mark_dirs=$(_rl_enabled mark-directories && echo y)
-    local -r mark_symdirs=$(_rl_enabled mark-symlinked-directories && echo y)
-
-    # we have a CDPATH, so loop on its contents
-    for i in ${CDPATH//:/$'\n'}; do
-        # create an array of matched subdirs
-        k="${#COMPREPLY[@]}"
-        for j in $( compgen -d $i/$cur ); do
-            if [[ ( $mark_symdirs && -h $j || $mark_dirs && ! -h $j ) && ! -d ${j#$i/} ]]; then
-                j="${j}/"
-            fi
-            COMPREPLY[k++]=${j#$i/}
-        done
-    done
-
-    _filedir -d
-
-    if [[ ${#COMPREPLY[@]} -eq 1 ]]; then
-        i=${COMPREPLY[0]}
-        if [[ "$i" == "$cur" && $i != "*/" ]]; then
-            COMPREPLY[0]="${i}/"
-        fi
-    fi
-
-    return 0
-}
-if shopt -q cdable_vars; then
-    complete -v -F _cd -o nospace cd
-else
-    complete -F _cd -o nospace cd
-fi
+complete -F _known_hosts traceroute ping telnet host nslookup dig mtr
 
 # a wrapper method for the next one, when the offset is unknown
 _command()
@@ -1465,8 +1370,7 @@ _command_offset()
         fi
     fi
 }
-complete -F _command command do else eval exec ltrace nice nohup \
-    then time xargs
+complete -F _command command do else eval exec nohup then time xargs
 
 _root_command()
 {
@@ -1515,11 +1419,10 @@ _longopt()
 
 
 # makeinfo and texi2dvi are defined elsewhere.
-for i in awk bash bc cat colordiff cp csplit curl cut date df \
-    diff dir du env expand fmt grep head indent ld ldd less ln \
-    ls m4 md5sum mkdir mkfifo mv netstat od paste patch rm sed \
-    seq sha{,1,256,384,512}sum sort split strip tail tee touch \
-    tr uname uniq wc wget who; do
+for i in awk bash bc cat cp curl cut date df diff du grep head less ln ls \
+  md5sum mkdir mkfifo mv netstat patch rm sed seq sha{,1,256,384,512}sum sort \
+  tail tee touch tr uname uniq wc wget who
+do
     have $i && complete -F _longopt -o default $i
 done
 unset i
@@ -1575,39 +1478,17 @@ _filedir_xspec()
     [ ${#toks[@]} -ne 0 ] && _compopt_o_filenames
     COMPREPLY=( "${toks[@]}" )
 }
-list=( $( sed -ne '/^# START exclude/,/^# FINISH exclude/p' "$BASH_COMPLETION" | \
-    # read exclusion compspecs
-    (
-    while read line
-    do
-        # ignore compspecs that are commented out
-        if [ "${line#\#}" != "$line" ]; then continue; fi
-        line=${line%# START exclude*}
-        line=${line%# FINISH exclude*}
-        line=${line##*\'}
-        list=( "${list[@]}" $line )
-    done
-    printf '%s ' "${list[@]}"
-    )
-    ) )
-# remove previous compspecs
-if [ ${#list[@]} -gt 0 ]; then
-    eval complete -r ${list[@]}
-    # install new compspecs
-    eval complete -F _filedir_xspec "${list[@]}"
-fi
+list="unzip gunzip zcat vi vim view"
+eval complete -r ${list[@]}
+# install new compspecs
+eval complete -F _filedir_xspec "${list[@]}"
 unset list
 
-# source completion directory definitions
-if [[ -d $BASH_COMPLETION_COMPAT_DIR && -r $BASH_COMPLETION_COMPAT_DIR && \
-    -x $BASH_COMPLETION_COMPAT_DIR ]]; then
-    for i in aria2c autoconf automake bash-builtins brew bzip2 chsh configure \
-        coreutils crontab dd findutils gzip iftop info lftp lsof make man \
-        net-tools openssl python rsync sh ssh strace tar tcpdump unrar \
-        youtube-dl.bash-completion; do
-        . "$BASH_COMPLETION_COMPAT_DIR/$i"
-    done
-fi
+for app in bash-builtins brew bzip2 configure coreutils dd findutils gzip iftop info lftp lsof make man net-tools openssl python rsync ssh tar tcpdump unrar youtube-dl.bash-completion
+do
+    . "$BASH_COMPLETION_DIR/$app"
+done
+unset app
 
 # source user completion file
 unset -f have

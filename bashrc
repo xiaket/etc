@@ -14,16 +14,15 @@ shopt -s cdspell
 
 # explicitly enable term colors.
 export TERM="xterm-256color"
+export ARCH=`uname -s`
  
-if [ "x`uname -s`" = "xLinux" ]
+if [ "x$ARCH" = "xLinux" ]
 then
     export MAN_POSIXLY_CORRECT=1
-    HAS_MAC="no"
     # running on a linux virtual machine.
     COLORS=dircolors
 else
     # running on a macOS machine.
-    HAS_MAC="yes"
     COLORS=gdircolors
 fi
 
