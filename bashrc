@@ -49,22 +49,17 @@ then
 fi
 
 function _xiaket_prompt {
-  ORANGE="\[$(tput setaf 166)\]"
-  CRIMSON="\[$(tput setaf 124)\]"
-  LIME="\[$(tput setaf 34)\]"
-  RESET="\[$(tput sgr0)\]"
+  ORANGE="\[\033[38;5;166m\]"
+  CRIMSON="\[\033[38;5;124m\]"
+  LIME="\[\033[38;5;34m\]"
+  RESET="\[\033[0m\]"
   if [ $? -eq 0 ]
   then
     col=${LIME}
   else
     col=${CRIMSON}
   fi
-  PS1="${col}[$(my_prompt)"
-  if [ -n "${VIRTUAL_ENV}" ] && [[ "$PATH" == "${VIRTUAL_ENV}"* ]]
-  then
-    PS1="${ORANGE}^${RESET}${PS1}"
-  fi
-  PS1+="${col}]${RESET}"
+  PS1="${col}[$(my_prompt)${col}]${RESET}"
   history -a; history -n;
 }
 

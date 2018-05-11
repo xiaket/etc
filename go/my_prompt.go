@@ -17,6 +17,7 @@ func ColorIt(name string) func(string) string {
 		"COLOR_CURRENTPATH": "33",
 		"COLOR_GITBRANCH":   "166",
 		"COLOR_GITSTATUS":   "136",
+		"COLOR_VENV":        "166",
 	}
 	color := os.Getenv(name)
 	if color == "" {
@@ -31,12 +32,13 @@ func ColorIt(name string) func(string) string {
 	}
 }
 
-func GitSymbol(name string) string {
+func Symbols(name string) string {
 	var default_symbols = map[string]string{
 		"GIT_UNCOMMITED": "+",
 		"GIT_UNSTAGED":   "!",
 		"GIT_UNTRACKED":  "?",
 		"GIT_STASHED":    "\\$",
+		"HAS_VENV":       "^",
 	}
 	symbol := os.Getenv(name)
 	if symbol == "" {
@@ -137,22 +139,22 @@ func GitSt() string {
 
 	err := exec.Command("git", "diff", "--quiet", "--ignore-submodules", "--cached").Run()
 	if err != nil {
-		status += GitSymbol("GIT_UNCOMMITED")
+		status += Symbols("GIT_UNCOMMITED")
 	}
 
 	err = exec.Command("git", "diff-files", "--quiet", "--ignore-submodules", "--").Run()
 	if err != nil {
-		status += GitSymbol("GIT_UNSTAGED")
+		status += Symbols("GIT_UNSTAGED")
 	}
 
 	err = exec.Command("git", "rev-parse", "--verify", "refs/stash").Run()
 	if err == nil {
-		status += GitSymbol("GIT_STASHED")
+		status += Symbols("GIT_STASHED")
 	}
 
 	output, _ := exec.Command("git", "ls-files", "--others", "--exclude-standard").Output()
 	if len(output) != 0 {
-		status += GitSymbol("GIT_UNTRACKED")
+		status += Symbols("GIT_UNTRACKED")
 	}
 
 	if len(status) != 0 {
@@ -161,6 +163,7 @@ func GitSt() string {
 	return status
 }
 
+// GitPrompt will combine GitSt and BranchName and provide git info for prompt.
 func GitPrompt() string {
 	inside_git, inside_tree := GitSearch()
 	if !inside_git {
@@ -175,12 +178,25 @@ func GitPrompt() string {
 	return branchName + GitSt()
 }
 
-func main() {
-	gitPrompt := GitPrompt()
-	pwd := Cwd()
-	if len(gitPrompt) != 0 {
-		fmt.Println(pwd + " " + gitPrompt)
-	} else {
-		fmt.Println(pwd)
+// VenvPrompt will look for virtualenv def in environment.
+func VenvPrompt() string {
+	env_def := os.Getenv("VIRTUAL_ENV")
+	if env_def == "" {
+		return ""
 	}
+	path := os.Getenv("PATH")
+	if !strings.HasPrefix(path, env_def) {
+		return ""
+	}
+	return ColorIt("COLOR_VENV")(Symbols("HAS_VENV"))
+}
+
+func main() {
+	prompt := VenvPrompt()
+	prompt += Cwd()
+	gitPrompt := GitPrompt()
+	if len(gitPrompt) != 0 {
+		prompt += " " + gitPrompt
+	}
+	fmt.Println(prompt)
 }
