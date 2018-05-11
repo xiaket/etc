@@ -53,6 +53,8 @@ function _xiaket_prompt {
   CRIMSON="\[\033[38;5;124m\]"
   LIME="\[\033[38;5;34m\]"
   RESET="\[\033[0m\]"
+  export HAS_VENV="𝑣"
+  export GIT_STASHED="¥"
   if [ $? -eq 0 ]
   then
     col=${LIME}
