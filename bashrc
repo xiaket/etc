@@ -18,12 +18,12 @@ export TERM="xterm-256color"
 if [ "x`uname -s`" = "xLinux" ]
 then
     export MAN_POSIXLY_CORRECT=1
-    HAS_MAC="yes"
+    HAS_MAC="no"
     # running on a linux virtual machine.
     COLORS=dircolors
 else
     # running on a macOS machine.
-    HAS_MAC="no"
+    HAS_MAC="yes"
     COLORS=gdircolors
 fi
 

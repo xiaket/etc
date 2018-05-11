@@ -1603,7 +1603,7 @@ if [[ -d $BASH_COMPLETION_COMPAT_DIR && -r $BASH_COMPLETION_COMPAT_DIR && \
     -x $BASH_COMPLETION_COMPAT_DIR ]]; then
     for i in aria2c autoconf automake bash-builtins brew bzip2 chsh configure \
         coreutils crontab dd findutils gzip iftop info lftp lsof make man \
-        net-tools openssl python rsync sh ssh strace tar tcpdump unrar vagrant \
+        net-tools openssl python rsync sh ssh strace tar tcpdump unrar \
         youtube-dl.bash-completion; do
         . "$BASH_COMPLETION_COMPAT_DIR/$i"
     done
