@@ -18,6 +18,8 @@ func ColorIt(name string) func(string) string {
 		"COLOR_GITBRANCH":   "166",
 		"COLOR_GITSTATUS":   "136",
 		"COLOR_VENV":        "166",
+		"COLOR_LAST_GOOD":   "34",
+		"COLOR_LAST_FAIL":   "124",
 	}
 	color := os.Getenv(name)
 	if color == "" {
@@ -37,8 +39,10 @@ func Symbols(name string) string {
 		"GIT_UNCOMMITED": "+",
 		"GIT_UNSTAGED":   "!",
 		"GIT_UNTRACKED":  "?",
-		"GIT_STASHED":    "\\$",
-		"HAS_VENV":       "^",
+		"GIT_STASHED":    "¥",
+		"HAS_VENV":       "∇",
+		"START_BRACKET":  "{",
+		"END_BRACKET":    "}",
 	}
 	symbol := os.Getenv(name)
 	if symbol == "" {
@@ -192,11 +196,24 @@ func VenvPrompt() string {
 }
 
 func main() {
+	var last_color_name string
+	if len(os.Args) == 1 {
+		last_color_name = "COLOR_LAST_GOOD"
+	} else {
+		if os.Args[1] == "0" {
+			last_color_name = "COLOR_LAST_GOOD"
+		} else {
+			last_color_name = "COLOR_LAST_FAIL"
+		}
+	}
 	prompt := VenvPrompt()
+	prompt += ColorIt(last_color_name)(Symbols("START_BRACKET"))
 	prompt += Cwd()
 	gitPrompt := GitPrompt()
 	if len(gitPrompt) != 0 {
 		prompt += " " + gitPrompt
 	}
+	prompt += ColorIt(last_color_name)(Symbols("END_BRACKET"))
+	prompt += "\\[\033[0m\\]"
 	fmt.Println(prompt)
 }

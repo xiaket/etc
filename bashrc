@@ -49,19 +49,7 @@ then
 fi
 
 function _xiaket_prompt {
-  ORANGE="\[\033[38;5;166m\]"
-  CRIMSON="\[\033[38;5;124m\]"
-  LIME="\[\033[38;5;34m\]"
-  RESET="\[\033[0m\]"
-  export HAS_VENV="𝑣"
-  export GIT_STASHED="¥"
-  if [ $? -eq 0 ]
-  then
-    col=${LIME}
-  else
-    col=${CRIMSON}
-  fi
-  PS1="${col}[$(my_prompt)${col}]${RESET}"
+  PS1="$(my_prompt $?)"
   history -a; history -n;
 }
 
