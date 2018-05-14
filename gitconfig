@@ -3,20 +3,17 @@
     email = kai.xia@shinesolutions.com
 
 [alias]
-    ci = commit
     st = status
     co = checkout
+    p = push -u
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-    pulls = "!f() { git pull --squash -s recursive "$1" master; }; f"
-    g = grep --break --heading --line-number
-    pr = pull --rebase
 
 [core]
     excludesfile = ~/.xiaket/etc/gitignore_global
     pager = cat
     quotepath = false
 [push]
-    default = simple
+    default = current
 [color]
     ui = true
     branch = auto
