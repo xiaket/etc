@@ -55,6 +55,10 @@ func Symbols(name string) string {
 func GitSearch() (bool, bool) {
 	dir, _ := filepath.Abs(".")
 	dir, _ = filepath.EvalSymlinks(dir)
+	if dir == "" {
+		// Current working directory removed
+		return false, false
+	}
 	for dir != "/" {
 		if filepath.Base(dir) == ".git" {
 			return true, false
