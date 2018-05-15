@@ -40,6 +40,7 @@
   "sed delete line with pattern": "sed '/pattern/d' filename",
   "sed replace EOL": "sed ':a;N;$!ba;s/\\n/,/g'",
   "sending data to local statsd": "echo \"deploys.test.kent:1|c\" | nc -u 127.0.0.1 8125 -w 1",
+  "sync a fork": "git remote add upstream https://github.com/user/project.git\ngit fetch upstream\ngit checkout master\ngit merge upstream/master",
   "sync time without ntp": "sudo date -s \"$(curl -sD - google.com | grep '^Date:' | cut -d' ' -f3-6)Z\"",
   "tar extract to folder": "tar -xzf v0.8.0.tar.gz -C /tmp/statsd",
   "tell innodb and myisam": "SHOW TABLE STATUS WHERE Name = 'tablename';",
