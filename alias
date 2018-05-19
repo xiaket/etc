@@ -54,6 +54,7 @@ alias daemon='supervisorctl -c ~/.supervisord.conf'
 alias gc='git commit -vs'
 alias ga='git add'
 alias boat='newsboat'
+alias act='source venv/bin/activate'
 alias rerc='. ~/.bashrc'
 alias pipfix='pip install -U prompt_toolkit ptpython neovim'
 
