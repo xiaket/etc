@@ -126,8 +126,11 @@ func BranchName() string {
 func PrettyBranchName(name string) string {
 	const truncate = 15
 	name = strings.Trim(name, "\n")
-	name = strings.Replace(name, "feature", "𝞿", 1)
-	name = strings.Replace(name, "bugfix", "𝛃", 1)
+	name = strings.Replace(name, "feature/", "𝞿/", 1)
+	// the bugfix name could have many variants.
+	name = strings.Replace(name, "bugfix/", "𝛃/", 1)
+	name = strings.Replace(name, "bug/", "𝛃/", 1)
+	name = strings.Replace(name, "fix/", "𝛃/", 1)
 	if len(name) > truncate {
 		return name[:truncate-3] + "⁁" + name[len(name)-3:]
 	} else {
