@@ -169,7 +169,7 @@ func GitSt() string {
 	}
 
 	if len(status) != 0 {
-		status = GitStatus(" " + status)
+		status = GitStatus(status)
 	}
 	return status
 }
@@ -215,11 +215,11 @@ func main() {
 	}
 	prompt := VenvPrompt()
 	prompt += ColorIt(last_color_name)(Symbols("START_BRACKET"))
-	prompt += Cwd()
 	gitPrompt := GitPrompt()
 	if len(gitPrompt) != 0 {
-		prompt += " " + gitPrompt
+		prompt += gitPrompt + " "
 	}
+	prompt += Cwd()
 	prompt += ColorIt(last_color_name)(Symbols("END_BRACKET"))
 	prompt += "\\[\033[0m\\]"
 	fmt.Println(prompt)
