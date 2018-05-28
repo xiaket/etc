@@ -14,6 +14,7 @@ fzf
 gawk
 gnu-sed
 gnu-tar
+gnu-time
 gnutls
 go
 graphviz
