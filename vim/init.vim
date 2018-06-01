@@ -4,6 +4,7 @@
 " enable vim-plug
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
+Plug 'ambv/black',
 Plug 'bling/vim-airline'
 Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plug 'davidhalter/jedi-vim'
@@ -201,3 +202,6 @@ autocmd BufLeave,FocusLost * silent! wall
 let g:mapleader = ","
 let g:jedi#auto_vim_configuration = 0
 let g:jedi#use_tabs_not_buffers = 1
+
+" configuration for black
+autocmd BufWritePre *.py execute ':Black'

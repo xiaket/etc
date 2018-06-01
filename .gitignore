@@ -1,11 +1,10 @@
 vim/backup
-vim/undo
-vim/plugged
+vim/black
 vim/.netrwhist
-bin.disabled
+vim/plugged
 vim/shada
+vim/undo
 vim/view
-pronto
 
 w3m/history
 w3m/w3mtmp*
