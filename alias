@@ -56,7 +56,7 @@ alias ga='git add'
 alias boat='newsboat'
 alias act='source venv/bin/activate'
 alias rerc='. ~/.bashrc'
-alias pipfix='pip install -U prompt_toolkit ptpython neovim'
+alias pipfix='pip install -U ptpython neovim'
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias randport='python -c "import random; print(random.randint(1025, 32768))"'
