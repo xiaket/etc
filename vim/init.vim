@@ -204,4 +204,5 @@ let g:jedi#auto_vim_configuration = 0
 let g:jedi#use_tabs_not_buffers = 1
 
 " configuration for black
+let g:black_linelength = 80
 autocmd BufWritePre *.py execute ':Black'
