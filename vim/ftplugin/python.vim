@@ -9,7 +9,7 @@ let python_highlight_all=1
 
 " set the color of overlength lines and white space at EOL
 highlight OverLength ctermbg=DarkRed ctermfg=white
-match OverLength /\%80v.*/
+match OverLength /\%81v.*/
 
 " disable preview.
 "setlocal completeopt=menu
