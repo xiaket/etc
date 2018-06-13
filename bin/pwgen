@@ -1,65 +1,53 @@
-#!/usr/bin/env python
-#coding=utf-8
+#!/usr/bin/env python3
 """
-Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+Author:         Kai Xia <xiaket@gmail.com>
 Filename:       pwgen
-Last modified:  2013-06-26 14:45
+Last modified:  2018-06-13 22:54
 
 Description:
-生成可用的密码:
-    1. 每个类型都必须出现一次
-    2. 默认16个字符
-    3. 倾向于数字和小写字母, 不倾向于大写字母和标点符号.
+Generate a password that's easier to type while being secure:
+
+1. Need to have at least one lowercase character, one uppercase character,
+  and one special characters.
+2. Lowercase characters have a higher roll chance than digits/uppercase
+  characters and punctuations.
+3. It will generate 20 password so you can pick a random one.
 """
-import random
-import string
-import sys
+from secrets import choice, randbelow
+from random import shuffle
+from string import ascii_lowercase, ascii_uppercase
 
-
-QUOTATIONS = '<>?,./;\':"{}|[]\\~!@#$%^&*()_+=-'
-LETTERS_LOWER = string.ascii_lowercase
-LETTERS_UPPER = string.ascii_uppercase
-DIGITS = string.digits
+special_lowercase = """`1234567890-=[];',./"""
+special_uppercase = '''~!@#$%^&*()_+{}:"<>?'''
 
 
 def generate_one(length):
-    characters = []
-    characters.append(random.choice(QUOTATIONS))
-    characters.append(random.choice(LETTERS_LOWER))
-    characters.append(random.choice(LETTERS_UPPER))
-    characters.append(random.choice(DIGITS))
-    length -= 4
-    while length > 0:
-        length -= 1
-        roll = random.randint(0, 100)
+    characters = [
+        choice(ascii_lowercase),
+        choice(ascii_uppercase),
+        choice(special_lowercase),
+        choice(special_uppercase),
+    ]
+    for i in range(length - 4):
+        roll = randbelow(101)
         if roll > 95:
-            characters.append(random.choice(QUOTATIONS))
-        elif roll > 70:
-            characters.append(random.choice(LETTERS_UPPER))
-        elif roll > 35:
-            characters.append(random.choice(DIGITS))
+            # 5% chance to add a special uppercase character
+            characters.append(choice(special_uppercase))
+        elif roll > 85:
+            # 10% chance to add a normal uppercase character
+            characters.append(choice(ascii_uppercase))
+        elif roll > 75:
+            # 10% chance to add a special lowercase character
+            characters.append(choice(ascii_uppercase))
         else:
-            characters.append(random.choice(LETTERS_LOWER))
-    random.shuffle(characters)
+            # 75% chance to add a normal lowercase character
+            characters.append(choice(ascii_lowercase))
+    shuffle(characters)
     return "".join(characters)
 
 def main():
-    try:
-        length = int(sys.argv[1])
-        assert length > 8
-    except ValueError:
-        sys.stderr.write("enter an interger as parameter.")
-        sys.exit(1)
-    except AssertionError:
-        sys.stderr.write("password length must be greater than 8")
-        sys.exit(1)
-    except IndexError:
-        length = 16
-
     for i in range(5):
-        for j in range(4):
-            sys.stdout.write(generate_one(length) + " ")
-        sys.stdout.write("\n")
+        print(*[generate_one(16) for j in range(4)], sep=" ")
 
 
 if __name__ == '__main__':
