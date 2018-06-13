@@ -1,10 +1,6 @@
 if [ "x$ARCH" = "xDarwin" ]
 then
     # GNU rules.
-    alias ls='myls'
-    alias ll='gls $LS_OPTIONS -lh'
-    alias la='gls -a'
-    alias l='gls -lF'
     alias rm='grm'
     alias head='ghead'
     alias tail='gtail'
@@ -16,8 +12,6 @@ then
     # BSD fix
     alias sed='gsed'
     alias awk='gawk'
-else
-    alias ls='ls $LS_OPTIONS'
 fi
 
 alias grep='grep --color'

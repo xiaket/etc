@@ -95,7 +95,6 @@ export EDITOR=nvim
 #################
 # accessibility #
 #################
-export LS_OPTIONS='--color=always'
 eval `"$COLORS" "$HOME/.xiaket/etc/dir_colors"`
 
 # Don’t clear the screen after quitting a manual page.
