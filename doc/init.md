@@ -6,8 +6,8 @@ aacgain
 aria2
 bash
 bash-completion
+colordiff
 coreutils
-exercism
 ffmpeg
 findutils
 fzf
@@ -18,16 +18,21 @@ gnu-time
 gnutls
 go
 graphviz
+icu4c
 jq
 mtr
 neovim
-newsbeuter
+newsboat
+openssl
 openvpn
 p7zip
 packer
+pandoc
+pick-pass
 procmail
 python3
 ruby
+saml2aws
 shellcheck
 sqlite
 tig
@@ -77,6 +82,10 @@ troposphere
 go get -u github.com/bndw/pick
 go get -u github.com/mgutz/ansi
 
+## rb packages:
+
+gem install gollum
+
 ## Defaults to write
 
 defaults write com.apple.dashboard mcx-disabled -bool TRUE;killall Dock
@@ -105,7 +114,7 @@ Install Alfred 2 manually since I do not have powerpack for 3.
 ~/.xiaket/etc/pythonrc ~/.pythonrc
 ~/.xiaket/etc/snape.json ~/.snape.json
 ~/.xiaket/etc/vim -> ~/.vim
-~/.xiaket/etc/vim -> ~/.config/nvim 
+~/.xiaket/etc/vim -> ~/.config/nvim
 ~/.xiaket/etc/vim/init.vim -> ~/.vimrc
 ~/.xiaket/shared/bitbucket -> ~/.BITBUCKET
 ~/.xiaket/shared/github -> ~/.GITHUB
