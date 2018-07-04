@@ -1,6 +1,7 @@
 gm (){
+  mod="$1"
   # goto module directory
-  module_path=`python -c "import $1;print($1.__file__.rsplit('/', 1)[0])"`
+  module_path=`python3 -c "import $mod;print($1.__file__.rsplit('/', 1)[0])" 2>/dev/null` || module_path=`python2 -c "import $mod;print($1.__file__.rsplit('/', 1)[0])"`
   cd $module_path
 }
 
