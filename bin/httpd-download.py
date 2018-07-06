@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding=utf-8
 """
-Author:         Xia Kai <xiaket@corp.netease.com/xiaket@gmail.com>
+Author:         Kai Xia <xiaket@gmail.com>
 Filename:       httpd-download.py
 Type:           httpd that support resume.
 Last modified:  2013-09-13 10:38
