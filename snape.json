@@ -1,51 +1,198 @@
 {
-  "UNIX time to datetime": "from datetime import datetime\ndatetime.fromtimestamp(1409638930)",
-  "Ubuntu add normal user": "useradd -m -U -s /bin/bash $username",
-  "add submodule": "git submodule add ~/submd/repos/lib1.git libs/lib1",
-  "ansible keep remote files": "export ANSIBLE_KEEP_REMOTE_FILES=1",
-  "awk average columns": "awk '{ total += $1; count++} END {print total/count}' filename",
-  "awk delete line with pattern": "echo $line\n/websites/webapps/Auski_Test/Auski_Test_log\ncat /etc/fstab | awk -v l=$line '{if($1!=l) print $0}'",
-  "awk print line if field not starts with": "awk '$5 !~ /^127.0.0.1/'",
-  "awk standard deviation": "awk '{x+=$0;y+=$0^2}END{print sqrt(y/NR-(x/NR)^2)}' filename",
-  "awk sum columns": "awk '{ total += $1; count++} END {print total}' filename",
-  "aws ami query": "aws ec2 describe-images --image-id ami-23456789",
-  "bash get script directory": "CURRENT_DIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"",
-  "convert git commit to patch": "git format-patch -1 <sha>   # This will generate a patch file\ngit apply --stat file.patch # show apply patch stats, will not change the codebase\ngit am < file.patch         # Apply patch as a commit",
-  "convert pfx to normal ssl certificates": "openssl pkcs12 -in domain.pfx -clcerts -nokeys -out domain.cer\nopenssl pkcs12 -in domain.pfx -nocerts -nodes  -out domain.key\nopenssl pkcs12 -in domain.pfx -out domain.crt -nodes -nokeys -cacerts",
-  "debug SSL problem": "openssl s_client -connect www.test.com:443 -prexit",
-  "decimal to hex": "hex(dec)[2:]",
-  "dpkg show package files": "dpkg-query -L lolcat",
-  "echo to stderr": ">&2 echo \"error\"",
-  "extract rpm": "rpm2cpio somefile.rpm | cpio -idmv",
-  "ffmpeg fix video": "ffmpeg -err_detect ignore_err -i video.mkv -c copy video_fixed.mkv",
-  "ffmpeg transcode video for iPhone": "ffmpeg -ss 1:23:45 -i somevideo.mp4 -s qvga -b:v 384k -c:v mpeg4 -r 23.976 -acodec libfaac -ac 2 -ar 44100 -an -crf 22 -deinterlace -fs 200000000 output.mp4",
-  "find largest files in git repo": "git rev-list --objects --all | grep \"$(git verify-pack -v .git/objects/pack/*.idx | sort -k 3 -n | tail -10 | awk '{print$1}')\"",
-  "fix email in commits": "#!/bin/sh\n\ngit filter-branch --env-filter '\nOLD_EMAIL=\"kai.xia@shinesolutions.com\"\nCORRECT_NAME=\"Kai Xia\"\nCORRECT_EMAIL=\"xiaket@gmail.com\"\nif [ \"$GIT_COMMITTER_EMAIL\" = \"$OLD_EMAIL\" ]\nthen\n    export GIT_COMMITTER_NAME=\"$CORRECT_NAME\"\n    export GIT_COMMITTER_EMAIL=\"$CORRECT_EMAIL\"\nfi\nif [ \"$GIT_AUTHOR_EMAIL\" = \"$OLD_EMAIL\" ]\nthen\n    export GIT_AUTHOR_NAME=\"$CORRECT_NAME\"\n    export GIT_AUTHOR_EMAIL=\"$CORRECT_EMAIL\"\nfi\n' --tag-name-filter cat -- --branches --tags",
-  "get local ipaddr": "def get_ipaddr(host=\"www.163.com\"):\n    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\n    try:\n        udp_socket.connect((host, 9))\n        ipaddress = udp_socket.getsockname()[0]\n    except socket.error:\n        raise\n    finally:\n        del udp_socket\n        return ipaddress\n",
-  "git diff local and server": "git diff origin/master master",
-  "git remove remote branch": "git push origin --delete <branch name>",
-  "git setup user and email": "git config user.email \"xiaket@gmail.com\"\ngit config user.name \"Kai Xia\"",
-  "increase inotify watchers": "echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p",
-  "linux dir in Windows": "C:\\Users\\kentx\\AppData\\Local\\lxss\\home\\xiaket",
-  "list all submodules": "git submodule foreach git pull origin master",
-  "load python code from file without import": "synctaginfo = imp.new_module('synctaginfo')\nexec content in synctaginfo.__dict__\ntaginfo = synctaginfo.synctaginfo",
-  "private network address space": "        10.0.0.0        -   10.255.255.255\n        172.16.0.0      -   172.31.255.255\n        192.168.0.0     -   192.168.255.255",
-  "python post json": "import requests, json\nurl = 'http://127.0.0.1:27182/api/account'\nheaders = {'Content-type': 'application/json', 'Accept': 'text/plain'}\ndata = {'name': 1, 'param': 2}\nresponse = requests.post(url, data=json.dumps(data), headers=headers}",
-  "python run overrided method from superclass": "getattr(super(self.__class, self), sys._getframe().f_code.co_name)()",
-  "requests disable logging": "logging.getLogger('requests').setLevel(logging.WARNING)",
-  "revert last git commit": "git reset --soft HEAD~",
-  "rocketchat change role": "use rocketchat\ndb.users.update({'username': 'somename'},{$set: {'roles': ['user']}})",
-  "run complex command directly through ssh using base64": "import base64\nbase64.b64encode(\"filename=`ls /websites/webapps/somesite/logs/gc.* -1 | tail -n 1`; start=`grep -n 'Full GC' $filename | grep -v 'Ergon' |cut -d ':' -f1 | python -c 'import sys; ns= [int(n) for n in sys.stdin.read().splitlines()]; print [ns[i] for i in xrange(len(ns)-1) if ns[i] + 5 > ns[i+1]][-1]'`; end=$((start+5)); echo $filename; sed -n $start,${end}p $filename\")\nZmlsZW5hbWU9YGxzIC93ZWJzaXRlcy93ZWJhcHBzL2Nya19zdXJ2ZXlfbGl2ZS9sb2dzL2djLiogLTEgfCB0YWlsIC1uIDFgOyBzdGFydD1gZ3JlcCAtbiAnRnVsbCBHQycgJGZpbGVuYW1lIHwgZ3JlcCAtdiAnRXJnb24nIHxjdXQgLWQgJzonIC1mMSB8IHB5dGhvbiAtYyAnaW1wb3J0IHN5czsgbnM9IFtpbnQobikgZm9yIG4gaW4gc3lzLnN0ZGluLnJlYWQoKS5zcGxpdGxpbmVzKCldOyBwcmludCBbbnNbaV0gZm9yIGkgaW4geHJhbmdlKGxlbihucyktMSkgaWYgbnNbaV0gKyA1ID4gbnNbaSsxXV1bLTFdJ2A7IGVuZD0kKChzdGFydCs1KSk7IGVjaG8gJGZpbGVuYW1lOyBzZWQgLW4gJHN0YXJ0LCR7ZW5kfXAgJGZpbGVuYW1l\n\nssh someserver 'echo \"ZmlsZW5hbWU9YGxzIC93ZWJzaXRlcy93ZWJhcHBzL2Nya19zdXJ2ZXlfbGl2ZS9sb2dzL2djLiogLTEgfCB0YWlsIC1uIDFgOyBzdGFydD1gZ3JlcCAtbiAnRnVsbCBHQycgJGZpbGVuYW1lIHwgZ3JlcCAtdiAnRXJnb24nIHxjdXQgLWQgJzonIC1mMSB8IHB5dGhvbiAtYyAnaW1wb3J0IHN5czsgbnM9IFtpbnQobikgZm9yIG4gaW4gc3lzLnN0ZGluLnJlYWQoKS5zcGxpdGxpbmVzKCldOyBwcmludCBbbnNbaV0gZm9yIGkgaW4geHJhbmdlKGxlbihucyktMSkgaWYgbnNbaV0gKyA1ID4gbnNbaSsxXV1bLTFdJ2A7IGVuZD0kKChzdGFydCs1KSk7IGVjaG8gJGZpbGVuYW1lOyBzZWQgLW4gJHN0YXJ0LCR7ZW5kfXAgJGZpbGVuYW1l\" | base64 -d | bash'",
-  "scp using tar": "tar -C 2013 -cf - ./ | ssh 172.17.4.210 tar -C /websites/webapps/deploy/backup/mission_control_histories/2013 -xf -",
-  "sed delete line with pattern": "sed '/pattern/d' filename",
-  "sed replace EOL": "sed ':a;N;$!ba;s/\\n/,/g'",
-  "sending data to local statsd": "echo \"deploys.test.kent:1|c\" | nc -u 127.0.0.1 8125 -w 1",
-  "sync a fork": "git remote add upstream https://github.com/user/project.git\ngit fetch upstream\ngit checkout master\ngit merge upstream/master",
-  "sync time without ntp": "sudo date -s \"$(curl -sD - google.com | grep '^Date:' | cut -d' ' -f3-6)Z\"",
-  "tar extract to folder": "tar -xzf v0.8.0.tar.gz -C /tmp/statsd",
-  "tell innodb and myisam": "SHOW TABLE STATUS WHERE Name = 'tablename';",
-  "unzip archive with non-ascii charset": "unar -f -e gb18030 *.zip",
-  "upgrade all pip packages": "python -c 'import pip,subprocess; [subprocess.call(\"pip install -U \" + d.project_name, shell=True) for d in pip.get_installed_distributions()]'",
-  "user dynamodb as lock": "aws dynamodb put-item --table-name MusicCollection --item '{\"Artist\": {\"S\": \"Obscure Indie Band\"}}' --condition-expression \"attribute_not_exists(Artist)\"",
-  "validate json file": "cat lisen.json | python -c \"import json, sys; print json.loads(sys.stdin.read())\""
+  "UNIX time to datetime": {
+    "content": "from datetime import datetime\ndatetime.fromtimestamp(1409638930)",
+    "lang": "Python"
+  },
+  "Ubuntu add normal user": {
+    "content": "useradd -m -U -s /bin/bash $username",
+    "lang": "Bash"
+  },
+  "ansible keep remote files": {
+    "content": "export ANSIBLE_KEEP_REMOTE_FILES=1",
+    "lang": "Bash"
+  },
+  "awk average columns": {
+    "content": "awk '{ total += $1; count++} END {print total/count}' filename",
+    "lang": "Bash"
+  },
+  "awk delete line with pattern": {
+    "content": "echo $line\n/websites/webapps/Auski_Test/Auski_Test_log\ncat /etc/fstab | awk -v l=$line '{if($1!=l) print $0}'",
+    "lang": "Bash"
+  },
+  "awk print line if field not starts with": {
+    "content": "awk '$5 !~ /^127.0.0.1/'",
+    "lang": "Bash"
+  },
+  "awk standard deviation": {
+    "content": "awk '{x+=$0;y+=$0^2}END{print sqrt(y/NR-(x/NR)^2)}' filename",
+    "lang": "Bash"
+  },
+  "awk sum columns": {
+    "content": "awk '{ total += $1; count++} END {print total}' filename",
+    "lang": "Bash"
+  },
+  "aws ami query": {
+    "content": "aws ec2 describe-images --image-id ami-23456789",
+    "lang": "Bash"
+  },
+  "bash get script directory": {
+    "content": "CURRENT_DIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"",
+    "lang": "Bash"
+  },
+  "convert git commit to patch": {
+    "content": "git format-patch -1 <sha>   # This will generate a patch file\ngit apply --stat file.patch # show apply patch stats, will not change the codebase\ngit am < file.patch         # Apply patch as a commit",
+    "lang": "Bash"
+  },
+  "convert pfx to normal ssl certificates": {
+    "content": "openssl pkcs12 -in domain.pfx -clcerts -nokeys -out domain.cer\nopenssl pkcs12 -in domain.pfx -nocerts -nodes  -out domain.key\nopenssl pkcs12 -in domain.pfx -out domain.crt -nodes -nokeys -cacerts",
+    "lang": "Bash"
+  },
+  "debug SSL problem": {
+    "content": "openssl s_client -connect www.test.com:443 -prexit",
+    "lang": "Bash"
+  },
+  "decimal to hex": {
+    "content": "hex(dec)[2:]",
+    "lang": "Python"
+  },
+  "dpkg show package files": {
+    "content": "dpkg-query -L lolcat",
+    "lang": "Bash"
+  },
+  "echo to stderr": {
+    "content": ">&2 echo \"error\"",
+    "lang": "Bash"
+  },
+  "extract rpm": {
+    "content": "rpm2cpio somefile.rpm | cpio -idmv",
+    "lang": "Bash"
+  },
+  "ffmpeg fix video": {
+    "content": "ffmpeg -err_detect ignore_err -i video.mkv -c copy video_fixed.mkv",
+    "lang": "Bash"
+  },
+  "ffmpeg transcode video for iPhone": {
+    "content": "ffmpeg -ss 1:23:45 -i somevideo.mp4 -s qvga -b:v 384k -c:v mpeg4 -r 23.976 -acodec libfaac -ac 2 -ar 44100 -an -crf 22 -deinterlace -fs 200000000 output.mp4",
+    "lang": "Bash"
+  },
+  "find largest files in git repo": {
+    "content": "git rev-list --objects --all | grep \"$(git verify-pack -v .git/objects/pack/*.idx | sort -k 3 -n | tail -10 | awk '{print$1}')\"",
+    "lang": "Bash"
+  },
+  "fix email in commits": {
+    "content": "#!/bin/sh\n\ngit filter-branch --env-filter '\nOLD_EMAIL=\"kai.xia@shinesolutions.com\"\nCORRECT_NAME=\"Kai Xia\"\nCORRECT_EMAIL=\"xiaket@gmail.com\"\nif [ \"$GIT_COMMITTER_EMAIL\" = \"$OLD_EMAIL\" ]\nthen\n    export GIT_COMMITTER_NAME=\"$CORRECT_NAME\"\n    export GIT_COMMITTER_EMAIL=\"$CORRECT_EMAIL\"\nfi\nif [ \"$GIT_AUTHOR_EMAIL\" = \"$OLD_EMAIL\" ]\nthen\n    export GIT_AUTHOR_NAME=\"$CORRECT_NAME\"\n    export GIT_AUTHOR_EMAIL=\"$CORRECT_EMAIL\"\nfi\n' --tag-name-filter cat -- --branches --tags",
+    "lang": "Bash"
+  },
+  "get local ipaddr": {
+    "content": "def get_ipaddr(host=\"www.163.com\"):\n    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\n    try:\n        udp_socket.connect((host, 9))\n        ipaddress = udp_socket.getsockname()[0]\n    except socket.error:\n        raise\n    finally:\n        del udp_socket\n        return ipaddress",
+    "lang": "Python"
+  },
+  "git add submodule": {
+    "content": "git submodule add ~/submd/repos/lib1.git libs/lib1",
+    "lang": "Bash"
+  },
+  "git diff local and server": {
+    "content": "git diff origin/master master",
+    "lang": "Bash"
+  },
+  "git remove remote branch": {
+    "content": "git push origin --delete <branch name>",
+    "lang": "Bash"
+  },
+  "git setup user and email": {
+    "content": "git config user.email \"xiaket@gmail.com\"\ngit config user.name \"Kai Xia\"",
+    "lang": "Bash"
+  },
+  "increase inotify watchers": {
+    "content": "echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p",
+    "lang": "Bash"
+  },
+  "linux dir in Windows": {
+    "content": "C:\\Users\\kentx\\AppData\\Local\\lxss\\home\\xiaket",
+    "lang": "Text only"
+  },
+  "list all submodules": {
+    "content": "git submodule foreach git pull origin master",
+    "lang": "Bash"
+  },
+  "load python code from file without import": {
+    "content": "synctaginfo = imp.new_module('synctaginfo')\nexec content in synctaginfo.__dict__\ntaginfo = synctaginfo.synctaginfo",
+    "lang": "Python"
+  },
+  "private network address space": {
+    "content": "10.0.0.0        -   10.255.255.255\n172.16.0.0      -   172.31.255.255\n192.168.0.0     -   192.168.255.255",
+    "lang": "Text only"
+  },
+  "python post json": {
+    "content": "import requests, json\nurl = 'http://127.0.0.1:27182/api/account'\nheaders = {'Content-type': 'application/json', 'Accept': 'text/plain'}\ndata = {'name': 1, 'param': 2}\nresponse = requests.post(url, data=json.dumps(data), headers=headers}",
+    "lang": "Python"
+  },
+  "python run overrided method from superclass": {
+    "content": "getattr(super(self.__class, self), sys._getframe().f_code.co_name)()",
+    "lang": "Python"
+  },
+  "requests disable logging": {
+    "content": "logging.getLogger('requests').setLevel(logging.WARNING)",
+    "lang": "Python"
+  },
+  "revert last git commit": {
+    "content": "git reset --soft HEAD~",
+    "lang": "Bash"
+  },
+  "rocketchat change role": {
+    "content": "use rocketchat\ndb.users.update({'username': 'somename'},{$set: {'roles': ['user']}})",
+    "lang": "JavaScript"
+  },
+  "run complex command directly through ssh using base64": {
+    "content": "import base64\nbase64.b64encode(\"filename=`ls /websites/webapps/somesite/logs/gc.* -1 | tail -n 1`; start=`grep -n 'Full GC' $filename | grep -v 'Ergon' |cut -d ':' -f1 | python -c 'import sys; ns= [int(n) for n in sys.stdin.read().splitlines()]; print [ns[i] for i in xrange(len(ns)-1) if ns[i] + 5 > ns[i+1]][-1]'`; end=$((start+5)); echo $filename; sed -n $start,${end}p $filename\")\nZmlsZW5hbWU9YGxzIC93ZWJzaXRlcy93ZWJhcHBzL2Nya19zdXJ2ZXlfbGl2ZS9sb2dzL2djLiogLTEgfCB0YWlsIC1uIDFgOyBzdGFydD1gZ3JlcCAtbiAnRnVsbCBHQycgJGZpbGVuYW1lIHwgZ3JlcCAtdiAnRXJnb24nIHxjdXQgLWQgJzonIC1mMSB8IHB5dGhvbiAtYyAnaW1wb3J0IHN5czsgbnM9IFtpbnQobikgZm9yIG4gaW4gc3lzLnN0ZGluLnJlYWQoKS5zcGxpdGxpbmVzKCldOyBwcmludCBbbnNbaV0gZm9yIGkgaW4geHJhbmdlKGxlbihucyktMSkgaWYgbnNbaV0gKyA1ID4gbnNbaSsxXV1bLTFdJ2A7IGVuZD0kKChzdGFydCs1KSk7IGVjaG8gJGZpbGVuYW1lOyBzZWQgLW4gJHN0YXJ0LCR7ZW5kfXAgJGZpbGVuYW1l\n\nssh someserver 'echo \"ZmlsZW5hbWU9YGxzIC93ZWJzaXRlcy93ZWJhcHBzL2Nya19zdXJ2ZXlfbGl2ZS9sb2dzL2djLiogLTEgfCB0YWlsIC1uIDFgOyBzdGFydD1gZ3JlcCAtbiAnRnVsbCBHQycgJGZpbGVuYW1lIHwgZ3JlcCAtdiAnRXJnb24nIHxjdXQgLWQgJzonIC1mMSB8IHB5dGhvbiAtYyAnaW1wb3J0IHN5czsgbnM9IFtpbnQobikgZm9yIG4gaW4gc3lzLnN0ZGluLnJlYWQoKS5zcGxpdGxpbmVzKCldOyBwcmludCBbbnNbaV0gZm9yIGkgaW4geHJhbmdlKGxlbihucyktMSkgaWYgbnNbaV0gKyA1ID4gbnNbaSsxXV1bLTFdJ2A7IGVuZD0kKChzdGFydCs1KSk7IGVjaG8gJGZpbGVuYW1lOyBzZWQgLW4gJHN0YXJ0LCR7ZW5kfXAgJGZpbGVuYW1l\" | base64 -d | bash'",
+    "lang": "Python"
+  },
+  "scp using tar": {
+    "content": "tar -C 2013 -cf - ./ | ssh 172.17.4.210 tar -C /websites/webapps/deploy/backup/mission_control_histories/2013 -xf -",
+    "lang": "Bash"
+  },
+  "sed delete line with pattern": {
+    "content": "sed '/pattern/d' filename",
+    "lang": "Bash"
+  },
+  "sed replace EOL": {
+    "content": "sed ':a;N;$!ba;s/\\n/,/g'",
+    "lang": "Bash"
+  },
+  "sending data to local statsd": {
+    "content": "echo \"deploys.test.kent:1|c\" | nc -u 127.0.0.1 8125 -w 1",
+    "lang": "Bash"
+  },
+  "sync a fork": {
+    "content": "git remote add upstream https://github.com/user/project.git\ngit fetch upstream\ngit checkout master\ngit merge upstream/master",
+    "lang": "Bash"
+  },
+  "sync time without ntp": {
+    "content": "sudo date -s \"$(curl -sD - google.com | grep '^Date:' | cut -d' ' -f3-6)Z\"",
+    "lang": "Bash"
+  },
+  "tar extract to folder": {
+    "content": "tar -xzf v0.8.0.tar.gz -C /tmp/statsd",
+    "lang": "Bash"
+  },
+  "tell innodb and myisam": {
+    "content": "SHOW TABLE STATUS WHERE Name = 'tablename';",
+    "lang": "SQL"
+  },
+  "unzip archive with non-ascii charset": {
+    "content": "unar -f -e gb18030 *.zip",
+    "lang": "Bash"
+  },
+  "upgrade all pip packages": {
+    "content": "python -c 'import pip,subprocess; [subprocess.call(\"pip install -U \" + d.project_name, shell=True) for d in pip.get_installed_distributions()]'",
+    "lang": "Python"
+  },
+  "user dynamodb as lock": {
+    "content": "aws dynamodb put-item --table-name MusicCollection --item '{\"Artist\": {\"S\": \"Obscure Indie Band\"}}' --condition-expression \"attribute_not_exists(Artist)\"",
+    "lang": "Bash"
+  },
+  "validate json file": {
+    "content": "cat lisen.json | python -c \"import json, sys; print json.loads(sys.stdin.read())\"",
+    "lang": "Bash"
+  }
 }
