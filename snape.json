@@ -119,6 +119,10 @@
     "content": "synctaginfo = imp.new_module('synctaginfo')\nexec content in synctaginfo.__dict__\ntaginfo = synctaginfo.synctaginfo",
     "lang": "Python"
   },
+  "macos refresh disk usage": {
+    "content": "sudo tmutil thinLocalSnapshots / 10000000000 4",
+    "lang": "Bash"
+  },
   "private network address space": {
     "content": "10.0.0.0        -   10.255.255.255\n172.16.0.0      -   172.31.255.255\n192.168.0.0     -   192.168.255.255",
     "lang": "Text only"
