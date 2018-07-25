@@ -74,6 +74,7 @@ psutil
 pyflakes
 requests
 sh
+Snape
 termcolor
 troposphere
 
