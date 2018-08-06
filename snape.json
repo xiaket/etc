@@ -39,6 +39,10 @@
     "content": "CURRENT_DIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"",
     "lang": "Bash"
   },
+  "boto set region": {
+    "content": "boto3.setup_default_session(region_name='ap-southeast-2')",
+    "lang": "Python"
+  },
   "convert git commit to patch": {
     "content": "git format-patch -1 <sha>   # This will generate a patch file\ngit apply --stat file.patch # show apply patch stats, will not change the codebase\ngit am < file.patch         # Apply patch as a commit",
     "lang": "Bash"
@@ -97,6 +101,10 @@
   },
   "git remove remote branch": {
     "content": "git push origin --delete <branch name>",
+    "lang": "Bash"
+  },
+  "git remove remote tag": {
+    "content": "git push --delete origin tagname",
     "lang": "Bash"
   },
   "git setup user and email": {
