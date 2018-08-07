@@ -44,6 +44,7 @@ wget
 ## Extra setups for homebrew
 
 brew tap caskroom/cask
+brew tap caskroom/fonts
 
 ## Homebrew cask apps
 
@@ -51,6 +52,7 @@ ccmenu
 dash
 djview
 dropbox
+font-firacode-nerd-font-mono
 itsycal
 grammarly
 iina
