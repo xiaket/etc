@@ -23,7 +23,7 @@ temp_name="${basename}mp3"
 output_name="${basename}m4b"
 
 mediainfo=`mplayer -endpos 0 -vo null -ao null "$fullpath" 2>/dev/null | grep "^AUDIO"`
-bit_rate=`python -c "br = '${mediainfo}'.split(',')[3].strip().split()[0]; print min(br, ${DEFAULT_BIT_RATE})"`
+bit_rate=`python2 -c "br = '${mediainfo}'.split(',')[3].strip().split()[0]; print min(br, ${DEFAULT_BIT_RATE})"`
 
 if [ $suffix = "mp3" ]
 then
