@@ -67,6 +67,28 @@ vagrant-manager
 virtualbox
 virtualbox-extension-pack
 
+## Docker setup: curtesy of https://pilsniak.com/how-to-install-docker-on-mac-os-using-brew/
+
+1. Install packages
+
+```
+brew install docker docker-compose docker-machine xhyve docker-machine-driver-xhyve
+```
+
+2. setup xhyve
+
+```
+sudo chown root:wheel $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
+sudo chmod u+s $(brew --prefix)/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
+```
+
+3. create docker machine.
+
+```
+docker-machine create default --driver xhyve --xhyve-experimental-nfs-share
+```
+
+
 ## pip3 packages:
 
 ansible
