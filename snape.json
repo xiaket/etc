@@ -59,6 +59,10 @@
     "content": "hex(dec)[2:]",
     "lang": "Python"
   },
+  "decrypt kms text": {
+    "content": "import base64, boto3\ndecrypt = lambda text: boto3.client('kms').decrypt(CiphertextBlob=base64.b64decode(text))\ndecrypt(text)",
+    "lang": "Python"
+  },
   "dpkg show package files": {
     "content": "dpkg-query -L lolcat",
     "lang": "Bash"
