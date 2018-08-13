@@ -14,7 +14,6 @@ Plug 'fatih/vim-go'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'jiangmiao/auto-pairs'
-Plug 'ncm2/ncm2'
 Plug 'plasticboy/vim-markdown'
 Plug 'roxma/nvim-yarp'
 Plug 'scrooloose/nerdtree'
@@ -205,7 +204,3 @@ let g:jedi#use_tabs_not_buffers = 1
 
 " configuration for black
 let g:black_linelength = 80
-
-" ncm2 config
-set completeopt+=noinsert
-autocmd BufEnter * call ncm2#enable_for_buffer()
