@@ -1,0 +1,4 @@
+[default]
+region = ap-southeast-2
+[profile saml]
+region = ap-southeast-2
