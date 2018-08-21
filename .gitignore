@@ -5,6 +5,7 @@ vim/plugged
 vim/shada
 vim/undo
 vim/view
+vim/autoload/plug.vim
 
 w3m/history
 w3m/w3mtmp*
