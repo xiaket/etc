@@ -46,6 +46,7 @@ wget
 
 brew tap caskroom/cask
 brew tap caskroom/fonts
+brew tap versent/homebrew-taps
 
 ## Homebrew cask apps
 
@@ -93,10 +94,12 @@ docker-machine create default --driver xhyve --xhyve-experimental-nfs-share
 ## pip3 packages:
 
 ansible
+black
 icdiff
 neovim
 psutil
 pyflakes
+pygments
 requests
 sh
 Snape
