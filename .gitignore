@@ -15,3 +15,5 @@ newsboat/cache.*
 newsboat/history.*
 
 ptpython/history
+
+aws/credentials
