@@ -98,6 +98,7 @@ black
 icdiff
 neovim
 psutil
+ptpython
 pyflakes
 pygments
 requests
@@ -105,6 +106,7 @@ sh
 Snape
 termcolor
 troposphere
+virtualenv
 
 ## go packages:
 
@@ -141,6 +143,7 @@ Install Alfred 2 manually since I do not have powerpack for 3.
 ~/.xiaket/etc/karabiner -> ~/.config/karabiner
 ~/.xiaket/etc/newsbeuter -> ~/.newsbeuter
 ~/.xiaket/etc/pythonrc ~/.pythonrc
+~/.xiaket/etc/ptpython ~/.ptpython
 ~/.xiaket/etc/snape.json ~/.snape.json
 ~/.xiaket/etc/vim -> ~/.vim
 ~/.xiaket/etc/vim -> ~/.config/nvim
@@ -160,6 +163,10 @@ ublock
 ## Ruby setups
 sudo gem install bundler --no-ri --no-rdoc
 
+## setup vim-plug
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
 ## Shine specific packages
 
 pip install aws-google-auth
+
