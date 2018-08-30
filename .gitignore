@@ -11,6 +11,7 @@ w3m/history
 w3m/w3mtmp*
 w3m/w3mcache*
 
+karabiner/automatic_backups/
 newsboat/cache.*
 newsboat/history.*
 
