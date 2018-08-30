@@ -19,7 +19,7 @@
                         "manipulators": [
                             {
                                 "from": {
-                                    "key_code": "1",
+                                    "key_code": "a",
                                     "modifiers": {
                                         "mandatory": [
                                             "right_command"
@@ -28,23 +28,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "open '/Applications/1Password 6.app'"
-                                    }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "from": {
-                                    "key_code": "c",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "right_command"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "shell_command": "open '/Applications/Calendar.app'"
+                                        "shell_command": "open '/Applications/Opera.app'"
                                     }
                                 ],
                                 "type": "basic"
