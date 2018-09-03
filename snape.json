@@ -144,7 +144,7 @@
     "lang": "Text only"
   },
   "python post json": {
-    "content": "import requests, json\nurl = 'http://127.0.0.1:27182/api/account'\nheaders = {'Content-type': 'application/json', 'Accept': 'text/plain'}\ndata = {'name': 1, 'param': 2}\nresponse = requests.post(url, data=json.dumps(data), headers=headers}",
+    "content": "import requests, json\nurl = 'http://127.0.0.1:27182/api/account'\nheaders = {'Content-type': 'application/json', 'Accept': 'text/plain'}\ndata = {'name': 1, 'param': 2}\nresponse = requests.post(url, data=json.dumps(data), headers=headers})",
     "lang": "Python"
   },
   "python run overrided method from superclass": {
