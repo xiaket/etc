@@ -1486,7 +1486,10 @@ unset list
 
 for app in bash-builtins brew bzip2 configure coreutils dd findutils gzip iftop info lftp lsof make man net-tools openssl python rsync ssh tar tcpdump unrar youtube-dl.bash-completion
 do
-    . "$BASH_COMPLETION_DIR/$app"
+    if [ -f "$BASH_COMPLETION_DIR/$app" ]
+    then
+      . "$BASH_COMPLETION_DIR/$app"
+    fi
 done
 unset app
 
