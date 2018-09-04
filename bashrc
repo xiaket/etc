@@ -48,6 +48,12 @@ then
     . "$etcdir"/bash_functions
 fi
 
+# For Alternative settings
+if [ -f "$altdir/etc/bashrc" ]
+then
+    . "$altdir/etc/bashrc"
+fi
+
 function _xiaket_prompt {
   PS1="$(my_prompt $?)"
   history -a; history -n;
@@ -133,9 +139,3 @@ else
     start_agent;
 fi
 rm -f ~/.xiaket/var/tmp/ssh.lock
-
-# For Alternative settings
-if [ -f "$altdir/etc/bashrc" ]
-then
-    . "$altdir/etc/bashrc"
-fi
