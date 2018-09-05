@@ -113,29 +113,32 @@ shopt -s checkwinsize
 #####################
 # ssh agent forward #
 #####################
-SSH_ENV="$HOME/.ssh/environment"
+if [ -d ~/.ssh ]
+then
+    SSH_ENV="$HOME/.ssh/environment"
 
-function start_agent {
-    content=`/usr/bin/ssh-agent | sed "/^echo/d"`
-    [ -f $SSH_ENV ] && return 0 || echo $content > $SSH_ENV
-    chmod 600 "${SSH_ENV}"
-    . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add ~/.ssh/*ed25519
-    /usr/bin/ssh-add ~/.ssh/*rsa
-}
+    function start_agent {
+        content=`/usr/bin/ssh-agent | sed "/^echo/d"`
+        [ -f $SSH_ENV ] && return 0 || echo $content > $SSH_ENV
+        chmod 600 "${SSH_ENV}"
+        . "${SSH_ENV}" > /dev/null
+        /usr/bin/ssh-add ~/.ssh/*ed25519
+        /usr/bin/ssh-add ~/.ssh/*rsa
+    }
 
-# Source SSH settings, if applicable
-[ ! -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
-lockfile -1 ~/.xiaket/var/tmp/ssh.lock
-if [ -f "${SSH_ENV}" ]; then
-    . "${SSH_ENV}" > /dev/null
-    ps ${SSH_AGENT_PID} | grep -q ssh-agent$
-    if [ $? -ne 0 ]
-    then
-        rm -f ${SSH_ENV}
-        start_agent
+    # Source SSH settings, if applicable
+    [ ! -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
+    lockfile -1 ~/.xiaket/var/tmp/ssh.lock
+    if [ -f "${SSH_ENV}" ]; then
+        . "${SSH_ENV}" > /dev/null
+        ps ${SSH_AGENT_PID} | grep -q ssh-agent$
+        if [ $? -ne 0 ]
+        then
+            rm -f ${SSH_ENV}
+            start_agent
+        fi
+    else
+        start_agent;
     fi
-else
-    start_agent;
+    rm -f ~/.xiaket/var/tmp/ssh.lock
 fi
-rm -f ~/.xiaket/var/tmp/ssh.lock
