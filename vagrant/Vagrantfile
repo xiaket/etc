@@ -37,6 +37,8 @@ Vagrant.configure("2") do |config|
     apt install -y python3-pip neovim lftp python3-setuptools golang procmail &&
     pip3 install -U pip &&
     pip install requests pipenv black neovim icdiff ptpython sh
+    timedatectl set-timezone Australia/Melbourne
+    echo "Done with System setup."
   SHELL
 
   $user_script = <<-SCRIPT
@@ -61,7 +63,9 @@ Vagrant.configure("2") do |config|
       cd ~/.xiaket/etc && git pull
     fi
     curl -sfLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    nvim -c "PlugUpdate" -c ":q!" -c ":q!" > /dev/null
     mkdir -p ~/.xiaket/alt/etc && echo -n "export COLOR_LAST_GOOD=51\nexport COLOR_LAST_FAIL=199\nexport BASH_COMPLETION_DIR=/usr/share/bash-completion/completions" > ~/.xiaket/alt/etc/bashrc
+    echo "Done with User setup. Happy Hacking!"
   SCRIPT
 
   config.vm.provision "shell", privileged: false, inline: $user_script
