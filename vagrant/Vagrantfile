@@ -55,7 +55,7 @@ Vagrant.configure("2") do |config|
       mkdir -p ~/.vim/backup &&
       ln -sf ~/.xiaket/etc/vim ~/.config/nvim &&
       ln -sf ~/.xiaket/etc/vim/init.vim ~/.vimrc &&
-      ln -sf ~/.xiaket/shared/github ~/.GITHUB &&
+      ln -sf ~/.xiaket/share/github ~/.GITHUB &&
       cd ~/.xiaket/etc/go && go build -o ../bin/my_prompt my_prompt.go
     else
       cd ~/.xiaket/etc && git pull
