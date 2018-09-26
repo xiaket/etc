@@ -188,12 +188,6 @@ cmap Q! q!
 cmap WQ wq
 cmap Wq wq
 
-" Bash like keys for the command line
-cnoremap <C-A> <Home>
-cnoremap <C-E> <End>
-cnoremap <C-P> <Up>
-cnoremap <C-N> <Down>
-
 " auto save on bufleave and lose focus.
 autocmd BufLeave,FocusLost * silent! wall
 
