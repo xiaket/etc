@@ -113,7 +113,7 @@ shopt -s checkwinsize
 #####################
 # ssh agent forward #
 #####################
-if [ -f ~/.ssh/*ed25519 ] || [ -f ~/.ssh/*rsa ]
+if [[ -f ~/.ssh/*ed25519 ]] || [[ -f ~/.ssh/*rsa ]]
 then
     SSH_ENV="$HOME/.ssh/environment"
 
