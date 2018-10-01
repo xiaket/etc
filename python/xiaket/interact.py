@@ -2,10 +2,9 @@
 # encoding=utf8
 import os
 
+from prompt_toolkit.keys import Keys
 from prompt_toolkit.utils import DummyContext
 from ptpython.repl import PythonRepl
-from ptpython.eventloop import create_eventloop as eventloop
-from ptpython.python_input import PythonCommandLineInterface
 
 
 def shell(globals_, locals_):
@@ -14,19 +13,22 @@ def shell(globals_, locals_):
     """
     # Create REPL.
     repl = PythonRepl(
-        lambda : globals_, lambda : locals_,
-        history_filename=os.path.expanduser("~/.pyhistory.shell")
+        get_globals=lambda : globals_,
+        get_locals=lambda : locals_,
+        history_filename=os.path.expanduser("~/.pyhistory.shell"),
     )
-
-    # Some customizations
-    repl.show_exit_confirmation = False
-    repl.show_sidebar = False
-    repl.confirm_exit = False
+    repl.confirm_exit = True
     repl.prompt_style = 'ipython'
     repl.use_code_colorscheme("monokai")
 
-    cli = PythonCommandLineInterface(python_input=repl, eventloop=eventloop())
+    @repl.add_key_binding(Keys.ControlD)
+    def _(event):
+        """
+        Ctrl-D to exit.
 
-    # Start repl.
+        This behavior is suppressed somewhere in ptpython.
+        """
+        event.app.exit(exception=EOFError, style='class:exiting')
+
     with DummyContext():
-        cli.run()
+        repl.run()
