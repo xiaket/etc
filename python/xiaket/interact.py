@@ -2,9 +2,8 @@
 # encoding=utf8
 import os
 
-from prompt_toolkit.keys import Keys
 from prompt_toolkit.utils import DummyContext
-from ptpython.repl import PythonRepl
+from ptpython.repl import PythonRepl, run_config
 
 
 def shell(globals_, locals_):
@@ -17,18 +16,7 @@ def shell(globals_, locals_):
         get_locals=lambda : locals_,
         history_filename=os.path.expanduser("~/.pyhistory.shell"),
     )
-    repl.confirm_exit = True
-    repl.prompt_style = 'ipython'
-    repl.use_code_colorscheme("monokai")
-
-    @repl.add_key_binding(Keys.ControlD)
-    def _(event):
-        """
-        Ctrl-D to exit.
-
-        This behavior is suppressed somewhere in ptpython.
-        """
-        event.app.exit(exception=EOFError, style='class:exiting')
+    run_config(repl)
 
     with DummyContext():
         repl.run()

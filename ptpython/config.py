@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # encoding=utf8
-
-from __future__ import unicode_literals
+from prompt_toolkit.keys import Keys
 
 
 def configure(repl):
@@ -19,6 +18,15 @@ def configure(repl):
     repl.prompt_style = 'ipython'
     repl.true_color = True
     repl.use_code_colorscheme('monokai')
+
+    @repl.add_key_binding(Keys.ControlD)
+    def _(event):
+        """
+        Ctrl-D to exit.
+
+        This behavior is suppressed somewhere in ptpython.
+        """
+        event.app.exit(exception=EOFError, style='class:exiting')
 
     # typo fixer.
     corrections = {
