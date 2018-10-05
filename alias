@@ -8,6 +8,7 @@ then
     alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm winx'
     alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
     alias mtr='sudo /usr/local/sbin/mtr'
+    alias typora='open -a Typora '
 
     # BSD fix
     alias sed='gsed'
