@@ -19,15 +19,6 @@ def configure(repl):
     repl.true_color = True
     repl.use_code_colorscheme('monokai')
 
-    @repl.add_key_binding(Keys.ControlD)
-    def _(event):
-        """
-        Ctrl-D to exit.
-
-        This behavior is suppressed somewhere in ptpython.
-        """
-        event.app.exit(exception=EOFError, style='class:exiting')
-
     # typo fixer.
     corrections = {
         'impotr': 'import',
