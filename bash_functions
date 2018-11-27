@@ -33,3 +33,13 @@ mark () {
     echo "command marked."
   fi
 }
+
+denv () {
+  state=`docker-machine status default`
+  if [ $state = "Stopped" ]
+  then
+    echo "starting docker-machine"
+    docker-machine start default >/dev/null
+  fi
+  eval $(docker-machine env default)
+}

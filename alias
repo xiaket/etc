@@ -53,7 +53,6 @@ alias rerc='. ~/.bashrc; unset PIPENV_ACTIVE VIRTUAL_ENV PIP_PYTHON_PATH'
 alias pipfix='pip install -U ptpython neovim black'
 alias black='/usr/local/bin/black -l 80'
 alias gcp='pbpaste | xargs git clone'
-alias denv='eval $(docker-machine env default)'
 
 alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias randport='python -c "import random; print(random.randint(1025, 32768))"'
