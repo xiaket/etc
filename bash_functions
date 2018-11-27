@@ -23,3 +23,13 @@ ls (){
 
   echo $OPTIONS | xargs "$bin" --color=always $*
 }
+
+mark () {
+  if [ $# -eq 0 ]
+  then
+    eval "$MARKED"
+  else
+    export MARKED="$@"
+    echo "command marked."
+  fi
+}
