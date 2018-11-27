@@ -24,7 +24,7 @@ ls (){
   echo $OPTIONS | xargs "$bin" --color=always $*
 }
 
-mark () {
+mk () {
   if [ $# -eq 0 ]
   then
     eval "$MARKED"
