@@ -21,3 +21,5 @@ aws/credentials
 
 vagrant/.vagrant/
 vagrant/*.log
+
+bin/my_prompt
