@@ -9,6 +9,8 @@ import (
 	"strings"
 )
 
+var SHORT_PATH_TRUNCATE = 3
+
 // ColorIt would return a function that will paint a string using a color
 // specified by a name. We will try to load color from environment first.
 func ColorIt(name string) func(string) string {
@@ -89,9 +91,9 @@ func Cwd() string {
 			short_paths[i] = path
 		} else {
 			if strings.HasPrefix(path, ".") {
-				short_paths[i] = path[:3]
+				short_paths[i] = path[:SHORT_PATH_TRUNCATE+1]
 			} else {
-				short_paths[i] = path[:2]
+				short_paths[i] = path[:SHORT_PATH_TRUNCATE]
 			}
 		}
 	}
