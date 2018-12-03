@@ -21,6 +21,27 @@ special_lowercase = """`1234567890-=[];',./"""
 special_uppercase = '''~!@#$%^&*()_+{}:"<>?'''
 
 
+def regroup(chars):
+    """Regroup characters so it's easier to type."""
+    lowers = [
+        char for char in chars
+        if char in ascii_lowercase or char in special_lowercase
+    ]
+    uppers = [
+        char for char in chars
+        if char in ascii_uppercase or char in special_uppercase
+    ]
+    if len(uppers) % 2:
+        # pattern would be lower-upper-lower
+        truncate = randbelow(len(lowers))
+        return lowers[:truncate] + uppers + lowers[truncate:]
+    else:
+        # pattern would be upper-lower-upper
+        truncate = randbelow(len(uppers))
+        return uppers[:truncate] + lowers + uppers[truncate:]
+    return chars
+
+
 def generate_one(length):
     characters = [
         choice(ascii_lowercase),
@@ -28,22 +49,23 @@ def generate_one(length):
         choice(special_lowercase),
         choice(special_uppercase),
     ]
+    shuffle(characters)
     for i in range(length - 4):
         roll = randbelow(101)
         if roll > 95:
-            # 5% chance to add a special uppercase character
+            # 5% chance to roll a special uppercase character
             characters.append(choice(special_uppercase))
         elif roll > 85:
-            # 10% chance to add a normal uppercase character
-            characters.append(choice(ascii_uppercase))
-        elif roll > 75:
             # 10% chance to add a special lowercase character
+            characters.append(choice(special_lowercase))
+        elif roll > 75:
+            # 10% chance to add a normal uppercase character
             characters.append(choice(ascii_uppercase))
         else:
             # 75% chance to add a normal lowercase character
             characters.append(choice(ascii_lowercase))
-    shuffle(characters)
-    return "".join(characters)
+
+    return "".join(regroup(characters))
 
 def main():
     for i in range(5):
