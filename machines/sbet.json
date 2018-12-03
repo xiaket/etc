@@ -4,7 +4,11 @@
   },
   "dirs": [
     "~/.ssh/sockets",
-    "${root}/sockets"
+    "${root}/sockets",
+    "~/.xiaket/share/github",
+    "~/.xiaket/share/stash",
+    "~/.xiaket/sbet/bin",
+    "~/.xiaket/sbet/etc"
   ],
   "links": [
     {
@@ -40,7 +44,7 @@
       "dst": ["~/.config/nvim", "~/.vim"]
     },
     {
-      "src": "~/.config/nvim/init.vim",
+      "src": "~/.vim/init.vim",
       "dst": "~/.vimrc"
     },
     {
@@ -48,7 +52,27 @@
       "dst": "~/.Github"
     },
     {
-      "src": "~/.xiaket/shared/ssh",
+      "src": "~/.xiaket/shared/stash",
+      "dst": "~/.Stash"
+    },
+    {
+      "src": "~/.xiaket/sbet",
+      "dst": "~/.xiaket/alt"
+    },
+    {
+      "src": "~/.xiaket/shared/aws",
+      "dst": "~/.aws"
+    },
+    {
+      "src": "${root}/pylintrc",
+      "dst": "~/.pylintrc"
+    },
+    {
+      "src": "${root}/pylintrc",
+      "dst": "~/.pylintrc"
+    },
+    {
+      "src": "~/.xiaket/ssh",
       "dst": "~/.ssh"
     }
   ],
