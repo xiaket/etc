@@ -43,3 +43,7 @@ denv () {
   fi
   eval $(docker-machine env default)
 }
+
+ip138 () {
+  curl "http://www.ip138.com/ips138.asp?ip=$1" 2>/dev/null | iconv -f gb18030 -t utf-8 | egrep "\"ul1" | sed "s/<[^>]*>/./g;s/^\s*//g; s/\.\././g;s/\.\././g" | python -c "import sys; print sys.stdin.read().replace('.', '\n')" | grep -v "^$"
+}
