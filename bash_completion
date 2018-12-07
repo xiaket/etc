@@ -1271,7 +1271,7 @@ _known_hosts_real()
     return 0
 } # _known_hosts_real()
 
-complete -F _known_hosts traceroute ping telnet host nslookup dig mtr
+complete -F _known_hosts ping nslookup mtr
 
 # a wrapper method for the next one, when the offset is unknown
 _command()
@@ -1371,14 +1371,6 @@ _command_offset()
     fi
 }
 complete -F _command command do else eval exec nohup then time xargs
-
-_root_command()
-{
-    local PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
-    local root_command=$1
-    _command $1 $2 $3
-}
-complete -F _root_command fakeroot sudo
 
 # Return true if the completion should be treated as running as root
 _complete_as_root()
@@ -1484,7 +1476,7 @@ eval complete -r ${list[@]}
 eval complete -F _filedir_xspec "${list[@]}"
 unset list
 
-for app in bash-builtins brew bzip2 configure coreutils dd findutils gzip iftop info lftp lsof make man net-tools openssl python rsync ssh tar tcpdump unrar youtube-dl.bash-completion
+for app in bash-builtins brew coreutils findutils gzip lsof make man net-tools python rsync ssh tar youtube-dl.bash-completion
 do
     if [ -f "$BASH_COMPLETION_DIR/$app" ]
     then

@@ -31,7 +31,7 @@ etcdir=$xiaketDIR"/etc"
 altdir=$xiaketDIR"/alt"
 
 # PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
-export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin/usr/sbin:~/Library/Python/2.7/bin:/usr/local/opt/coreutils/bin"
+export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin/usr/sbin:~/Library/Python/2.7/bin:/usr/local/opt/coreutils/bin:/usr/local/opt/fzf/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 export LANG=en_US.UTF-8
 
@@ -59,6 +59,7 @@ function _xiaket_prompt {
   history -a; history -n;
 }
 
+
 export PROMPT_COMMAND='_xiaket_prompt'
 
 # For bash completion.
@@ -67,7 +68,7 @@ export PROMPT_COMMAND='_xiaket_prompt'
 
 # for fzf
 set rtp+=/usr/local/opt/fzf
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[ -f /usr/local/opt/fzf/shell/key-bindings.bash ] && source /usr/local/opt/fzf/shell/key-bindings.bash
 
 ################
 # bash history #

@@ -8,56 +8,17 @@
 # https://github.com/seebi/dircolors-solarized
 
 # Term Section
-TERM ansi
-TERM color-xterm
-TERM konsole
-TERM linux
-TERM screen
-TERM screen-256color
-TERM screen-256color-bce
-TERM screen-256color-s
-TERM screen-256color-bce-s
-TERM screen-bce
-TERM screen-w
-TERM screen.linux
-TERM xterm
 TERM xterm-256color
 TERM xterm-color
 
-## Documentation
-#
-# standard colors
-#
-# Below are the color init strings for the basic file types. A color init
-# string consists of one or more of the following numeric codes:
-# Attribute codes:
-# 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
-# Text color codes:
-# 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
-# Background color codes:
-# 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
-#
-#
-# 256 color support
-# see here: http://www.mail-archive.com/bug-coreutils@gnu.org/msg11030.html)
-#
-# Text 256 color coding:
-# 38;5;COLOR_NUMBER
-# Background 256 color coding:
-# 48;5;COLOR_NUMBER
-
 ## Special files
 
-NORMAL 00;38;5;244 # no color code at all
-#FILE 00 # regular file: use no color at all
 RESET 0 # reset to "normal" color
 DIR 00;38;5;33 # directory 01;34
-LINK 00;38;5;37 # symbolic link. (If you set this to 'target' instead of a
- # numerical value, the color is as for the file pointed to.)
+LINK 00;38;5;37 # symbolic link.
 MULTIHARDLINK 00 # regular file with more than one link
 FIFO 48;5;230;38;5;136;01 # pipe
 SOCK 48;5;230;38;5;136;01 # socket
-DOOR 48;5;230;38;5;136;01 # door
 BLK 48;5;230;38;5;244;01 # block device driver
 CHR 48;5;230;38;5;244;01 # character device driver
 ORPHAN 48;5;235;38;5;160 # symlink to nonexistent file, or non-stat'able file
@@ -67,8 +28,6 @@ CAPABILITY 30;41 # file with capability
 STICKY_OTHER_WRITABLE 48;5;64;38;5;230 # dir that is sticky and other-writable (+t,o+w)
 OTHER_WRITABLE 48;5;235;38;5;33 # dir that is other-writable (o+w) and not sticky
 STICKY 48;5;33;38;5;230 # dir with the sticky bit set (+t) and not other-writable
-# This is for files with execute permission:
-EXEC 01;38;5;64
 
 
 # configured by xiaket.
@@ -92,28 +51,14 @@ EXEC   00;38;5;046      # a little brighter than usual.
 .js    01;38;5;54
 .css   00;38;5;200
 
-# used by dircolors-solarized
-#archive 00;38;5;232   black
-#image   00;38;5;168   red and orange like
-#text    00;38;5;015   bright white
-#backup  00;38;5;235   gray
-#media   00;38;5;090   magenta
-
-
 ## Archives or compressed (violet + bold for compression)
 .tar    00;38;5;9
 .tgz    00;38;5;9
 .txz    00;38;5;9
 .zip    00;38;5;9
-.z      00;38;5;9
-.Z      00;38;5;9
 .gz     00;38;5;9
 .xz     00;38;5;9
 .bz2    00;38;5;9
-.bz     00;38;5;9
-.tbz    00;38;5;9
-.tbz2   00;38;5;9
-.tz     00;38;5;9
 .deb    00;38;5;9
 .rpm    00;38;5;9
 .jar    00;38;5;9
@@ -132,12 +77,8 @@ EXEC   00;38;5;046      # a little brighter than usual.
 .png    00;38;5;168
 .svg    00;38;5;168
 .svgz   00;38;5;168
-.xcf    00;38;5;168
-.eps    00;38;5;168
-.ico    00;38;5;168
 
-# Files of special interest (base1 + bold)
-.tex             00;38;5;015
+# Text files of special interest (base1 + bold)
 .torrent         00;38;5;015
 .xml             00;38;5;015
 *rc              00;38;5;015
@@ -164,36 +105,13 @@ EXEC   00;38;5;046      # a little brighter than usual.
 .temp       00;38;5;236
 .o          00;38;5;236
 .pyc        00;38;5;236
-
-# Audio formats (orange)
-.aac    00;38;5;090
-.au     00;38;5;090
-.flac   00;38;5;090
-.mid    00;38;5;090
-.midi   00;38;5;090
-.mp3    00;38;5;090
-.mpc    00;38;5;090
-.ogg    00;38;5;090
-.wav    00;38;5;090
-.m4a    00;38;5;090
-.m4b    00;38;5;090
+.pyo        00;38;5;236
 
 # Video formats (as audio + bold)
 .mov    00;38;5;090
-.mpg    00;38;5;090
-.mpeg   00;38;5;090
-.m2v    00;38;5;090
 .mkv    00;38;5;090
 .mp4    00;38;5;090
 .m4v    00;38;5;090
-.mp4v   00;38;5;090
-.vob    00;38;5;090
-.wmv    00;38;5;090
-.asf    00;38;5;090
-.rm     00;38;5;090
-.rmvb   00;38;5;090
-.avi    00;38;5;090
-.flv    00;38;5;090
 .ts    00;38;5;090
 
 # playground
