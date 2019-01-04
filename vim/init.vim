@@ -14,6 +14,7 @@ Plug 'fatih/vim-go'
 Plug 'hail2u/vim-css3-syntax'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'jiangmiao/auto-pairs'
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 Plug 'plasticboy/vim-markdown'
 Plug 'roxma/nvim-yarp'
 Plug 'scrooloose/nerdtree'
@@ -165,10 +166,6 @@ let g:UltiSnipsDoHash=0
 " NERD configurations
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let NERDTreeIgnore = ['\.pyc$']
-
-"deoplete
-let g:deoplete#enable_at_startup = 1
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 "restore_view settings
 set viewoptions=cursor,folds,slash,unix
