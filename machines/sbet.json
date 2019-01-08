@@ -48,11 +48,11 @@
       "dst": "~/.vimrc"
     },
     {
-      "src": "~/.xiaket/shared/github",
+      "src": "~/.xiaket/share/github",
       "dst": "~/.Github"
     },
     {
-      "src": "~/.xiaket/shared/stash",
+      "src": "~/.xiaket/share/stash",
       "dst": "~/.Stash"
     },
     {
@@ -60,7 +60,7 @@
       "dst": "~/.xiaket/alt"
     },
     {
-      "src": "~/.xiaket/shared/aws",
+      "src": "~/.xiaket/share/aws",
       "dst": "~/.aws"
     },
     {
