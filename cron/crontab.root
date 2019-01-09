@@ -1,5 +1,0 @@
-# reload this file.
-@reboot crontab /Users/xiaket/.xiaket/etc/cron/crontab.root
-
-# ensure that httpd is running.
-*/5 * * * * (/usr/sbin/httpd -k reload 2>/dev/null)
