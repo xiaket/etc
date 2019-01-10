@@ -87,7 +87,7 @@ func Cwd() string {
 	paths := strings.Split(dir, "/")
 	short_paths := make([]string, len(paths))
 	for i, path := range paths {
-		if (len(path) < 2) || (i == len(paths)-1) {
+		if (len(path) < SHORT_PATH_TRUNCATE) || (i == len(paths)-1) {
 			short_paths[i] = path
 		} else {
 			if strings.HasPrefix(path, ".") {
