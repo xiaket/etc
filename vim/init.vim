@@ -17,7 +17,6 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 Plug 'plasticboy/vim-markdown'
 Plug 'roxma/nvim-yarp'
-Plug 'scrooloose/nerdtree'
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-haml'
 Plug 'tpope/vim-surround'
@@ -163,10 +162,6 @@ let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 let g:UltiSnipsSnippetDir="~/.vim/UltiSnips"
 let g:UltiSnipsDoHash=0
 
-" NERD configurations
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-let NERDTreeIgnore = ['\.pyc$']
-
 "restore_view settings
 set viewoptions=cursor,folds,slash,unix
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -175,11 +170,9 @@ set viewoptions=cursor,folds,slash,unix
 " use space to open and close a fold
 nnoremap <space> za
 vnoremap <space> zf
-nnoremap <silent> <F2> :call ToggleLineNumber()<cr>:call gitgutter#toggle()<cr>
-" use NERDTree
-nnoremap <F4> :NERDTree<cr>
+nnoremap <silent> <C-L> :call ToggleLineNumber()<cr>:call gitgutter#toggle()<cr>
 "Remove trailing spaces
-map <silent> <F5> :%s/\s*$//g<cr>
+nnoremap <silent> <C-E> :%s/\s*$//g<cr>
 " In case of Q! and WQ, as I have to press Shift.
 cmap Q! q!
 cmap WQ wq
