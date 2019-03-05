@@ -60,6 +60,7 @@ grammarly
 iina
 karabiner-elements
 omnifocus
+sloth
 spectacle
 steam
 tad
