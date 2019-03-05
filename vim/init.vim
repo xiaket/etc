@@ -173,6 +173,7 @@ vnoremap <space> zf
 nnoremap <silent> <C-L> :call ToggleLineNumber()<cr>:call gitgutter#toggle()<cr>
 "Remove trailing spaces
 nnoremap <silent> <C-E> :%s/\s*$//g<cr>
+set pastetoggle=<C-P>
 " In case of Q! and WQ, as I have to press Shift.
 cmap Q! q!
 cmap WQ wq
