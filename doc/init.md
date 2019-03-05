@@ -58,6 +58,7 @@ font-fira-code
 itsycal
 grammarly
 iina
+kap
 karabiner-elements
 omnifocus
 sloth
