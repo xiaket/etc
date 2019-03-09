@@ -125,7 +125,7 @@ autocmd CursorMoved * :call RelativeLineNumber("relativenumber")
 " file headers
 " empty line in the list is converted to a newline
 let g:Headers = {
-  \"py": ["#!/usr/bin/env python", "", ""],
+  \"py": ["#!/usr/bin/env python3", "", ""],
   \"sh": ["#!/bin/bash", "", "set -o errexit", "set -o nounset", "set -o pipefail", "", ""],
 \}
 au BufNewFile * call AppendHeader()
