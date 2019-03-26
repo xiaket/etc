@@ -61,6 +61,7 @@ iina
 kap
 karabiner-elements
 omnifocus
+sblack
 sloth
 spectacle
 steam
