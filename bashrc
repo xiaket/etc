@@ -31,7 +31,7 @@ etcdir=$xiaketDIR"/etc"
 altdir=$xiaketDIR"/alt"
 
 # PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
-export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/opt/ruby/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/sbin/usr/sbin:~/Library/Python/2.7/bin:/usr/local/opt/coreutils/bin:/usr/local/opt/fzf/bin"
+export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/opt/ruby/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/usr/sbin:/sbin:~/Library/Python/2.7/bin:/usr/local/opt/coreutils/bin:/usr/local/opt/fzf/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 export LANG=en_US.UTF-8
 
