@@ -195,6 +195,10 @@
     "content": "tar -xzf v0.8.0.tar.gz -C /tmp/statsd",
     "lang": "Bash"
   },
+  "tcpdump sniff syslog traffic": {
+    "content": "tcpdump -Xni lo port 1514",
+    "lang": "Text only"
+  },
   "tell innodb and myisam": {
     "content": "SHOW TABLE STATUS WHERE Name = 'tablename';",
     "lang": "SQL"
