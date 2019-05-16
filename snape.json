@@ -1,4 +1,8 @@
 {
+  "HTTP request in bash": {
+    "content": "exec 3<> /dev/tcp/checkip.amazonaws.com/80\nprintf \"GET / HTTP/1.1\\r\\nHost: checkip.amazonaws.com\\r\\nConnection: close\\r\\n\\r\\n\" >&3\ntail -n1 <&3",
+    "lang": "Text only"
+  },
   "UNIX time to datetime": {
     "content": "from datetime import datetime\ndatetime.fromtimestamp(1409638930)",
     "lang": "Python"
