@@ -96,7 +96,7 @@
     "lang": "Text only"
   },
   "fix email in commits": {
-    "content": "#!/bin/sh\n\ngit filter-branch --env-filter '\nOLD_EMAIL=\"kai.xia@shinesolutions.com\"\nCORRECT_NAME=\"Kai Xia\"\nCORRECT_EMAIL=\"xiaket@gmail.com\"\nif [ \"$GIT_COMMITTER_EMAIL\" = \"$OLD_EMAIL\" ]\nthen\n    export GIT_COMMITTER_NAME=\"$CORRECT_NAME\"\n    export GIT_COMMITTER_EMAIL=\"$CORRECT_EMAIL\"\nfi\nif [ \"$GIT_AUTHOR_EMAIL\" = \"$OLD_EMAIL\" ]\nthen\n    export GIT_AUTHOR_NAME=\"$CORRECT_NAME\"\n    export GIT_AUTHOR_EMAIL=\"$CORRECT_EMAIL\"\nfi\n' --tag-name-filter cat -- --branches --tags",
+    "content": "#!/bin/sh\n\ngit filter-branch --env-filter '\nOLD_EMAIL=\"kai.xia@shinesolutions.com\"\nCORRECT_NAME=\"Kai Xia\"\nCORRECT_EMAIL=\"kaix+github@fastmail.com\"\nif [ \"$GIT_COMMITTER_EMAIL\" = \"$OLD_EMAIL\" ]\nthen\n    export GIT_COMMITTER_NAME=\"$CORRECT_NAME\"\n    export GIT_COMMITTER_EMAIL=\"$CORRECT_EMAIL\"\nfi\nif [ \"$GIT_AUTHOR_EMAIL\" = \"$OLD_EMAIL\" ]\nthen\n    export GIT_AUTHOR_NAME=\"$CORRECT_NAME\"\n    export GIT_AUTHOR_EMAIL=\"$CORRECT_EMAIL\"\nfi\n' --tag-name-filter cat -- --branches --tags",
     "lang": "Bash"
   },
   "get local ipaddr": {
@@ -120,7 +120,7 @@
     "lang": "Bash"
   },
   "git setup user and email": {
-    "content": "git config user.email \"xiaket@gmail.com\"\ngit config user.name \"Kai Xia\"",
+    "content": "git config user.email \"kaix+github@fastmail.com\"\ngit config user.name \"Kai Xia\"",
     "lang": "Bash"
   },
   "increase inotify watchers": {
