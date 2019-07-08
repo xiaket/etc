@@ -15,7 +15,7 @@ Plug 'hail2u/vim-css3-syntax'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'jiangmiao/auto-pairs'
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
-Plug 'plasticboy/vim-markdown'
+Plug 'rhysd/vim-gfm-syntax'
 Plug 'roxma/nvim-yarp'
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-haml'
