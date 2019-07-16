@@ -51,3 +51,12 @@ ip138 () {
 dbash () {
   docker exec -it `docker ps | head -n 2 | tail -n 1 | awk '{print $1}'` bash
 }
+
+gc () {
+  if git config remote.origin.url | grep -q github.com
+  then
+      git commit -vs --author "Kai Xia <kaix+github@fastmail.com>" "$@"
+  else
+      git commit -v --author "Kai Xia <${ALT_GIT_EMAIL}>" "$@"
+  fi
+}
