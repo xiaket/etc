@@ -113,6 +113,7 @@ set undodir=~/.vim/undo
 set mouse=iv
 " enable tomorrow colorscheme
 colorscheme Tomorrow-Night-Eighties
+highlight Normal ctermbg=NONE
 " case sensible when doing completion
 set infercase
 
