@@ -114,7 +114,8 @@ shopt -s checkwinsize
 #####################
 # ssh agent forward #
 #####################
-if [[ -f ~/.ssh/*ed25519 ]] || [[ -f ~/.ssh/*rsa ]]
+has_priv_files=$(ls -l ~/.ssh/*.priv >/dev/null 2>&1)
+if [ $? -eq 0 ]
 then
     SSH_ENV="$HOME/.ssh/environment"
 
@@ -123,13 +124,12 @@ then
         [ -f $SSH_ENV ] && return 0 || echo $content > $SSH_ENV
         chmod 600 "${SSH_ENV}"
         . "${SSH_ENV}" > /dev/null
-        /usr/bin/ssh-add ~/.ssh/*ed25519
-        /usr/bin/ssh-add ~/.ssh/*rsa
+        /usr/bin/ssh-add ~/.ssh/*.priv
     }
 
     # Source SSH settings, if applicable
-    [ ! -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
-    lockfile -1 ~/.xiaket/var/tmp/ssh.lock
+    [ -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
+    lockfile ~/.xiaket/var/tmp/ssh.lock
     if [ -f "${SSH_ENV}" ]; then
         . "${SSH_ENV}" > /dev/null
         ps ${SSH_AGENT_PID} | grep -q ssh-agent$
