@@ -31,6 +31,7 @@ alias maek='make'
 alias gti='git'
 
 # Acesssibilities
+alias py3='python3'
 alias md='mkdir -p'
 alias g='git'
 alias which='type -p'
