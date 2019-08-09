@@ -122,6 +122,7 @@ autocmd InsertEnter * :call RelativeLineNumber("number")
 autocmd InsertLeave * :call RelativeLineNumber("relativenumber")
 autocmd FocusLost * :call RelativeLineNumber("number")
 autocmd CursorMoved * :call RelativeLineNumber("relativenumber")
+autocmd InsertLeave * set nopaste
 
 " file headers
 " empty line in the list is converted to a newline
@@ -174,6 +175,7 @@ vnoremap <space> zf
 nnoremap <silent> <C-L> :call ToggleLineNumber()<cr>:call gitgutter#toggle()<cr>
 "Remove trailing spaces
 nnoremap <silent> <C-E> :%s/\s*$//g<cr>
+nnoremap <silent> <C-V> "*p
 set pastetoggle=<C-P>
 " In case of Q! and WQ, as I have to press Shift.
 cmap Q! q!
