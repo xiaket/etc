@@ -151,6 +151,10 @@
     "content": "import requests, json\nurl = 'http://127.0.0.1:27182/api/account'\nheaders = {'Content-type': 'application/json', 'Accept': 'text/plain'}\ndata = {'name': 1, 'param': 2}\nresponse = requests.post(url, data=json.dumps(data), headers=headers})",
     "lang": "Python"
   },
+  "python print to stderr": {
+    "content": "print(*args, file=sys.stderr, **kwargs)",
+    "lang": "SQL"
+  },
   "python run overrided method from superclass": {
     "content": "getattr(super(self.__class, self), sys._getframe().f_code.co_name)()",
     "lang": "Python"
