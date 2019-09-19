@@ -109,7 +109,7 @@
                                 },
                                 "to": [
                                     {
-                                        "shell_command": "open '/Applications/Sblack.app'"
+                                        "shell_command": "open '/Applications/Slack.app'"
                                     }
                                 ],
                                 "type": "basic"
