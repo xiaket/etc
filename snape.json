@@ -1,4 +1,8 @@
 {
+  "Debug time machine process": {
+    "content": "log show --predicate 'subsystem == \"com.apple.TimeMachine\"' --debug --info --start \"2019-09-29 09:20:00\"",
+    "lang": "Tera Term macro"
+  },
   "HTTP request in bash": {
     "content": "exec 3<> /dev/tcp/checkip.amazonaws.com/80\nprintf \"GET / HTTP/1.1\\r\\nHost: checkip.amazonaws.com\\r\\nConnection: close\\r\\n\\r\\n\" >&3\ntail -n1 <&3",
     "lang": "Text only"
@@ -54,6 +58,10 @@
   "convert pfx to normal ssl certificates": {
     "content": "openssl pkcs12 -in domain.pfx -clcerts -nokeys -out domain.cer\nopenssl pkcs12 -in domain.pfx -nocerts -nodes  -out domain.key\nopenssl pkcs12 -in domain.pfx -out domain.crt -nodes -nokeys -cacerts",
     "lang": "Bash"
+  },
+  "current unix timestamp in bash": {
+    "content": "date +\"%s\"",
+    "lang": "SQL"
   },
   "debug SSL problem": {
     "content": "openssl s_client -connect www.test.com:443 -prexit",
