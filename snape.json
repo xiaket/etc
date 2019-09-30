@@ -61,7 +61,7 @@
   },
   "current unix timestamp in bash": {
     "content": "date +\"%s\"",
-    "lang": "SQL"
+    "lang": "Bash"
   },
   "debug SSL problem": {
     "content": "openssl s_client -connect www.test.com:443 -prexit",
@@ -161,7 +161,7 @@
   },
   "python print to stderr": {
     "content": "print(*args, file=sys.stderr, **kwargs)",
-    "lang": "SQL"
+    "lang": "Python"
   },
   "python run overrided method from superclass": {
     "content": "getattr(super(self.__class, self), sys._getframe().f_code.co_name)()",
@@ -197,6 +197,10 @@
   },
   "sending data to local statsd": {
     "content": "echo \"deploys.test.kent:1|c\" | nc -u 127.0.0.1 8125 -w 1",
+    "lang": "Bash"
+  },
+  "speed up time machine backup": {
+    "content": "sudo sysctl debug.lowpri_throttle_enabled=0",
     "lang": "Bash"
   },
   "sync a fork": {
