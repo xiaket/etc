@@ -7,6 +7,7 @@ then
     alias preview='open -a Preview '
     alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm winx'
     alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
+    alias retouch='sudo pkill TouchBarServer'
     alias mtr='sudo /usr/local/sbin/mtr'
     alias typora='open -a Typora '
 
@@ -57,7 +58,6 @@ alias gcp='pbpaste | xargs git clone'
 #alias fls='(LS_COLORS="ex=00:su=00:sg=00:ca=00:" ls)'
 alias pcat='pygmentize -f terminal256 -O style=native -g'
 
-alias reweb='clear && sudo /usr/sbin/httpd -k restart && date'
 alias randport='python -c "import random; print(random.randint(1025, 32768))"'
 alias brewup='brew update && brew upgrade && brew cleanup'
 alias lvi='nvim --noplugin'
