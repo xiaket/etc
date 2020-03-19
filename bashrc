@@ -31,9 +31,10 @@ etcdir=$xiaketDIR"/etc"
 altdir=$xiaketDIR"/alt"
 
 # PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
-export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/opt/ruby/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/usr/sbin:/sbin:~/Library/Python/3.7/bin:/usr/local/opt/coreutils/bin:/usr/local/opt/fzf/bin"
+export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/opt/ruby/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/usr/sbin:/sbin:~/Library/Python/3.7/bin:~/.cargo/bin:/usr/local/opt/coreutils/bin:/usr/local/opt/fzf/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 export LANG=en_US.UTF-8
+export DYLD_FALLBACK_LIBRARY_PATH=/usr/local/opt/openssl/lib
 
 ############
 # sourcing #
@@ -54,17 +55,35 @@ then
     . "$altdir/etc/bashrc"
 fi
 
-function _xiaket_prompt {
-  PS1="$(my_prompt $?)"
-  history -a; history -n;
+_z_cd() {
+  builtin cd "${@}" > /dev/null
 }
 
+cd() {
+  if [ "${#}" -eq 0 ]; then
+    _z_cd "${HOME}"
+  elif [ "${#}" -eq 1 ] && [ "${1}" = '-' ]; then
+    _z_cd '-'
+  else
+    local result=$(zoxide query "${@}")
+    case "${result}" in
+      "query: "*) _z_cd "${result:7}" ;;
+      *) [ -n "${result}" ] && echo "${result}" ;;
+    esac
+  fi
+}
+
+function _xiaket_prompt {
+  status=$?
+  zoxide add
+  PS1="$(my_prompt $status)"
+  history -a; history -n;
+}
 
 export PROMPT_COMMAND='_xiaket_prompt'
 
 # For bash completion.
 . "$etcdir"/bash_completion
-
 
 # for fzf
 set rtp+=/usr/local/opt/fzf
