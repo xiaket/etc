@@ -15,7 +15,7 @@ shopt -s cdspell
 # explicitly enable term colors.
 export TERM="xterm-256color"
 export ARCH=`uname -s`
- 
+
 if [ "x$ARCH" = "xLinux" ]
 then
     export MAN_POSIXLY_CORRECT=1
@@ -55,11 +55,19 @@ then
     . "$altdir/etc/bashrc"
 fi
 
-_z_cd() {
-  builtin cd "${@}" > /dev/null
-}
+# for fzf
+set rtp+=/usr/local/opt/fzf
+[ -f /usr/local/opt/fzf/shell/key-bindings.bash ] && source /usr/local/opt/fzf/shell/key-bindings.bash
 
+# For bash completion.
+. "$etcdir"/bash_completion
+
+# For zoxide, replacing builtin cd.
 cd() {
+  _z_cd() {
+    builtin cd "${@}" > /dev/null
+  }
+
   if [ "${#}" -eq 0 ]; then
     _z_cd "${HOME}"
   elif [ "${#}" -eq 1 ] && [ "${1}" = '-' ]; then
@@ -73,6 +81,7 @@ cd() {
   fi
 }
 
+# I love my prompt
 function _xiaket_prompt {
   status=$?
   zoxide add
@@ -81,13 +90,6 @@ function _xiaket_prompt {
 }
 
 export PROMPT_COMMAND='_xiaket_prompt'
-
-# For bash completion.
-. "$etcdir"/bash_completion
-
-# for fzf
-set rtp+=/usr/local/opt/fzf
-[ -f /usr/local/opt/fzf/shell/key-bindings.bash ] && source /usr/local/opt/fzf/shell/key-bindings.bash
 
 ################
 # bash history #
