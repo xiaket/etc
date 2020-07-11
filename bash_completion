@@ -1476,7 +1476,7 @@ eval complete -r ${list[@]}
 eval complete -F _filedir_xspec "${list[@]}"
 unset list
 
-for app in bash-builtins brew coreutils findutils gzip lsof make man net-tools python rsync ssh tar youtube-dl.bash-completion
+for app in bash-builtins brew coreutils findutils git-completion.bash gzip lsof make man net-tools python rsync ssh tar youtube-dl.bash-completion
 do
     if [ -f "$BASH_COMPLETION_DIR/$app" ]
     then
