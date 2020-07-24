@@ -35,6 +35,7 @@ export PATH="$altdir/bin:~/.xiaket/etc/bin:~/.xiaket/go/bin:/usr/local/opt/ruby/
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 export LANG=en_US.UTF-8
 export DYLD_FALLBACK_LIBRARY_PATH=/usr/local/opt/openssl/lib
+export XDG_CONFIG_HOME="$etcdir"
 
 ############
 # sourcing #

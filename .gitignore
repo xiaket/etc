@@ -1,11 +1,11 @@
-vim/backup
-vim/black
-vim/.netrwhist
-vim/plugged
-vim/shada
-vim/undo
-vim/view
-vim/autoload/plug.vim
+nvim/backup
+nvim/black
+nvim/.netrwhist
+nvim/plugged
+nvim/shada
+nvim/undo
+nvim/view
+nvim/autoload/plug.vim
 
 w3m/history
 w3m/w3mtmp*
