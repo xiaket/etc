@@ -39,3 +39,5 @@
 
 [includeIf "gitdir:~/.Bitbucket/"]
    path = .xiaket/alt/etc/gitconfig
+[includeIf "gitdir:~/.xiaket/share/bitbucket/"]
+   path = .xiaket/alt/etc/gitconfig
