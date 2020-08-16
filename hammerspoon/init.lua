@@ -1,38 +1,28 @@
-local hyper = require('hyperex').new('rightcmd')
+local hiper = require('hiper').new('rightcmd')
 
-apps = {
-  {'d', 'Dash'},
-  {'f', 'Finder'},
-  {'k', 'Kitty'},
-  {'l', 'Slack'},
-  {'m', 'Mail'},
-  {'s', 'Safari'},
-  {'t', 'Typora'},
-  {'x', 'Firefox'},
+local features = {
+  -- Rebalance the audio output, sometime my WH-H900N will end up unbalanced
+  a = function() hs.audiodevice.current()['device']:setBalance(0.5) end,
+  d = 'Dash',
+  f = 'Finder',
+  -- Debug
+  h = function() hs.reload(); hs.console.clearConsole() end,
+  -- Lock screen
+  i = function() hs.osascript.applescript('tell application "System Events" to keystroke "q" using {command down,control down}') end,
+  k = 'Kitty',
+  l = 'Slack',
+  m = 'Mail',
+  -- Pause/Play audio
+  p = function() require('hs.eventtap').event.newSystemKeyEvent("PLAY", true):post() end,
+  s = 'Safari',
+  t = 'Typora',
+  x = 'Firefox',
 }
 
-for i, app in ipairs(apps) do
-  hyper:bind(app[1]):to(function() hs.application.launchOrFocus(app[2]) end)
+for key, feature in pairs(features) do
+  if type(feature) == 'string' then
+    hiper.bind(key, function() hs.application.launchOrFocus(feature) end)
+  else
+    hiper.bind(key, feature)
+  end
 end
-
--- Rebalance the audio output, sometime my WH-H900N will end up inbalanced
-hyper:bind("a"):to(
-  function()
-    hs.audiodevice.current()['device']:setBalance(0.5)
-  end
-)
-
--- Lock screen
-hyper:bind("i"):to(
-  function()
-    hs.osascript.applescript('tell application "System Events" to keystroke "q" using {command down,control down}')
-  end
-)
-
--- Pause/Play audio
-hyper:bind("p"):to(
-  function()
-    local event = require('hs.eventtap').event
-    event.newSystemKeyEvent("PLAY", true):post()
-  end
-)
