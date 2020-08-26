@@ -2,8 +2,6 @@
 
 ## Homebrew recepies
 
-aacgain
-aria2
 bash
 bash-completion
 colordiff
@@ -17,28 +15,22 @@ gnu-tar
 gnu-time
 gnutls
 go
-graphviz
-icu4c
 jq
 mtr
 neovim
-newsboat
 openssl
-openvpn
 p7zip
 packer
 pandoc
-pick-pass
 procmail
 python3
-ruby
+rbenv
 saml2aws
 shellcheck
 sqlite
 tig
 tree
 unrar
-vagrant-completion
 youtube-dl
 wget
 
@@ -50,27 +42,18 @@ brew tap versent/homebrew-taps
 
 ## Homebrew cask apps
 
-ccmenu
 dash
 djview
 dropbox
 font-fira-code
+hammerspoon
 itsycal
 grammarly
 iina
 kap
-karabiner-elements
-omnifocus
-sblack
 sloth
-spectacle
-steam
 tad
 typora
-vagrant
-vagrant-manager
-virtualbox
-virtualbox-extension-pack
 
 ## Docker setup: curtesy of https://pilsniak.com/how-to-install-docker-on-mac-os-using-brew/
 
