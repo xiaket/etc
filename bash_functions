@@ -34,22 +34,8 @@ mk () {
   fi
 }
 
-denv () {
-  state=`docker-machine status default`
-  if [ $state = "Stopped" ]
-  then
-    echo "starting docker-machine"
-    docker-machine start default >/dev/null
-  fi
-  eval $(docker-machine env default)
-}
-
 ip138 () {
   curl "http://www.ip138.com/ips138.asp?ip=$1" 2>/dev/null | iconv -f gb18030 -t utf-8 | egrep "\"ul1" | sed "s/<[^>]*>/./g;s/^\s*//g; s/\.\././g;s/\.\././g" | python -c "import sys; print sys.stdin.read().replace('.', '\n')" | grep -v "^$"
-}
-
-dbash () {
-  docker exec -it `docker ps | head -n 2 | tail -n 1 | awk '{print $1}'` bash
 }
 
 gc () {
@@ -58,5 +44,16 @@ gc () {
       git commit -vs --author "Kai Xia <kaix+github@fastmail.com>" "$@"
   else
       git commit -v --author "Kai Xia <${ALT_GIT_EMAIL}>" "$@"
+  fi
+}
+
+vm() {
+  # toggle vi edit mode in bash.
+  current_mode=$(bind -v | awk '/keymap/ {print $NF}')
+  if [ "$current_mode" = "emacs" ]
+  then
+    set -o vi
+  else
+    set -o emacs
   fi
 }
