@@ -86,7 +86,7 @@ cd() {
 function _xiaket_prompt {
   status=$?
   zoxide add
-  PS1="$(my_prompt $status)"
+  PS1="$(ps1 $status)"
   history -a; history -n;
 }
 

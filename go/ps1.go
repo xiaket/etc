@@ -3,8 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"github.com/libgit2/git2go/v30"
+
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -54,23 +55,23 @@ func Symbols(name string) string {
 }
 
 // GitSearch will tell us whether we are in a git root and in a git tree.
-func GitSearch() (bool, bool) {
+func GitSearch() (bool, string) {
 	dir, _ := filepath.Abs(".")
 	dir, _ = filepath.EvalSymlinks(dir)
 	if dir == "" {
 		// Current working directory removed
-		return false, false
+		return false, ""
 	}
 	for dir != "/" {
 		if filepath.Base(dir) == ".git" {
-			return true, false
+			return true, filepath.Dir(dir)
 		}
 		if _, err := os.Stat(filepath.Join(dir, "/.git")); err == nil {
-			return true, true
+			return true, dir
 		}
 		dir = filepath.Dir(dir)
 	}
-	return false, false
+	return false, ""
 }
 
 // Cwd would output the current path, and reduce the length of the output.
@@ -107,17 +108,10 @@ func Cwd() string {
 }
 
 // BranchName will give the name of the branch.
-func BranchName() string {
-	var out bytes.Buffer
-	cmd := exec.Command("git", "symbolic-ref", "--quiet", "--short", "HEAD")
-	cmd.Stdout = &out
-	if cmd.Run() == nil {
-		return PrettyBranchName(out.String())
-	}
-	cmd = exec.Command("git", "rev-parse", "--short", "HEAD")
-	cmd.Stdout = &out
-	if cmd.Run() == nil {
-		return PrettyBranchName(out.String())
+func BranchName(repository *git.Repository) string {
+	head, err := repository.Head()
+	if err == nil {
+		return PrettyBranchName(head.Shorthand())
 	} else {
 		return "Unknown"
 	}
@@ -141,33 +135,43 @@ func PrettyBranchName(name string) string {
 }
 
 // GitSt will output the current git status.
-func GitSt() string {
-	// Commands copied from:
-	// https://github.com/mathiasbynens/dotfiles/blob/master/.bash_prompt
+func GitSt(repository *git.Repository) string {
+	opts := &git.StatusOptions{}
+	opts.Show = git.StatusShowIndexAndWorkdir
+	opts.Flags = git.StatusOptIncludeUntracked | git.StatusOptRenamesHeadToIndex | git.StatusOptExcludeSubmodules
+	sl, _ := repository.StatusList(opts)
+	ec, _ := sl.EntryCount()
+
+	has_uncommited := false
+	has_unstaged := false
+	has_untracked := false
+	for i := 0; i < ec; i++ {
+		item, _ := sl.ByIndex(i)
+		if item.Status%32 != 0 {
+			has_uncommited = true
+		}
+		if item.Status == 128 {
+			has_untracked = true
+		}
+		if item.Status >= 256 {
+			has_unstaged = true
+		}
+	}
+
 	var status string
 	GitStatus := ColorIt("COLOR_GITSTATUS")
 
-	cmd := exec.Command("git", "update-index", "--really-refresh", "-q")
-	cmd.Run()
-
-	err := exec.Command("git", "diff", "--quiet", "--ignore-submodules", "--cached").Run()
-	if err != nil {
+	if has_uncommited {
 		status += Symbols("GIT_UNCOMMITED")
 	}
-
-	err = exec.Command("git", "diff-files", "--quiet", "--ignore-submodules", "--").Run()
-	if err != nil {
+	if has_unstaged {
 		status += Symbols("GIT_UNSTAGED")
 	}
-
-	err = exec.Command("git", "rev-parse", "--verify", "refs/stash").Run()
-	if err == nil {
-		status += Symbols("GIT_STASHED")
-	}
-
-	output, _ := exec.Command("git", "ls-files", "--others", "--exclude-standard").Output()
-	if len(output) != 0 {
+	if has_untracked {
 		status += Symbols("GIT_UNTRACKED")
+	}
+	if _, err := os.Stat(filepath.Join(repository.Path(), "refs/stash")); err == nil {
+		status += Symbols("GIT_STASHED")
 	}
 
 	if len(status) != 0 {
@@ -178,17 +182,14 @@ func GitSt() string {
 
 // GitPrompt will combine GitSt and BranchName and provide git info for prompt.
 func GitPrompt() string {
-	inside_git, inside_tree := GitSearch()
+	inside_git, dir := GitSearch()
 	if !inside_git {
 		return ""
 	}
+	repository, _ := git.OpenRepository(dir)
 	GitBranch := ColorIt("COLOR_GITBRANCH")
-	branchName := GitBranch(BranchName())
 
-	if !inside_tree {
-		return branchName
-	}
-	return branchName + GitSt()
+	return GitBranch(BranchName(repository)) + GitSt(repository)
 }
 
 // VenvPrompt will look for virtualenv def in environment.
