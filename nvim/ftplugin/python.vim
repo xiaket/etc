@@ -1,5 +1,5 @@
 " tabs and indents.
-setlocal textwidth=79
+setlocal textwidth=87
 setlocal smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 
 " we want to hightlight every thing, but not indent.
@@ -9,7 +9,7 @@ let python_highlight_all=1
 
 " set the color of overlength lines and white space at EOL
 highlight OverLength ctermbg=DarkRed ctermfg=white
-match OverLength /\%82v.*/
+match OverLength /\%90v.*/
 
 " disable preview.
 "setlocal completeopt=menu
