@@ -4,7 +4,7 @@
 " enable vim-plug
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'ambv/black',
+Plug 'psf/black', {'branch': 'stable'}
 Plug 'bling/vim-airline'
 Plug 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
 Plug 'davidhalter/jedi-vim'
