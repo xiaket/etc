@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/libgit2/git2go/v30"
+	"github.com/libgit2/git2go/v31"
 
 	"os"
 	"path/filepath"
