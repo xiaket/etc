@@ -21,5 +21,7 @@ aws/credentials
 
 vagrant/.vagrant/
 vagrant/*.log
+freebsd/base/package.box
+freebsd/.vagrant/
 
 bin/ps1
