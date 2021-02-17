@@ -57,3 +57,13 @@ vm() {
     set -o emacs
   fi
 }
+
+aws-extract() {
+  # export values in ~/.aws/credentials
+while IFS= read -r line
+do
+  name=$(echo "$line" | awk '{print $1}' | tr '[:lower:]' '[:upper:]')
+  value=$(echo "$line" | awk '{print $3}')
+  eval "export $name=\"$value\""
+done < <(cat ~/.aws/credentials | grep -A 3 "\[default\]" | tail -n 3)
+}
