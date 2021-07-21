@@ -1,19 +1,13 @@
 nvim/backup
-nvim/black
 nvim/.netrwhist
-nvim/plugged
 nvim/shada
 nvim/undo
 nvim/view
-nvim/autoload/plug.vim
+nvim/plugin/packer_compiled.lua
 
 w3m/history
 w3m/w3mtmp*
 w3m/w3mcache*
-
-karabiner/automatic_backups/
-newsboat/cache.*
-newsboat/history.*
 
 ptpython/history
 
