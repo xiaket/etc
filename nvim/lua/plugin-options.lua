@@ -1,5 +1,5 @@
 -- plugin setups
---- enable tomorrow colorscheme
+--- enable tomorrow colorscheme in airline
 vim.g.airline_theme = 'tomorrow'
 --- force loading the package so the directory is in runtime path.
 --- so that the color scheme file can be found.
@@ -7,13 +7,29 @@ vim.cmd("packadd tomorrow-theme/vim")
 vim.cmd("colorscheme Tomorrow-Night-Eighties")
 vim.cmd("highlight Normal ctermbg=NONE")
 
+-- gitsigns setup
+require('gitsigns').setup()
+
+-- auto pairs setup.
 require('nvim-autopairs').setup()
 
+require'lspconfig'.pylsp.setup{
+  cmd = {"pyls"},
+  on_attach=on_attach_vim,
+  settings = {
+    pyls = {
+      plugins = {
+        pycodestyle =  { enabled = false },
+        pylint =  { enabled = false },
+        mccabe =  { enabled = false },
+      }
+    }
+  }
+}
+
 vim.o.completeopt = "menuone,noselect"
-require'lspconfig'.pylsp.setup{}
 require'compe'.setup {
   min_length = 3;
-  documentation = false;
 
   source = {
     path = true;
@@ -43,8 +59,6 @@ end
 _G.tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-n>"
-  elseif vim.fn.call("vsnip#available", {1}) == 1 then
-    return t "<Plug>(vsnip-expand-or-jump)"
   elseif check_back_space() then
     return t "<Tab>"
   else
@@ -54,8 +68,6 @@ end
 _G.s_tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-p>"
-  elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
-    return t "<Plug>(vsnip-jump-prev)"
   else
     -- If <S-Tab> is not working in your terminal, change it to <C-h>
     return t "<S-Tab>"

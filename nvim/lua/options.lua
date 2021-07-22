@@ -1,10 +1,5 @@
-local scopes = {o = vim.o, b = vim.bo, w = vim.wo, g = vim.g}
-function option(key, value, scope)
-  scope = scope or "o"
-  scopes[scope][key] = value
-  if scope ~= 'o' then
-    scopes['o'][key] = value
-  end
+function option(key, value)
+  vim.o[key] = value
 end
 
 local tabsize = 2
@@ -29,8 +24,8 @@ option("tabstop", tabsize)
 option("softtabstop", tabsize)
 option("shiftwidth", tabsize)
 
--- autocmd FileType py set tabstop=4 softtabstop=4 shiftwidth=4
--- autocmd FileType make set noexpandtab shiftwidth=8
+vim.cmd('autocmd FileType py set tabstop=4 softtabstop=4 shiftwidth=4')
+vim.cmd('autocmd FileType make set noexpandtab shiftwidth=8')
 
 -- Enable folding
 option("foldmethod", "indent")
@@ -47,6 +42,7 @@ option("swapfile", false)
 -- save undo history
 option('undodir',  undo_dir)
 vim.cmd('set undofile')
+
 -- At times, I want to select text using the mouse and paste it somewhere, I
 -- know '"*' works, but I just don't like that.
 option("mouse", "iv")
@@ -55,3 +51,8 @@ option("infercase", true)
 
 -- things saved in the view
 option("viewoptions", "cursor,folds,slash,unix")
+
+-- Leave paste mode once we leave insert mode.
+vim.cmd('autocmd InsertLeave * set nopaste')
+-- auto save on bufleave and lose focus.
+vim.cmd('autocmd BufLeave,FocusLost * silent! wall')
