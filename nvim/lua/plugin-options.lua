@@ -14,10 +14,9 @@ require('gitsigns').setup()
 require('nvim-autopairs').setup()
 
 require'lspconfig'.pylsp.setup{
-  cmd = {"pyls"},
   on_attach=on_attach_vim,
   settings = {
-    pyls = {
+    pylsp = {
       plugins = {
         pycodestyle =  { enabled = false },
         pylint =  { enabled = false },
