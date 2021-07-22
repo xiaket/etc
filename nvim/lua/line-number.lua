@@ -40,4 +40,4 @@ function toggleln()
 end
 
 -- Use Ctrl-L to toggle the line number display.
-vim.api.nvim_set_keymap('', '<C-L>', ':lua toggleln()<CR>', {noremap = true})
+vim.api.nvim_set_keymap('', '<C-L>', ':lua toggleln()<CR>:lua require"gitsigns".toggle_signs()<CR>', {noremap = true})
