@@ -120,7 +120,7 @@ func BranchName(repository *git.Repository) string {
 // PrettyBranchName will replace repetitive names in the branch and
 // truncate longer names.
 func PrettyBranchName(name string) string {
-	if name == "master" {
+	if name == "master" || name == "main" {
 		return "🏠"
 	}
 	const truncate = 15
