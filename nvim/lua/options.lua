@@ -1,7 +1,3 @@
-function option(key, value)
-  vim.o[key] = value
-end
-
 local tabsize = 2
 local undo_dir = os.getenv("HOME") .. '/.vim/undo'
 local bak_dir = os.getenv("HOME") .. '/.vim/backup'
@@ -12,45 +8,45 @@ os.execute("mkdir -p " .. bak_dir)
 vim.g.fileencodings = "utf-8,gbk,ucs-bom,cp936"
 vim.g.fileformats = "unix,dos,mac"
 -- Do not change eol setting of the current file
-option("fixendofline", false)
+vim.o.fixendofline = false
 -- Do not redraw while running macros (much faster).
-option("lazyredraw", true)
+vim.o.lazyredraw = true
 -- Search related.
-option("showmatch", true)
+vim.o.showmatch = true
 -- Tab and indent
-option("expandtab", true)
-option("smartindent", true)
-option("tabstop", tabsize)
-option("softtabstop", tabsize)
-option("shiftwidth", tabsize)
+vim.o.expandtab = true
+vim.o.smartindent = true
+vim.o.tabstop = tabsize
+vim.o.softtabstop = tabsize
+vim.o.shiftwidth = tabsize
 
 vim.cmd('autocmd FileType py set tabstop=4 softtabstop=4 shiftwidth=4')
 vim.cmd('autocmd FileType make set noexpandtab shiftwidth=8')
 
 -- Enable folding
-option("foldmethod", "indent")
-option("foldlevel", 99)
+vim.o.foldmethod = "indent"
+vim.o.foldlevel = 99
 -- Minimal number of screen lines to keep above and below the cursor.
-option("scrolloff", 3)
+vim.o.scrolloff = 3
 -- always report number of lines affected.
-option("report", 0)
+vim.o.report = 0
 -- backup and swap file
-option("backup", true)
-option("backupdir", bak_dir)
-option("swapfile", false)
+vim.o.backup = true
+vim.o.backupdir = bak_dir
+vim.o.swapfile = false
 
 -- save undo history
-option('undodir',  undo_dir)
+vim.o.undodir = undo_dir
 vim.cmd('set undofile')
 
 -- At times, I want to select text using the mouse and paste it somewhere, I
 -- know '"*' works, but I just don't like that.
-option("mouse", "iv")
+vim.o.mouse = "iv"
 -- case sensible when doing completion
-option("infercase", true)
+vim.o.infercase = true
 
 -- things saved in the view
-option("viewoptions", "cursor,folds,slash,unix")
+vim.o.viewoptions = "cursor,folds,slash,unix"
 
 -- Leave paste mode once we leave insert mode.
 vim.cmd('autocmd InsertLeave * set nopaste')

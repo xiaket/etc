@@ -15,3 +15,6 @@ require("auto-header")
 
 -- keymaps
 require("keymaps")
+
+-- snippets
+require("snippets")

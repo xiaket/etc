@@ -16,7 +16,6 @@ function relativeln(target)
   end
 end
 
-
 -- Show relative line number when in command mode and absolute line number in edit mode
 vim.cmd('autocmd InsertEnter * :lua relativeln("number")')
 vim.cmd('autocmd InsertLeave * :lua relativeln("relativenumber")')

@@ -28,10 +28,10 @@ require('packer').startup(function()
   use 'bling/vim-airline'                               -- better status line
   use 'vim-airline/vim-airline-themes'                  -- collection of airline themes
   use {'chriskempson/tomorrow-theme', rtp = 'vim/'}     -- my preferred theme
-  use 'SirVer/ultisnips'                                -- snippets
   use 'lewis6991/gitsigns.nvim'                         -- show git changes.
   use 'vim-scripts/restore_view.vim'                    -- save'n'restore view
   use 'windwp/nvim-autopairs'                           -- pairs helper
+  use 'L3MON4D3/LuaSnip'                                -- snippets
 
   -- python specific things.
   use 'psf/black'                                       -- python styling helper
