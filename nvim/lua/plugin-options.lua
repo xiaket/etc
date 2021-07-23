@@ -17,6 +17,30 @@ require('nvim-autopairs').setup()
 -- luasnip setup
 local luasnip = require("luasnip")
 
+-- formatter setup
+require('formatter').setup({
+  logging = false,
+  filetype = {
+    python = {
+       function()
+          return {
+            exe = "black",
+            stdin = false
+          }
+       end
+    },
+    yaml = {
+       function()
+          return {
+            exe = "yamlfix",
+            stdin = false
+          }
+       end
+    },
+  }
+})
+vim.api.nvim_set_keymap('n', '<C-F>', ':Format<cr>', {noremap = true, silent = true})
+
 -- compe setup
 vim.o.completeopt = "menuone,noselect"
 require'compe'.setup {

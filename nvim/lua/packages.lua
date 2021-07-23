@@ -32,9 +32,9 @@ require('packer').startup(function()
   use 'vim-scripts/restore_view.vim'                    -- save'n'restore view
   use 'windwp/nvim-autopairs'                           -- pairs helper
   use 'L3MON4D3/LuaSnip'                                -- snippets
+  use 'mhartington/formatter.nvim'                      -- (auto) format files
 
   -- python specific things.
-  use 'psf/black'                                       -- python styling helper
   use {'numirias/semshi', run = ':UpdateRemotePlugins'} -- python syntax highlighter
   use 'Vimjas/vim-python-pep8-indent'                   -- better indentation
 
