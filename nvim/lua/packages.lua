@@ -19,6 +19,7 @@ local use = require('packer').use
 require('packer').startup(function()
   use {'wbthomason/packer.nvim', opt = true}            -- package manager
   use 'nvim-lua/plenary.nvim'                           -- lua helpers
+  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
 
   -- nvim level setups.
   use 'neovim/nvim-lspconfig'                           -- language server setup

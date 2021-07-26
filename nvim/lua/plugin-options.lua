@@ -8,6 +8,19 @@ vim.cmd("packadd tomorrow-theme/vim")
 vim.cmd("colorscheme Tomorrow-Night-Eighties")
 vim.cmd("highlight Normal ctermbg=NONE")
 
+
+-- treesitter setup
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {"python", "bash", "go", "json", "lua", "yaml"},
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    additional_vim_regex_highlighting = false,
+  },
+  indent = {
+    enable = true
+  }
+}
+
 -- gitsigns setup
 require('gitsigns').setup()
 
