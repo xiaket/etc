@@ -20,8 +20,9 @@ vim.o.tabstop = tabsize
 vim.o.softtabstop = tabsize
 vim.o.shiftwidth = tabsize
 
-vim.cmd('autocmd FileType py set tabstop=4 softtabstop=4 shiftwidth=4')
+vim.cmd('autocmd FileType py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=87')
 vim.cmd('autocmd FileType make set noexpandtab shiftwidth=8')
+vim.cmd('autocmd FileType go setlocal textwidth=95')
 
 -- Enable folding
 vim.o.foldmethod = "indent"
