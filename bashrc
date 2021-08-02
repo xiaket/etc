@@ -63,29 +63,54 @@ set rtp+=/usr/local/opt/fzf
 # For bash completion.
 . "$etcdir"/bash_completion
 
-# For zoxide, replacing builtin cd.
-cd() {
-  _z_cd() {
-    builtin cd "${@}" > /dev/null
-  }
+# configuration for zoxide.
+function __zoxide_pwd() {
+    \builtin pwd -L
+}
 
-  if [ "${#}" -eq 0 ]; then
-    _z_cd "${HOME}"
-  elif [ "${#}" -eq 1 ] && [ "${1}" = '-' ]; then
-    _z_cd '-'
-  else
-    local result=$(zoxide query "${@}")
-    case "${result}" in
-      "query: "*) _z_cd "${result:7}" ;;
-      *) [ -n "${result}" ] && echo "${result}" ;;
-    esac
-  fi
+# cd + custom logic based on the value of _ZO_ECHO.
+function __zoxide_cd() {
+    # shellcheck disable=SC2164
+    \builtin cd "$@"
+}
+
+# Hook to add new entries to the database.
+function __zoxide_hook() {
+    \builtin local -r __zoxide_retval="$?"
+    \builtin local -r __zoxide_pwd_tmp="$(__zoxide_pwd)"
+    if [ -z "${__zoxide_pwd_old}" ]; then
+        __zoxide_pwd_old="${__zoxide_pwd_tmp}"
+    elif [ "${__zoxide_pwd_old}" != "${__zoxide_pwd_tmp}" ]; then
+        __zoxide_pwd_old="${__zoxide_pwd_tmp}"
+        zoxide add -- "${__zoxide_pwd_old}"
+    fi
+    return "${__zoxide_retval}"
+}
+
+# Jump to a directory using only keywords.
+cd() {
+    if [ "$#" -eq 0 ]; then
+        __zoxide_cd ~
+    elif [ "$#" -eq 1 ] && [ "$1" = '-' ]; then
+        if [ -n "${OLDPWD}" ]; then
+            __zoxide_cd "${OLDPWD}"
+        else
+            # shellcheck disable=SC2016
+            \builtin printf 'zoxide: $OLDPWD is not set\n'
+            return 1
+        fi
+    elif [ "$#" -eq 1 ] && [ -d "$1" ]; then
+        __zoxide_cd "$1"
+    else
+        \builtin local __zoxide_result
+        __zoxide_result="$(zoxide query --exclude "$(__zoxide_pwd)" -- "$@")" && __zoxide_cd "${__zoxide_result}"
+    fi
 }
 
 # I love my prompt
 function _xiaket_prompt {
   status=$?
-  zoxide add
+  __zoxide_hook
   PS1="$(ps1 $status)"
   history -a; history -n;
 }
