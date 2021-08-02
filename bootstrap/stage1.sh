@@ -55,14 +55,14 @@ homebrew () {
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     brew install \
-        bash bash-completion coreutils findutils gawk gnu-sed gnu-tar gnu-time gnutls openssl procmail tree wget \   # system utils
-        colordiff ffmpeg fzf git go jq python3 shellcheck sqlite tig \  # development tools
-        mtr neovim p7zip youtube-dl zoxide  # utils
+        bash bash-completion coreutils findutils gawk gcc gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \   # system utils
+        colordiff cw ffmpeg fzf git go jq python3 rust shellcheck sqlite tig \  # development tools
+        mtr mpv neovim p7zip youtube-dl zoxide  # utils
 
     brew tap homebrew/cask
     brew tap homebrew/cask-fonts
 
-    brew install font-fira-code hammerspoon itsycal grammarly iina typora
+    brew install basictex bitwarden dash docker drawio firefox font-fira-code grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
     touch-done
 }
 
