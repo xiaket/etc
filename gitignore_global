@@ -1,6 +1,5 @@
 *~
 .DS_Store
-.gitignore
 *.pyc
 .coverage
 *.egg-info
