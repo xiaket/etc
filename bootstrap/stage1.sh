@@ -4,6 +4,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+# This stage does not have any prerequisites. We should run this after the first boot.
 BASE_DIR="$HOME/.xiaket"
 
 
@@ -131,6 +132,7 @@ misc-config () {
     check-done || return 0
     chsh -s /bin/bash
     nvim +PackerSync +qall
+    (cd "$BASE_DIR/etc" && git remote set-url origin git@github.com:xiaket/etc.git)
     touch-done
 }
 
