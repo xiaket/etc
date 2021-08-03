@@ -36,7 +36,7 @@ clone-etc () {
 
     while true
     do
-        has_git=$(which git || echo "false")
+        has_git=$(git --version 2>/dev/null || echo "false")
         if [ "$has_git" != "false" ]
         then
             break
@@ -54,15 +54,18 @@ homebrew () {
     check-done || return 0
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+    # system utils
+    # development tools
+    # utils
     brew install \
-        bash bash-completion coreutils findutils gawk gcc gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \   # system utils
-        colordiff cw ffmpeg fzf git go jq python3 rust shellcheck sqlite tig \  # development tools
-        mtr mpv neovim p7zip youtube-dl zoxide  # utils
+        bash bash-completion coreutils findutils gawk gcc gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \
+        colordiff cwlogs ffmpeg fzf git go jq python3 rust shellcheck sqlite tig \
+        mtr mpv neovim p7zip youtube-dl zoxide
 
     brew tap homebrew/cask
     brew tap homebrew/cask-fonts
 
-    brew install basictex bitwarden dash docker drawio firefox font-fira-code grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
+    brew install basictex bitwarden homebrew/cask/dash homebrew/cask/docker drawio firefox font-fira-code grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
     touch-done
 }
 
@@ -116,13 +119,14 @@ create-links () {
     ln -sf "$BASE_DIR/etc/pythonrc" "$HOME/.pythonrc"
     ln -sf "$BASE_DIR/etc/ptpython" "$HOME/.ptpython"
     ln -sf "$BASE_DIR/etc/snape.json" "$HOME/.snape.json"
-    ln -sf "$BASE_DIR/etc/vim" "$HOME/.vim"
+    ln -sf "$BASE_DIR/etc/nvim" "$HOME/.vim"
     ln -sf "$BASE_DIR/share/github" "$HOME/.Github"
     ln -sf "$BASE_DIR/share/ssh" "$HOME/.ssh"
 
     # for configuration in .config
     mkdir -p "$HOME/.config"
-    ln -sf "$BASE_DIR/etc/vim" "$HOME/.config/nvim"
+    ln -sf "$BASE_DIR/etc/nvim" "$HOME/.config/nvim"
+    ln -sf "$BASE_DIR/etc/kitty" "$HOME/.config/kitty"
     ln -sf /usr/local/bin/python3 /usr/local/bin/python
     ln -sf /usr/local/bin/pip3 /usr/local/bin/pip
     touch-done
