@@ -72,7 +72,7 @@ homebrew () {
 python-packages () {
     check-done || return 0
     python3 -m pip install -U pip
-    python3 -m pip install black icdiff neovim psutil ptpython pyflakes pygments requests sh Snape termcolor virtualenv
+    python3 -m pip install ansible black icdiff neovim poetry psutil ptpython pyflakes pygments requests sh Snape termcolor virtualenv
     touch-done
 }
 
