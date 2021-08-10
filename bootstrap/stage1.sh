@@ -65,7 +65,7 @@ homebrew () {
     brew tap homebrew/cask
     brew tap homebrew/cask-fonts
 
-    brew install basictex bitwarden homebrew/cask/dash homebrew/cask/docker drawio firefox font-fira-code grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
+    brew install basictex bitwarden chiaki homebrew/cask/dash homebrew/cask/docker drawio firefox font-fira-code grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
     touch-done
 }
 
