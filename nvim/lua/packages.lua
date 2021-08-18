@@ -26,9 +26,8 @@ require('packer').startup(function()
   use 'hrsh7th/nvim-compe'                              -- auto complete setup.
 
   -- global configurations.
-  use 'bling/vim-airline'                               -- better status line
-  use 'vim-airline/vim-airline-themes'                  -- collection of airline themes
-  use {'chriskempson/tomorrow-theme', rtp = 'vim/'}     -- my preferred theme
+  use 'EdenEast/nightfox.nvim'                          -- theme
+  use 'hoob3rt/lualine.nvim'                            -- statusline.
   use 'lewis6991/gitsigns.nvim'                         -- show git changes.
   use 'vim-scripts/restore_view.vim'                    -- save'n'restore view
   use 'windwp/nvim-autopairs'                           -- pairs helper

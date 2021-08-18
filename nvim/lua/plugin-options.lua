@@ -1,13 +1,18 @@
 -- plugin setups
---- enable tomorrow colorscheme in airline
-vim.g.airline_theme = 'tomorrow'
+--- theme
+require('nightfox').set()
 
---- force loading the package so the directory is in runtime path.
---- and the color scheme file can be found.
-vim.cmd("packadd tomorrow-theme/vim")
-vim.cmd("colorscheme Tomorrow-Night-Eighties")
-vim.cmd("highlight Normal ctermbg=NONE")
-
+--- statusline
+require'lualine'.setup {
+  options = {
+    icons_enabled = false,
+    theme = 'nightfox',
+  },
+  sections = {
+    lualine_b = {},
+    lualine_x = {'encoding', 'fileformat'},
+  }
+}
 
 -- treesitter setup
 require'nvim-treesitter.configs'.setup {
