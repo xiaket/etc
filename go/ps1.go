@@ -3,11 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"github.com/libgit2/git2go/v31"
+
+	git "github.com/libgit2/git2go/v31"
 
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 var SHORT_PATH_TRUNCATE = 3
@@ -192,7 +194,20 @@ func GitPrompt() string {
 	repository, _ := git.OpenRepository(dir)
 	GitBranch := ColorIt("COLOR_GITBRANCH")
 
-	return GitBranch(BranchName(repository)) + GitSt(repository)
+	branch_name := BranchName(repository)
+
+	channel := make(chan string, 1)
+	go func() {
+		text := GitSt(repository)
+		channel <- text
+	}()
+
+	select {
+	case git_st := <-channel:
+		return GitBranch(branch_name) + git_st
+	case <-time.After(400 * time.Millisecond):
+		return GitBranch(branch_name)
+	}
 }
 
 // VenvPrompt will look for virtualenv def in environment.
