@@ -134,8 +134,6 @@ shopt -s histappend
 # environment variables #
 #########################
 
-# Setup Python PATH, so our python libraries would be portable.
-export PYTHONPATH="$PYTHONPATH:${etcdir}/python/"
 export PYTHONSTARTUP=~/.pythonrc
 export PYTHONDONTWRITEBYTECODE="False"
 export GOPATH="${xiaketDIR}/go"

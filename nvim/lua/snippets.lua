@@ -16,7 +16,10 @@ luasnip.snippets = {
 	},
   python = {
     luasnip.snippet("exit", luasnip.text_node({"import sys", "sys.exit()"})),
-    luasnip.snippet("interact", luasnip.text_node({"from xiaket.interact import shell", "shell(globals(), locals())"})),
+    luasnip.snippet("shell", luasnip.text_node(
+      {"xiaket = locals()", "import os", "from prompt_toolkit.utils import DummyContext", "from ptpython.repl import PythonRepl, run_config", "repl = PythonRepl(get_globals=lambda : globals(), get_locals=lambda : xiaket, history_filename=os.path.expanduser('~/.ptpython_history'))", "run_config(repl)", "with DummyContext():", "    repl.run()"}
+      )
+    ),
     luasnip.snippet("datetime", luasnip.text_node({"from datetime import datetime"})),
     luasnip.snippet("ifmain", luasnip.text_node({"if __name__ == '__main__':", "    main()"})),
   }

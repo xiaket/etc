@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # encoding=utf8
-from prompt_toolkit.keys import Keys
 
 
 def configure(repl):
@@ -15,12 +14,12 @@ def configure(repl):
     # visual
     repl.highlight_matching_parenthesis = True
     repl.insert_blank_line_after_output = False
-    repl.prompt_style = 'ipython'
-    repl.true_color = True
-    repl.use_code_colorscheme('monokai')
+    repl.prompt_style = "ipython"
+    repl.color_depth = "DEPTH_24_BIT"
+    repl.use_code_colorscheme("zenburn")
 
     # typo fixer.
     corrections = {
-        'impotr': 'import',
-        'pritn': 'print',
+        "impotr": "import",
+        "pritn": "print",
     }
