@@ -8,6 +8,7 @@ local features = {
   k = 'Kitty',
   l = 'Slack',
   m = 'Mail',
+  o = 'Obsidian',
   s = 'Safari',
   t = 'Typora',
   x = 'Firefox',
