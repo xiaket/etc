@@ -58,7 +58,7 @@ homebrew () {
     # development tools
     # utils
     brew install \
-        bash bash-completion coreutils findutils gawk gcc gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \
+        bash bash-completion coreutils findutils gawk gcc git-delta gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \
         colordiff cwlogs ffmpeg fzf git go jq python3 rust shellcheck sqlite tig \
         mtr mpv neovim p7zip youtube-dl zoxide
 
