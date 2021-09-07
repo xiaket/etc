@@ -1,6 +1,6 @@
 -- plugin setups
 --- theme
-require('nightfox').set()
+require('nightfox').load()
 
 --- statusline
 require'lualine'.setup {
