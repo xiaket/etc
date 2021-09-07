@@ -44,6 +44,7 @@ require('formatter').setup({
        function()
           return {
             exe = "black",
+            args = {"--line-length", "100"},
             stdin = false
           }
        end
