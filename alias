@@ -56,6 +56,7 @@ alias gcp='pbpaste | xargs git clone'
 # https://news.sherlock.stanford.edu/posts/when-setting-an-environment-variable-gives-you-a-40-x-speedup
 #alias fls='(LS_COLORS="ex=00:su=00:sg=00:ca=00:" ls)'
 alias pcat='pygmentize -f terminal256 -O style=native -g'
+alias docker='podman'
 
 alias randport='python -c "import random; print(random.randint(1025, 32768))"'
 alias brewup='brew update && brew upgrade && brew cleanup'

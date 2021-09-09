@@ -59,13 +59,15 @@ homebrew () {
     # utils
     brew install \
         bash bash-completion coreutils findutils gawk gcc git-delta gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \
-        colordiff cwlogs ffmpeg fzf git go jq python3 rust shellcheck sqlite tig \
+        colordiff cwlogs ffmpeg fzf git go jq podman python3 rust shellcheck sqlite tig \
         mtr mpv neovim p7zip youtube-dl zoxide
 
     brew tap homebrew/cask
     brew tap homebrew/cask-fonts
 
-    brew install basictex bitwarden chiaki homebrew/cask/dash homebrew/cask/docker drawio firefox font-fira-code grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
+    brew install basictex bitwarden chiaki homebrew/cask/dash drawio firefox font-fira-code grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
+    podman machine init
+    podman machine start
     touch-done
 }
 
