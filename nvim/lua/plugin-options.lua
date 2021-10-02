@@ -14,6 +14,12 @@ require'lualine'.setup {
   }
 }
 
+-- spellsitter setup
+require('spellsitter').setup {
+  hl = 'SpellBad',
+  captures = {'comment', 'string'},
+}
+
 -- treesitter setup
 require'nvim-treesitter.configs'.setup {
   ensure_installed = {"python", "bash", "go", "json", "lua", "yaml"},
