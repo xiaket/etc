@@ -33,7 +33,9 @@ require('packer').startup(function()
   use 'windwp/nvim-autopairs'                           -- pairs helper
   use 'L3MON4D3/LuaSnip'                                -- snippets
   use 'mhartington/formatter.nvim'                      -- (auto) format files
-  use 'lewis6991/spellsitter.nvim'                      -- spell check setup.
+  use 'lewis6991/spellsitter.nvim'                      -- spell check setup
+  use 'beauwilliams/focus.nvim'                         -- window management
+  use 'rmagatti/auto-session'                           -- session management
 
   -- python specific things.
   use {'numirias/semshi', run = ':UpdateRemotePlugins'} -- python syntax highlighter

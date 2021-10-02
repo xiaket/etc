@@ -14,6 +14,20 @@ require'lualine'.setup {
   }
 }
 
+-- auto session
+vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,resize,winpos,terminal"
+require('auto-session').setup {
+    auto_session_enable_last_session=rue,
+}
+
+-- focus
+require("focus").setup(
+  {
+    hybridnumber = true,
+    excluded_filetypes = {"toggleterm"}
+  }
+)
+
 -- spellsitter setup
 require('spellsitter').setup {
   hl = 'SpellBad',
