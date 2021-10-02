@@ -19,11 +19,13 @@ local use = require('packer').use
 require('packer').startup(function()
   use {'wbthomason/packer.nvim', opt = true}            -- package manager
   use 'nvim-lua/plenary.nvim'                           -- lua helpers
-  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
 
   -- nvim level setups.
+  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}      -- treesitter
   use 'neovim/nvim-lspconfig'                           -- language server setup
-  use 'hrsh7th/nvim-compe'                              -- auto complete setup.
+  use 'hrsh7th/nvim-compe'                              -- auto complete setup
+  use 'nvim-telescope/telescope.nvim'                   -- telescope
+  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' } -- telescope extension
 
   -- global configurations.
   use 'EdenEast/nightfox.nvim'                          -- theme
@@ -31,7 +33,7 @@ require('packer').startup(function()
   use 'lewis6991/gitsigns.nvim'                         -- show git changes.
   use 'vim-scripts/restore_view.vim'                    -- save'n'restore view
   use 'windwp/nvim-autopairs'                           -- pairs helper
-  use 'L3MON4D3/LuaSnip'                                -- snippets
+  use {'L3MON4D3/LuaSnip', commit = "0349dccd"}         -- snippets
   use 'mhartington/formatter.nvim'                      -- (auto) format files
   use 'lewis6991/spellsitter.nvim'                      -- spell check setup
   use 'beauwilliams/focus.nvim'                         -- window management
@@ -42,7 +44,7 @@ require('packer').startup(function()
   use 'Vimjas/vim-python-pep8-indent'                   -- better indentation
 
   -- other languages.
-  use 'ekalinin/Dockerfile.vim'
-  use 'fatih/vim-go'
-  use 'rhysd/vim-gfm-syntax'
+  use 'ekalinin/Dockerfile.vim'                         -- Dockerfile
+  use 'fatih/vim-go'                                    -- golang
+  use 'rhysd/vim-gfm-syntax'                            -- markdown
 end)

@@ -1,20 +1,20 @@
--- loading packages
+-- packages/plugins that I install
 require("packages")
 
--- loading generic options
-require("options")
+-- generic vim configurations
+require("neovim-options")
 
--- loading plugin options
-require("plugin-options")
-
--- my line number setup
-require("line-number")
-
--- auto header: add a header to new python/shell scripts
-require("auto-header")
+-- package/plugin options
+require("package-options")
 
 -- keymaps
 require("keymaps")
 
 -- snippets
 require("snippets")
+
+-- my line number setup
+require("line-number")
+
+-- auto header: add a header to new python/shell scripts
+require("auto-header")
