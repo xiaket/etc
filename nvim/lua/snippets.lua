@@ -1,6 +1,6 @@
 local luasnip = require'luasnip'
 
-local function bash(_, command)
+local function bash(_, _, command)
 	local file = io.popen(command, "r")
 	local res = {}
 	for line in file:lines() do
