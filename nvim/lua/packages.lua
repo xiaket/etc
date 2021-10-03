@@ -23,17 +23,20 @@ require('packer').startup(function()
   -- nvim level setups.
   use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}      -- treesitter
   use 'neovim/nvim-lspconfig'                           -- language server setup
-  use 'hrsh7th/nvim-compe'                              -- auto complete setup
   use 'nvim-telescope/telescope.nvim'                   -- telescope
   use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' } -- telescope extension
 
   -- global configurations.
+  use 'windwp/nvim-autopairs'                           -- pairs helper
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'saadparwaiz1/cmp_luasnip'
+  use 'hrsh7th/nvim-cmp'                                -- auto complete setup
+  use 'L3MON4D3/LuaSnip'                                -- snippets
   use 'EdenEast/nightfox.nvim'                          -- theme
   use 'hoob3rt/lualine.nvim'                            -- statusline.
   use 'lewis6991/gitsigns.nvim'                         -- show git changes.
   use 'vim-scripts/restore_view.vim'                    -- save'n'restore view
-  use 'windwp/nvim-autopairs'                           -- pairs helper
-  use {'L3MON4D3/LuaSnip', commit = "0349dccd"}         -- snippets
   use 'mhartington/formatter.nvim'                      -- (auto) format files
   use 'lewis6991/spellsitter.nvim'                      -- spell check setup
   use 'beauwilliams/focus.nvim'                         -- window management

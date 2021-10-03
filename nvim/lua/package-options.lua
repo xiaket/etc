@@ -14,39 +14,6 @@ require'nvim-treesitter.configs'.setup {
 }
 -- end:nvim-treesitter
 
--- start:nvim-lspconfig
-require'lspconfig'.pylsp.setup{
-  on_attach = on_attach_vim,
-  settings = {
-    pylsp = {
-      plugins = {
-        -- Disable these linters, coz I know what I'm doing
-        pycodestyle =  { enabled = false },
-        pylint =  { enabled = false },
-        mccabe =  { enabled = false },
-      }
-    }
-  }
-}
--- end:nvim-lspconfig
-
--- start:nvim-compe
----- This section is coupled with nvim-autopairs and luasnip.
-vim.o.completeopt = "menuone,noselect"
-require'compe'.setup {
-  min_length = 3;    -- start give options after 3 chrs.
-
-  source = {
-    path = true;
-    buffer = true;
-    nvim_lsp = true;
-    spell = true;
-    luasnip = true;
-  };
-}
----- Additional keymaps are defined later.
--- end:nvim-compe
-
 -- start:telescope.nvim
 local actions = require('telescope.actions')
 local previewers = require('telescope.previewers')
@@ -89,6 +56,88 @@ vim.api.nvim_set_keymap('n', '<leader>g', ':Telescope live_grep<cr>', {noremap =
 require('telescope').load_extension('fzf')
 -- end:telescope-fzf-native.nvim
 
+-- start:nvim-autopairs
+require('nvim-autopairs').setup()
+-- end:nvim-autopairs
+
+-- start:luasnip
+local luasnip = require("luasnip")
+-- end:luasnip
+
+-- start:nvim-cmp
+---- This section is coupled with nvim-autopairs and luasnip.
+vim.o.completeopt = "menu,menuone,noselect"
+local cmp = require'cmp'
+
+local termcode = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s')
+end
+
+cmp.setup({
+  mapping = {
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'buffer' },
+  },
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  }
+})
+
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return termcode "<C-n>"
+  elseif luasnip.expand_or_jumpable() then
+    return luasnip.jump()
+  elseif check_back_space() then
+    return termcode "<Tab>"
+  else
+    return cmp.mapping.complete()
+  end
+end
+
+-- cmp keymaps setup
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+
+require("nvim-autopairs.completion.cmp").setup({
+  map_cr = true,
+  map_complete = true,
+  auto_select = true,
+  insert = false,
+  map_char = {
+    all = '(',
+    tex = '{'
+  }
+})
+
+-- Setup lspconfig.
+require('lspconfig').pylsp.setup {
+  on_attach = on_attach_vim,
+  capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
+  settings = {
+    pylsp = {
+      plugins = {
+        autopep8 = { enabled = false },
+        mccabe = { enabled = false },
+        pycodestyle = { enabled = true },
+        pyflakes = { enabled = false },
+        pylint = { enabled = false },
+      }
+    }
+  }
+}
+-- end:nvim-cmp
+
 --- start:nightforx.nvim
 require('nightfox').load()
 
@@ -108,45 +157,6 @@ require'lualine'.setup {
 -- start:gitsigns.nvim
 require('gitsigns').setup()
 -- end:gitsigns.nvim
-
--- start:nvim-autopairs
-require('nvim-autopairs').setup()
----- Additional keymaps are defined later.
--- end:nvim-autopairs
-
--- start:luasnip
-local luasnip = require("luasnip")
-local termcode = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s')
-end
-
--- Use tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
-_G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return termcode "<C-n>"
-  elseif luasnip.expand_or_jumpable() then
-    return termcode "<cmd>lua require'luasnip'.jump(1)<Cr>"
-  elseif check_back_space() then
-    return termcode "<Tab>"
-  else
-    return vim.fn['compe#complete']()
-  end
-end
-
--- compe keymaps setup
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-
--- autopairs & compe keymaps setup
-vim.api.nvim_set_keymap('i', '<CR>', [[compe#confirm(luaeval("require 'nvim-autopairs'.autopairs_cr()"))]], {noremap = true, expr = true, silent = true})
--- end:luasnip
 
 -- start:formatter.nvim
 require('formatter').setup({
