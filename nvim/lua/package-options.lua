@@ -14,6 +14,11 @@ require'nvim-treesitter.configs'.setup {
 }
 -- end:nvim-treesitter
 
+-- start:nvim-lspconfig
+vim.api.nvim_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', {noremap = true, silent = false})
+vim.api.nvim_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', {noremap = true, silent = false})
+-- end:nvim-lspconfig
+
 -- start:telescope.nvim
 local actions = require('telescope.actions')
 local previewers = require('telescope.previewers')
@@ -120,11 +125,38 @@ require("nvim-autopairs.completion.cmp").setup({
   }
 })
 
+local get_python_venv = function()
+  if vim.env.VIRTUAL_ENV then
+    return vim.env.VIRTUAL_ENV
+  end
+
+  local cwd = vim.fn.getcwd()
+  while true do
+    if cwd == "/" then
+      break
+    end
+
+    local match = vim.fn.glob(cwd, 'Venv')
+    if match ~= '' then
+      return cwd .. "/Venv"
+    end
+    local rev = string.reverse(cwd)
+    local index = string.find(rev, "/")
+    if index == nil then
+      break
+    end
+    cwd = string.reverse(string.sub(rev, index + 1))
+  end
+end
+
 -- Setup lspconfig.
+local venv = get_python_venv()
 require('lspconfig').pylsp.setup {
   on_attach = on_attach_vim,
   capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
   settings = {
+    cmd = {"pylsp", "-v"},
+    cmd_env = {VIRTUAL_ENV = venv, PATH = venv .. "/bin:" .. vim.env.PATH},
     pylsp = {
       plugins = {
         autopep8 = { enabled = false },
