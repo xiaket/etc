@@ -242,7 +242,7 @@ vim.api.nvim_set_keymap('n', '<leader>l', ':FocusSplitRight<cr>', { silent = tru
 -- end:focus.nvim
 
 -- start:auto-session
-vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,resize,winpos,terminal"
+vim.o.sessionoptions="buffers,folds,winpos,terminal"
 require('auto-session').setup {
     auto_session_enable_last_session=true,
 }
