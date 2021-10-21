@@ -46,24 +46,11 @@ require('telescope').setup{
         ["<esc>"] = actions.close
       },
     },
-    fzf = {
-      fuzzy = true,                    -- false will only do exact matching
-      override_generic_sorter = true,  -- override the generic sorter
-      override_file_sorter = true,     -- override the file sorter
-    }
   }
 }
-vim.api.nvim_set_keymap('n', '<leader>f', ':Telescope find_files<cr>', {noremap = true, silent = false})
+vim.api.nvim_set_keymap("n", "<leader>f", "<cmd>lua require('telescope').extensions.frecency.frecency()<cr>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>g', ':Telescope live_grep<cr>', {noremap = true, silent = false})
 -- end:telescope.nvim
-
--- start:telescope-fzf-native.nvim
-require('telescope').load_extension('fzf')
--- end:telescope-fzf-native.nvim
-
--- start:nvim-autopairs
-require('nvim-autopairs').setup()
--- end:nvim-autopairs
 
 -- start:luasnip
 local luasnip = require("luasnip")
@@ -74,18 +61,25 @@ local luasnip = require("luasnip")
 vim.o.completeopt = "menu,menuone,noselect"
 local cmp = require'cmp'
 
-local termcode = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    return col == 0 or vim.fn.getline('.'):sub(col, col):match('%s')
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
 cmp.setup({
   mapping = {
     ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
   },
   sources = {
     { name = 'nvim_lsp' },
@@ -97,32 +91,6 @@ cmp.setup({
     expand = function(args)
       require('luasnip').lsp_expand(args.body)
     end,
-  }
-})
-
-_G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return termcode "<C-n>"
-  elseif luasnip.expand_or_jumpable() then
-    return luasnip.jump()
-  elseif check_back_space() then
-    return termcode "<Tab>"
-  else
-    return cmp.mapping.complete()
-  end
-end
-
--- cmp keymaps setup
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-
-require("nvim-autopairs.completion.cmp").setup({
-  map_cr = true,
-  map_complete = true,
-  auto_select = true,
-  insert = false,
-  map_char = {
-    all = '(',
-    tex = '{'
   }
 })
 

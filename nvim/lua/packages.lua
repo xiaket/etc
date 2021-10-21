@@ -24,10 +24,15 @@ require('packer').startup(function()
   use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}      -- treesitter
   use 'neovim/nvim-lspconfig'                           -- language server setup
   use 'nvim-telescope/telescope.nvim'                   -- telescope
-  use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' } -- telescope extension
+  use {
+    "nvim-telescope/telescope-frecency.nvim",
+    config = function()
+      require"telescope".load_extension("frecency")
+    end,
+    requires = {"tami5/sqlite.lua"}
+  }
 
   -- global configurations.
-  use 'windwp/nvim-autopairs'                           -- pairs helper
   use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
