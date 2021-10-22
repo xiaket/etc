@@ -168,31 +168,20 @@ require'lualine'.setup {
 require('gitsigns').setup()
 -- end:gitsigns.nvim
 
--- start:formatter.nvim
-require('formatter').setup({
-  logging = false,
-  filetype = {
+-- start:format.nvim
+require "format".setup {
+    ["*"] = {
+        {cmd = {"gsed -i 's/[ \t]*$//'"}} -- remove trailing whitespace
+    },
     python = {
-       function()
-          return {
-            exe = "black",
-            args = {"--line-length", "100"},
-            stdin = false
-          }
-       end
+        {cmd = {"black --line-length 100"}}
     },
     yaml = {
-       function()
-          return {
-            exe = "yamlfix",
-            stdin = false
-          }
-       end
+        {cmd = {"yamlfix"}}
     },
-  }
-})
+}
 vim.api.nvim_set_keymap('n', '<C-F>', ':Format<cr>', {noremap = true, silent = true})
--- end:formatter.nvim
+-- end:format.nvim
 
 -- start:spellsitter.nvim
 require('spellsitter').setup {
@@ -217,10 +206,10 @@ vim.api.nvim_set_keymap('n', '<leader>h', ':FocusSplitLeft<cr>', { silent = true
 vim.api.nvim_set_keymap('n', '<leader>j', ':FocusSplitDown<cr>', { silent = true })
 vim.api.nvim_set_keymap('n', '<leader>k', ':FocusSplitUp<cr>', { silent = true })
 vim.api.nvim_set_keymap('n', '<leader>l', ':FocusSplitRight<cr>', { silent = true })
-vim.api.nvim_set_keymap('n', '<S-h>', "<cmd>lua require('swap-buffers').swap_buffers('h')<cr>", {silent = true})
-vim.api.nvim_set_keymap('n', '<S-l>', "<cmd>lua require('swap-buffers').swap_buffers('l')<cr>", {silent = true})
-vim.api.nvim_set_keymap('n', '<S-j>', "<cmd>lua require('swap-buffers').swap_buffers('j')<cr>", {silent = true})
-vim.api.nvim_set_keymap('n', '<S-k>', "<cmd>lua require('swap-buffers').swap_buffers('k')<cr>", {silent = true})
+vim.api.nvim_set_keymap('n', '<C-S-h>', "<cmd>lua require('swap-buffers').swap_buffers('h')<cr>", {silent = true})
+vim.api.nvim_set_keymap('n', '<C-S-l>', "<cmd>lua require('swap-buffers').swap_buffers('l')<cr>", {silent = true})
+vim.api.nvim_set_keymap('n', '<C-S-j>', "<cmd>lua require('swap-buffers').swap_buffers('j')<cr>", {silent = true})
+vim.api.nvim_set_keymap('n', '<C-S-k>', "<cmd>lua require('swap-buffers').swap_buffers('k')<cr>", {silent = true})
 
 -- end:focus.nvim
 
@@ -234,3 +223,12 @@ require('auto-session').setup {
 -- start:stabilize.nvim
 require("stabilize").setup()
 -- end:stabilize.nvim
+
+-- start:pears.nvim
+require("pears").setup()
+-- end:pears.nvim
+
+-- start:FTerm.nvim
+vim.api.nvim_set_keymap('n', '<leader>t', '<CMD>lua require("FTerm").toggle()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('t', '<leader>t', '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>', {noremap = true, silent = true})
+-- end:FTerm.nvim

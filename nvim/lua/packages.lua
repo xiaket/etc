@@ -28,14 +28,14 @@ require('packer').startup(function()
   use 'nvim-telescope/telescope.nvim'                   -- telescope
   use {
     'nvim-telescope/telescope-fzf-native.nvim', run = 'make'
-  }                                                     -- telescope extension
+  }
   use {
     "nvim-telescope/telescope-frecency.nvim",
     config = function()
       require"telescope".load_extension("frecency")
     end,
     requires = {"tami5/sqlite.lua"}
-  }
+  }                                                     -- telescope extension
 
   -- global configurations.
   use 'hrsh7th/cmp-nvim-lsp'
@@ -48,12 +48,15 @@ require('packer').startup(function()
   use 'hoob3rt/lualine.nvim'                            -- statusline.
   use 'lewis6991/gitsigns.nvim'                         -- show git changes.
   use 'vim-scripts/restore_view.vim'                    -- save'n'restore view
-  use 'mhartington/formatter.nvim'                      -- (auto) format files
+  use 'lukas-reineke/format.nvim'                       -- format files
+
   use 'lewis6991/spellsitter.nvim'                      -- spell check setup
   use "caenrique/swap-buffers.nvim"                     -- swap vim windows on demand
   use 'beauwilliams/focus.nvim'                         -- window management
   use 'rmagatti/auto-session'                           -- session management
   use "luukvbaal/stabilize.nvim"                        -- stabiliser
+  use "steelsojka/pears.nvim"                           -- autopairs.
+  use "numtostr/FTerm.nvim"                             -- better :term.
 
   -- python specific things.
   use {'numirias/semshi', run = ':UpdateRemotePlugins'} -- python syntax highlighter
