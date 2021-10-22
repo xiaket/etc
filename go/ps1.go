@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 
-	git "github.com/libgit2/git2go/v31"
+	git "github.com/libgit2/git2go/v32"
 
 	"os"
 	"path/filepath"
