@@ -46,11 +46,21 @@ require('telescope').setup{
         ["<esc>"] = actions.close
       },
     },
+    fzf = {
+      fuzzy = true,
+      override_generic_sorter = true,  -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+    }
   }
 }
-vim.api.nvim_set_keymap("n", "<leader>f", "<cmd>lua require('telescope').extensions.frecency.frecency()<cr>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>f', ':Telescope find_files<cr>', {noremap = true, silent = false})
+vim.api.nvim_set_keymap("n", "<leader>r", "<cmd>lua require('telescope').extensions.frecency.frecency()<cr>", {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>g', ':Telescope live_grep<cr>', {noremap = true, silent = false})
 -- end:telescope.nvim
+
+-- start:telescope-fzf-native.nvim
+require('telescope').load_extension('fzf')
+-- end:telescope-fzf-native.nvim
 
 -- start:luasnip
 local luasnip = require("luasnip")
@@ -130,8 +140,7 @@ require('lspconfig').pylsp.setup {
       plugins = {
         autopep8 = { enabled = false },
         mccabe = { enabled = false },
-        pycodestyle = { enabled = true },
-        pyflakes = { enabled = false },
+        pydocstyle = { enabled = true },
         pylint = { enabled = false },
       }
     }
@@ -208,6 +217,11 @@ vim.api.nvim_set_keymap('n', '<leader>h', ':FocusSplitLeft<cr>', { silent = true
 vim.api.nvim_set_keymap('n', '<leader>j', ':FocusSplitDown<cr>', { silent = true })
 vim.api.nvim_set_keymap('n', '<leader>k', ':FocusSplitUp<cr>', { silent = true })
 vim.api.nvim_set_keymap('n', '<leader>l', ':FocusSplitRight<cr>', { silent = true })
+vim.api.nvim_set_keymap('n', '<S-h>', "<cmd>lua require('swap-buffers').swap_buffers('h')<cr>", {silent = true})
+vim.api.nvim_set_keymap('n', '<S-l>', "<cmd>lua require('swap-buffers').swap_buffers('l')<cr>", {silent = true})
+vim.api.nvim_set_keymap('n', '<S-j>', "<cmd>lua require('swap-buffers').swap_buffers('j')<cr>", {silent = true})
+vim.api.nvim_set_keymap('n', '<S-k>', "<cmd>lua require('swap-buffers').swap_buffers('k')<cr>", {silent = true})
+
 -- end:focus.nvim
 
 -- start:auto-session
@@ -216,3 +230,7 @@ require('auto-session').setup {
     auto_session_enable_last_session=true,
 }
 -- end:auto-session
+
+-- start:stabilize.nvim
+require("stabilize").setup()
+-- end:stabilize.nvim
