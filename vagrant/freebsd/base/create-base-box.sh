@@ -8,16 +8,14 @@ vm_name="freebsd-base"
 box_name="xiaket/freebsd-base"
 iso=/tmp/mfsbsd.iso
 
-if [ ! -f "$iso" ]
-then
-  wget https://mfsbsd.vx.sk/files/iso/12/amd64/mfsbsd-12.2-RELEASE-amd64.iso -O "$iso"
+if [ ! -f "$iso" ]; then
+	wget https://mfsbsd.vx.sk/files/iso/13/amd64/mfsbsd-se-13.0-RELEASE-amd64.iso -O "$iso"
 fi
 
 has_box=$(vagrant box list | grep -c "$box_name" || true)
 
-if [ "$has_box" = "1" ]
-then
-  vagrant box remove "$box_name"
+if [ "$has_box" = "1" ]; then
+	vagrant box remove "$box_name"
 fi
 
 rm -f package.box
@@ -37,28 +35,38 @@ VBoxManage startvm "${vm_name}" --type gui
 sleep 2
 # Enter to skip the 10 seconds wait
 VBoxManage controlvm "${vm_name}" keyboardputscancode e0 1c
-sleep 25
+sleep 45
+VBoxManage controlvm "${vm_name}" keyboardputfile mfs.credential
+sleep 1
+VBoxManage controlvm "${vm_name}" keyboardputfile zfs.csh
+
+wait-till-poweroff() {
+	while true; do
+		state=$(VBoxManage showvminfo "${vm_name}" --machinereadable | grep "VMState=" | sed "s/\"/ /g" | awk '{print $2}')
+		if [ "$state" == "poweroff" ]; then
+			break
+		fi
+		sleep 10
+		echo "Sleeping"
+	done
+}
+
+wait-till-poweroff
+VBoxManage storageattach "${vm_name}" --storagectl IDE --port 0 --device 1 --type dvddrive --medium none
+sleep 1
+
+# Start the machine a second to use zfs and install stuff.
+VBoxManage startvm "${vm_name}" --type gui
+sleep 2
+# Enter to skip the 10 seconds wait
+VBoxManage controlvm "${vm_name}" keyboardputscancode e0 1c
+sleep 45
 VBoxManage controlvm "${vm_name}" keyboardputfile mfs.credential
 sleep 1
 VBoxManage controlvm "${vm_name}" keyboardputfile init.csh
 
-while true
-do
-  state=$(VBoxManage showvminfo "${vm_name}" --machinereadable | grep "VMState=" | sed "s/\"/ /g" | awk '{print $2}')
-  if [ "$state" == "poweroff" ]
-  then
-    break
-  fi
-  sleep 10
-  echo "Sleeping"
-done
-
-# eject iso.
-VBoxManage storageattach "${vm_name}" --storagectl IDE --port 0 --device 1 --type dvddrive --medium none
-
+wait-till-poweroff
 # create package.
 vagrant package --base "${vm_name}"
-
 vagrant box add "${box_name}" file://./package.box
-
 VBoxManage unregistervm "${vm_name}" --delete

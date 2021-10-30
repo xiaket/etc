@@ -13,6 +13,7 @@ ptpython/history
 aws/credentials
 
 vagrant/*/.vagrant/
-vagrant/*/*.log
+vagrant/*.log
+vagrant/freebsd/*/*.box
 
 bin/ps1
