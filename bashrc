@@ -7,23 +7,22 @@ umask 0022
 # Global settings.
 
 # Prepend cd to directory names automatically
-shopt -s autocd 2> /dev/null
+shopt -s autocd 2>/dev/null
 
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
 
 # explicitly enable term colors.
 export TERM="xterm-256color"
-export ARCH=`uname -s`
+export ARCH=$(uname -s)
 
-if [ "x$ARCH" = "xLinux" ]
-then
-    export MAN_POSIXLY_CORRECT=1
-    # running on a linux virtual machine.
-    COLORS=dircolors
+if [ "x$ARCH" = "xLinux" ]; then
+	export MAN_POSIXLY_CORRECT=1
+	# running on a linux virtual machine.
+	COLORS=dircolors
 else
-    # running on a macOS machine.
-    COLORS=gdircolors
+	# running on a macOS machine.
+	COLORS=gdircolors
 fi
 
 xiaketDIR=~/.xiaket
@@ -45,15 +44,13 @@ export XDG_CONFIG_HOME="$etcdir"
 . "$etcdir"/alias
 
 # For things that can only be done as a bash function.
-if [ -f "$etcdir"/bash_functions ]
-then
-    . "$etcdir"/bash_functions
+if [ -f "$etcdir"/bash_functions ]; then
+	. "$etcdir"/bash_functions
 fi
 
 # For Alternative settings
-if [ -f "$altdir/etc/bashrc" ]
-then
-    . "$altdir/etc/bashrc"
+if [ -f "$altdir/etc/bashrc" ]; then
+	. "$altdir/etc/bashrc"
 fi
 
 # for fzf
@@ -65,54 +62,55 @@ set rtp+=/usr/local/opt/fzf
 
 # configuration for zoxide.
 function __zoxide_pwd() {
-    \builtin pwd -L
+	\builtin pwd -L
 }
 
 # cd + custom logic based on the value of _ZO_ECHO.
 function __zoxide_cd() {
-    # shellcheck disable=SC2164
-    \builtin cd "$@"
+	# shellcheck disable=SC2164
+	\builtin cd "$@"
 }
 
 # Hook to add new entries to the database.
 function __zoxide_hook() {
-    \builtin local -r __zoxide_retval="$?"
-    \builtin local -r __zoxide_pwd_tmp="$(__zoxide_pwd)"
-    if [ -z "${__zoxide_pwd_old}" ]; then
-        __zoxide_pwd_old="${__zoxide_pwd_tmp}"
-    elif [ "${__zoxide_pwd_old}" != "${__zoxide_pwd_tmp}" ]; then
-        __zoxide_pwd_old="${__zoxide_pwd_tmp}"
-        zoxide add -- "${__zoxide_pwd_old}"
-    fi
-    return "${__zoxide_retval}"
+	\builtin local -r __zoxide_retval="$?"
+	\builtin local -r __zoxide_pwd_tmp="$(__zoxide_pwd)"
+	if [ -z "${__zoxide_pwd_old}" ]; then
+		__zoxide_pwd_old="${__zoxide_pwd_tmp}"
+	elif [ "${__zoxide_pwd_old}" != "${__zoxide_pwd_tmp}" ]; then
+		__zoxide_pwd_old="${__zoxide_pwd_tmp}"
+		zoxide add -- "${__zoxide_pwd_old}"
+	fi
+	return "${__zoxide_retval}"
 }
 
 # Jump to a directory using only keywords.
 cd() {
-    if [ "$#" -eq 0 ]; then
-        __zoxide_cd ~
-    elif [ "$#" -eq 1 ] && [ "$1" = '-' ]; then
-        if [ -n "${OLDPWD}" ]; then
-            __zoxide_cd "${OLDPWD}"
-        else
-            # shellcheck disable=SC2016
-            \builtin printf 'zoxide: $OLDPWD is not set\n'
-            return 1
-        fi
-    elif [ "$#" -eq 1 ] && [ -d "$1" ]; then
-        __zoxide_cd "$1"
-    else
-        \builtin local __zoxide_result
-        __zoxide_result="$(zoxide query --exclude "$(__zoxide_pwd)" -- "$@")" && __zoxide_cd "${__zoxide_result}"
-    fi
+	if [ "$#" -eq 0 ]; then
+		__zoxide_cd ~
+	elif [ "$#" -eq 1 ] && [ "$1" = '-' ]; then
+		if [ -n "${OLDPWD}" ]; then
+			__zoxide_cd "${OLDPWD}"
+		else
+			# shellcheck disable=SC2016
+			\builtin printf 'zoxide: $OLDPWD is not set\n'
+			return 1
+		fi
+	elif [ "$#" -eq 1 ] && [ -d "$1" ]; then
+		__zoxide_cd "$1"
+	else
+		\builtin local __zoxide_result
+		__zoxide_result="$(zoxide query --exclude "$(__zoxide_pwd)" -- "$@")" && __zoxide_cd "${__zoxide_result}"
+	fi
 }
 
 # I love my prompt
 function _xiaket_prompt {
-  status=$?
-  __zoxide_hook
-  PS1="$(ps1 $status)"
-  history -a; history -n;
+	status=$?
+	__zoxide_hook
+	PS1="$(ps1 $status)"
+	history -a
+	history -n
 }
 
 export PROMPT_COMMAND='_xiaket_prompt'
@@ -147,10 +145,10 @@ export EDITOR=nvim
 #################
 # accessibility #
 #################
-eval `"$COLORS" "$HOME/.xiaket/etc/dir_colors"`
+eval $("$COLORS" "$HOME/.xiaket/etc/dir_colors")
 
 # Don’t clear the screen after quitting a manual page.
-export MANPAGER='less -X';
+export MANPAGER='less -X'
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -160,31 +158,29 @@ shopt -s checkwinsize
 # ssh agent forward #
 #####################
 has_priv_files=$(ls -l ~/.ssh/*.priv >/dev/null 2>&1)
-if [ $? -eq 0 ]
-then
-    SSH_ENV="$HOME/.ssh/environment"
+if [ $? -eq 0 ]; then
+	SSH_ENV="$HOME/.ssh/environment"
 
-    function start_agent {
-        content=`/usr/bin/ssh-agent | sed "/^echo/d"`
-        [ -f $SSH_ENV ] && return 0 || echo $content > $SSH_ENV
-        chmod 600 "${SSH_ENV}"
-        . "${SSH_ENV}" > /dev/null
-        /usr/bin/ssh-add ~/.ssh/*.priv
-    }
+	function start_agent {
+		content=$(/usr/bin/ssh-agent | sed "/^echo/d")
+		[ -f $SSH_ENV ] && return 0 || echo $content >$SSH_ENV
+		chmod 600 "${SSH_ENV}"
+		. "${SSH_ENV}" >/dev/null
+		/usr/bin/ssh-add ~/.ssh/*.priv
+	}
 
-    # Source SSH settings, if applicable
-    [ -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
-    lockfile ~/.xiaket/var/tmp/ssh.lock
-    if [ -f "${SSH_ENV}" ]; then
-        . "${SSH_ENV}" > /dev/null
-        ps ${SSH_AGENT_PID} | grep -q ssh-agent$
-        if [ $? -ne 0 ]
-        then
-            rm -f ${SSH_ENV}
-            start_agent
-        fi
-    else
-        start_agent;
-    fi
-    rm -f ~/.xiaket/var/tmp/ssh.lock
+	# Source SSH settings, if applicable
+	[ -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
+	lockfile ~/.xiaket/var/tmp/ssh.lock
+	if [ -f "${SSH_ENV}" ]; then
+		. "${SSH_ENV}" >/dev/null
+		ps ${SSH_AGENT_PID} | grep -q ssh-agent$
+		if [ $? -ne 0 ]; then
+			rm -f ${SSH_ENV}
+			start_agent
+		fi
+	else
+		start_agent
+	fi
+	rm -f ~/.xiaket/var/tmp/ssh.lock
 fi

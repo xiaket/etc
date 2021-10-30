@@ -1,25 +1,21 @@
-if [ "x$ARCH" = "xDarwin" ]
-then
-    # GNU rules.
-    alias rm='grm'
-    alias head='ghead'
-    alias tail='gtail'
-    alias preview='open -a Preview '
-    alias win='/Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm winx'
-    alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
-    alias retouch='sudo pkill TouchBarServer'
-    alias mtr='sudo /usr/local/sbin/mtr'
-    alias typora='open -a Typora '
+if [ "x$ARCH" = "xDarwin" ]; then
+	# GNU rules.
+	alias rm='grm'
+	alias head='ghead'
+	alias tail='gtail'
+	alias sed='gsed'
+	alias awk='gawk'
 
-    # BSD fix
-    alias sed='gsed'
-    alias awk='gawk'
+	alias retouch='sudo pkill TouchBarServer'
+	alias mtr='sudo /usr/local/sbin/mtr'
+	alias typora='open -a Typora '
 fi
 
 alias grep='grep --color'
 alias vi='nvim'
+alias v='nvim'
 
-# Generic 
+# Generic
 alias su='su -'
 alias df='df -h'
 alias diff='colordiff'
