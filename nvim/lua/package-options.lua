@@ -19,6 +19,10 @@ vim.api.nvim_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', {no
 vim.api.nvim_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', {noremap = true, silent = false})
 -- end:nvim-lspconfig
 
+-- start:lsp_signature
+require "lsp_signature".setup()
+-- end:lsp_signature
+
 -- start:telescope.nvim
 local actions = require('telescope.actions')
 local previewers = require('telescope.previewers')
@@ -131,7 +135,6 @@ end
 -- Setup lspconfig.
 local venv = get_python_venv()
 require('lspconfig').pylsp.setup {
-  on_attach = on_attach_vim,
   capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities()),
   settings = {
     cmd = {"pylsp", "-v"},
@@ -175,6 +178,9 @@ require "format".setup {
     },
     python = {
         {cmd = {"black --line-length 100"}}
+    },
+    bash = {
+        {cmd = {"shfmt -w"}}
     },
     yaml = {
         {cmd = {"yamlfix"}}
@@ -224,11 +230,14 @@ require('auto-session').setup {
 require("stabilize").setup()
 -- end:stabilize.nvim
 
--- start:pears.nvim
-require("pears").setup()
--- end:pears.nvim
-
 -- start:FTerm.nvim
 vim.api.nvim_set_keymap('n', '<leader>t', '<CMD>lua require("FTerm").toggle()<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('t', '<leader>t', '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>', {noremap = true, silent = true})
 -- end:FTerm.nvim
+
+-- start:nvim-autopairs
+require('nvim-autopairs').setup{}
+-- If you want insert `(` after select function or method item
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({map_char={tex=''}}))
+-- end:nvim-autopairs

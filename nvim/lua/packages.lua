@@ -25,6 +25,7 @@ require('packer').startup(function()
     'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'
   }                                                     -- treesitter
   use 'neovim/nvim-lspconfig'                           -- language server setup
+  use "ray-x/lsp_signature.nvim"                        -- helper with function signatures
   use 'nvim-telescope/telescope.nvim'                   -- telescope
   use {
     'nvim-telescope/telescope-fzf-native.nvim', run = 'make'
@@ -55,8 +56,8 @@ require('packer').startup(function()
   use 'beauwilliams/focus.nvim'                         -- window management
   use 'rmagatti/auto-session'                           -- session management
   use "luukvbaal/stabilize.nvim"                        -- stabiliser
-  use "steelsojka/pears.nvim"                           -- autopairs.
   use "numtostr/FTerm.nvim"                             -- better :term.
+  use "windwp/nvim-autopairs"                           -- pairing 
 
   -- python specific things.
   use {'numirias/semshi', run = ':UpdateRemotePlugins'} -- python syntax highlighter
