@@ -227,6 +227,10 @@
     "content": "SHOW TABLE STATUS WHERE Name = 'tablename';",
     "lang": "SQL"
   },
+  "timing with curl": {
+    "content": "curl -L -w \"time_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_appconnect: %{time_appconnect}\ntime_pretransfer: %{time_pretransfer}\ntime_redirect: %{time_redirect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n\" https://example.com/",
+    "lang": "Text only"
+  },
   "unzip archive with non-ascii charset": {
     "content": "unar -f -e gb18030 *.zip",
     "lang": "Bash"
