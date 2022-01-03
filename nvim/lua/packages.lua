@@ -59,6 +59,7 @@ require('packer').startup(function()
   use "numtostr/FTerm.nvim"                             -- better :term.
   use "windwp/nvim-autopairs"                           -- pairing 
   use "mbbill/undotree"                                 -- visualize undos
+  use "folke/trouble.nvim"
 
   -- python specific things.
   use {'numirias/semshi', run = ':UpdateRemotePlugins'} -- python syntax highlighter

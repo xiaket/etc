@@ -241,3 +241,20 @@ require('nvim-autopairs').setup{}
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on( 'confirm_done', cmp_autopairs.on_confirm_done({map_char={tex=''}}))
 -- end:nvim-autopairs
+
+-- start:trouble.nvim
+require("trouble").setup {
+    icons = false,
+    fold_open = "v", -- icon used for open folds
+    fold_closed = ">", -- icon used for closed folds
+    indent_lines = false, -- add an indent guide below the fold icons
+    signs = {
+        error = "error",
+        warning = "warn",
+        hint = "hint",
+        information = "info"
+    },
+    use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
+}
+vim.api.nvim_set_keymap('n', '<leader>e', '<cmd>TroubleToggle<cr>', {noremap = true, silent = true})
+-- end:trouble.nvim
