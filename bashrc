@@ -1,7 +1,7 @@
 ##############
 # The basics #
 ##############
-[ -z "$PS1" ] && return
+[ -z "${PS1:-}" ] && return
 umask 0022
 
 # Global settings.
