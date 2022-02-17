@@ -13,6 +13,7 @@ local features = {
   s = 'Safari',
   t = 'Typora',
   x = 'Firefox',
+  z = 'zoom.us',
 
   -- Rebalance the audio output, sometime my WH-H900N will end up unbalanced
   a = function() hs.audiodevice.current()['device']:setBalance(0.5) end,
