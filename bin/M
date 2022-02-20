@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+if [ -f .manage ]
+then
+  source .manage
+else
+  >&2 echo ".manage file not found in cwd."
+  exit 1
+fi
+
+list () {
+  grep -E "()\ ?{$" .manage | grep -v 'grep ' | awk '{print $1}' | sort
+}
+
+# main start here
+command=${1:-""}
+
+if [[ -n $(type -t "${command}") ]] && [[ $(type -t "${command}") = function ]]
+then
+  shift
+  eval "$command" "$@"
+  exit $?
+fi
+
+case "$command" in
+  *)
+    list
+esac
