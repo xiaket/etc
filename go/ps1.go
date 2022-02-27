@@ -1,10 +1,9 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 
-	git "github.com/libgit2/git2go/v32"
+	git "github.com/libgit2/git2go/v33"
 
 	"os"
 	"path/filepath"
@@ -12,52 +11,33 @@ import (
 	"time"
 )
 
-var SHORT_PATH_TRUNCATE = 3
+const START_BRACKET = "{"
+const END_BRACKET = "}"
+const GIT_UNCOMMITED = "+"
+const GIT_UNSTAGED = "!"
+const GIT_UNTRACKED = "?"
+const GIT_STASHED = "¥"
+const VENV_INDICATOR = "∇"
+const CMD_EXIT_0_COLOR = 34
+const CMD_EXIT_NON0_COLOR = 124
+const CURRENT_PATH_COLOR = 33
+const SHORT_PATH_COLOR = 15
+const GIT_BRANCH_COLOR = 166
+const GIT_STATUS_COLOR = 136
+const VENV_COLOR = 166
 
-// ColorIt would return a function that will paint a string using a color
-// specified by a name. We will try to load color from environment first.
-func ColorIt(name string) func(string) string {
-	var default_colors = map[string]string{
-		"COLOR_SHORTPATH":   "15",
-		"COLOR_CURRENTPATH": "33",
-		"COLOR_GITBRANCH":   "166",
-		"COLOR_GITSTATUS":   "136",
-		"COLOR_VENV":        "166",
-		"COLOR_LAST_GOOD":   "34",
-		"COLOR_LAST_FAIL":   "124",
-	}
-	color := os.Getenv(name)
-	if color == "" {
-		color = default_colors[name]
-	}
-	return func(msg string) string {
-		buf := bytes.NewBufferString("\\[\033[")
-		buf.WriteString("38;5;" + color)
-		buf.WriteRune('m')
-		buf.WriteString("\\]" + msg)
-		return buf.String()
-	}
-}
+// number of letters displayed for each path segment.
+const SHORT_PATH_TRUNCATE = 3
 
-func Symbols(name string) string {
-	var default_symbols = map[string]string{
-		"GIT_UNCOMMITED": "+",
-		"GIT_UNSTAGED":   "!",
-		"GIT_UNTRACKED":  "?",
-		"GIT_STASHED":    "¥",
-		"HAS_VENV":       "∇",
-		"START_BRACKET":  "{",
-		"END_BRACKET":    "}",
-	}
-	symbol := os.Getenv(name)
-	if symbol == "" {
-		symbol = default_symbols[name]
-	}
-	return symbol
+// duration of time before we cancel the git op.
+const GIT_TIMEOUT = 150 * time.Millisecond
+
+func color(color_code int, msg string) string {
+	return fmt.Sprintf("\\[\033[38;5;%dm\\]%s", color_code, msg)
 }
 
 // GitSearch will tell us whether we are in a git root and in a git tree.
-func GitSearch() (bool, string) {
+func gitSearch() (bool, string) {
 	dir, _ := filepath.Abs(".")
 	dir, _ = filepath.EvalSymlinks(dir)
 	if dir == "" {
@@ -78,10 +58,8 @@ func GitSearch() (bool, string) {
 
 // Cwd would output the current path, and reduce the length of the output.
 // Example:
-// /usr/local/lib/python2.7/site-packages -> /us/lo/li/py/site-packages
-func Cwd() string {
-	ShortPath := ColorIt("COLOR_SHORTPATH")
-	CurrentPath := ColorIt("COLOR_CURRENTPATH")
+// /usr/local/lib/python2.7/site-packages -> /usr/loc/lib/pyt/site-packages
+func cwd() string {
 	var (
 		short_name string
 	)
@@ -103,17 +81,17 @@ func Cwd() string {
 	if len(paths) == 1 {
 		short_name = short_paths[0]
 	} else {
-		short_name = ShortPath(strings.Join(short_paths[:len(paths)-1], "/") + "/")
-		short_name += CurrentPath(short_paths[len(paths)-1])
+		short_name = color(SHORT_PATH_COLOR, strings.Join(short_paths[:len(paths)-1], "/")+"/")
+		short_name += color(CURRENT_PATH_COLOR, short_paths[len(paths)-1])
 	}
 	return short_name
 }
 
 // BranchName will give the name of the branch.
-func BranchName(repository *git.Repository) string {
+func branchName(repository *git.Repository) string {
 	head, err := repository.Head()
 	if err == nil {
-		return PrettyBranchName(head.Shorthand())
+		return prettyBranchName(head.Shorthand())
 	} else {
 		return "Unknown"
 	}
@@ -121,7 +99,7 @@ func BranchName(repository *git.Repository) string {
 
 // PrettyBranchName will replace repetitive names in the branch and
 // truncate longer names.
-func PrettyBranchName(name string) string {
+func prettyBranchName(name string) string {
 	if name == "master" || name == "main" {
 		return "🏠"
 	}
@@ -140,7 +118,7 @@ func PrettyBranchName(name string) string {
 }
 
 // GitSt will output the current git status.
-func GitSt(repository *git.Repository) string {
+func gitSt(repository *git.Repository) string {
 	opts := &git.StatusOptions{}
 	opts.Show = git.StatusShowIndexAndWorkdir
 	opts.Flags = git.StatusOptIncludeUntracked | git.StatusOptRenamesHeadToIndex | git.StatusOptExcludeSubmodules
@@ -164,54 +142,50 @@ func GitSt(repository *git.Repository) string {
 	}
 
 	var status string
-	GitStatus := ColorIt("COLOR_GITSTATUS")
-
 	if has_uncommited {
-		status += Symbols("GIT_UNCOMMITED")
+		status += GIT_UNCOMMITED
 	}
 	if has_unstaged {
-		status += Symbols("GIT_UNSTAGED")
+		status += GIT_UNSTAGED
 	}
 	if has_untracked {
-		status += Symbols("GIT_UNTRACKED")
+		status += GIT_UNTRACKED
 	}
 	if _, err := os.Stat(filepath.Join(repository.Path(), "refs/stash")); err == nil {
-		status += Symbols("GIT_STASHED")
+		status += GIT_STASHED
 	}
 
 	if len(status) != 0 {
-		status = GitStatus(status)
+		status = color(GIT_STATUS_COLOR, status)
 	}
 	return status
 }
 
 // GitPrompt will combine GitSt and BranchName and provide git info for prompt.
-func GitPrompt() string {
-	inside_git, dir := GitSearch()
+func gitPrompt() string {
+	inside_git, dir := gitSearch()
 	if !inside_git {
 		return ""
 	}
 	repository, _ := git.OpenRepository(dir)
-	GitBranch := ColorIt("COLOR_GITBRANCH")
-
-	branch_name := BranchName(repository)
+	branch_name := branchName(repository)
 
 	channel := make(chan string, 1)
 	go func() {
-		text := GitSt(repository)
+		text := gitSt(repository)
 		channel <- text
 	}()
 
 	select {
 	case git_st := <-channel:
-		return GitBranch(branch_name) + git_st
-	case <-time.After(400 * time.Millisecond):
-		return GitBranch(branch_name)
+		return color(GIT_BRANCH_COLOR, branch_name) + git_st
+	case <-time.After(GIT_TIMEOUT):
+		return color(GIT_BRANCH_COLOR, branch_name)
 	}
 }
 
 // VenvPrompt will look for virtualenv def in environment.
-func VenvPrompt() string {
+func venvPrompt() string {
 	env_def := os.Getenv("VIRTUAL_ENV")
 	if env_def == "" {
 		return ""
@@ -220,28 +194,22 @@ func VenvPrompt() string {
 	if !strings.HasPrefix(path, env_def) {
 		return ""
 	}
-	return ColorIt("COLOR_VENV")(Symbols("HAS_VENV"))
+	return color(VENV_COLOR, VENV_INDICATOR)
 }
 
 func main() {
-	var last_color_name string
-	if len(os.Args) == 1 {
-		last_color_name = "COLOR_LAST_GOOD"
-	} else {
-		if os.Args[1] == "0" {
-			last_color_name = "COLOR_LAST_GOOD"
-		} else {
-			last_color_name = "COLOR_LAST_FAIL"
-		}
+	var last_color = CMD_EXIT_NON0_COLOR
+	if len(os.Args) == 1 || os.Args[1] == "0" {
+		last_color = CMD_EXIT_0_COLOR
 	}
-	prompt := VenvPrompt()
-	prompt += ColorIt(last_color_name)(Symbols("START_BRACKET"))
-	gitPrompt := GitPrompt()
+	prompt := venvPrompt()
+	prompt += color(last_color, START_BRACKET)
+	gitPrompt := gitPrompt()
 	if len(gitPrompt) != 0 {
 		prompt += gitPrompt + " "
 	}
-	prompt += Cwd()
-	prompt += ColorIt(last_color_name)(Symbols("END_BRACKET"))
+	prompt += cwd()
+	prompt += color(last_color, END_BRACKET)
 	prompt += "\\[\033[0m\\]"
 	fmt.Println(prompt)
 }

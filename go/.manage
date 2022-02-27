@@ -1,0 +1,16 @@
+run () {
+  go build -ldflags="-s -w" ps1.go
+  strip ps1
+}
+clean () {
+  go mod tidy
+  rm -rf ./ps1
+}
+benchmark () {
+  ./ps1 
+  for i in $(seq 1 5)
+    do
+  time ./ps1 
+  done
+}
+export -f run clean benchmark
