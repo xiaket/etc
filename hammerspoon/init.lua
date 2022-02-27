@@ -13,6 +13,7 @@ local features = {
   s = 'Safari',
   t = 'Typora',
   x = 'Firefox',
+  w = 'WeChat',
   z = 'zoom.us',
 
   -- Rebalance the audio output, sometime my WH-H900N will end up unbalanced
