@@ -45,7 +45,7 @@ require('packer').startup(function()
   use 'hoob3rt/lualine.nvim'                            -- statusline.
   use 'lewis6991/gitsigns.nvim'                         -- show git changes.
   use 'vim-scripts/restore_view.vim'                    -- save'n'restore view
-  use 'lukas-reineke/format.nvim'                       -- format files
+  use 'lukas-reineke/lsp-format.nvim'                   -- format files
 
   use 'lewis6991/spellsitter.nvim'                      -- spell check setup
   use "caenrique/swap-buffers.nvim"                     -- swap vim windows on demand

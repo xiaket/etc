@@ -172,7 +172,7 @@ require('gitsigns').setup()
 -- end:gitsigns.nvim
 
 -- start:format.nvim
-require "format".setup {
+require "lsp-format".setup {
     ["*"] = {
         {cmd = {"gsed -i 's/[ \t]*$//'"}} -- remove trailing whitespace
     },
