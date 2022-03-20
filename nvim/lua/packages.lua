@@ -65,4 +65,5 @@ require('packer').startup(function()
   use 'ekalinin/Dockerfile.vim'                         -- Dockerfile
   use 'fatih/vim-go'                                    -- golang
   use 'rhysd/vim-gfm-syntax'                            -- markdown
+  use 'hashivim/vim-terraform'                          -- terraform
 end)
