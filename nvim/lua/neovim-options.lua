@@ -30,9 +30,6 @@ opt.smartindent = true
 opt.tabstop = tabsize
 opt.softtabstop = tabsize
 opt.shiftwidth = tabsize
-run('autocmd FileType py set tabstop=4 softtabstop=4 shiftwidth=4 textwidth=99')
-run('autocmd FileType make set noexpandtab shiftwidth=8')
-run('autocmd FileType go setlocal textwidth=99')
 
 -- Configure folding
 opt.foldmethod = "indent"
