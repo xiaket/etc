@@ -12,7 +12,7 @@ if [ "x$ARCH" = "xDarwin" ]; then
 fi
 
 alias grep='grep --color'
-alias vi='nvim'
+alias vi='/usr/local/Cellar/neovim/head/bin/nvim'
 alias v='nvim'
 
 # Generic

@@ -10,4 +10,5 @@ function add_header()
   end
 end
 
-vim.cmd('autocmd BufNewFile * :lua add_header()')
+local _group = vim.api.nvim_create_augroup("AutoHeader", { clear = true })
+vim.api.nvim_create_autocmd("BufNewFile", {pattern = "*", callback = add_header, once = true, group=_group})

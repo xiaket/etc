@@ -7,12 +7,8 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
 end
 
 vim.cmd [[packadd packer.nvim]]
-vim.api.nvim_exec([[
-  augroup Packer
-    autocmd!
-    autocmd BufWritePost packages.lua PackerCompile
-  augroup end
-]], false)
+local packer_group = vim.api.nvim_create_augroup("Packer", { clear = true })
+vim.api.nvim_create_autocmd("BufWritePost", {pattern = "packages.lua", command = "PackerCompile", once = true, group = packer_group})
 
 -- list of packages that I use.
 local use = require('packer').use
