@@ -7,7 +7,6 @@
     co = checkout
     p = push -u
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-    un = reset --soft HEAD^
     idff = diff
 
 [core]

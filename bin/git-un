@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+if [ $# -eq 0 ]
+then
+  git reset --soft HEAD^
+  exit 0
+fi
+
+FORCE="false"
+
+while [[ $# -gt 0 ]]
+do
+  case $1 in
+    -f|--force)
+      FORCE="true"
+      shift
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}"
+if [ "$FORCE" = "true" ]
+then
+  git restore "$@"
+else
+  git restore --staged "$@"
+fi
