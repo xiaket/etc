@@ -100,6 +100,13 @@ write-defaults () {
     defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
     touch-done
+
+    # Switch to previous tab using alt-a and next tab alt-s.
+    defaults write com.apple.Safari NSUserKeyEquivalents '{
+      "Show Previous Tab"="~a";
+      "Show Next Tab"="~s";
+      "Close Tab"="~q";
+    }'
 }
 
 build-ps1 () {
