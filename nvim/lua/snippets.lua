@@ -9,10 +9,14 @@ local function bash(_, _, command)
 	return res
 end
 
+local function get_date(_, _, format)
+  return os.date(format)
+end
+
 luasnip.snippets = {
 	all = {
-    luasnip.snippet("dtime", luasnip.function_node(bash, {}, "date +'%Y-%m-%d %H:%M'")),
-    luasnip.snippet("date", luasnip.function_node(bash, {}, "date +'%Y-%m-%d'")),
+    luasnip.snippet("dtime", luasnip.function_node(get_date, {}, {user_args = {"%Y-%m-%d %H:%M"}})),
+    luasnip.snippet("date", luasnip.function_node(get_date, {}, {user_args = {"%Y-%m-%d"}})),
 	},
   python = {
     luasnip.snippet("exit", luasnip.text_node({"import sys", "sys.exit()"})),
