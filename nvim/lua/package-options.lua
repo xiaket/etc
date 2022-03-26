@@ -152,7 +152,7 @@ require('lspconfig').pylsp.setup {
 -- end:nvim-cmp
 
 --- start:nightforx.nvim
-require('nightfox').load()
+vim.cmd("colorscheme nightfox")
 
 --- start:lualine.nvim
 require'lualine'.setup {
