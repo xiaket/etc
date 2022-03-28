@@ -65,7 +65,8 @@ homebrew () {
     brew tap homebrew/cask
     brew tap homebrew/cask-fonts
 
-    brew install basictex bitwarden chiaki homebrew/cask/dash drawio firefox font-fira-code grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
+    brew install basictex bitwarden chiaki homebrew/cask/dash drawio firefox grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
+    brew install --cask font-fira-code-nerd-font
     podman machine init
     podman machine start
     touch-done
