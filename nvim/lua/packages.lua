@@ -46,6 +46,7 @@ require('packer').startup(function()
   use 'lewis6991/gitsigns.nvim'                         -- show git changes.
   use 'vim-scripts/restore_view.vim'                    -- save'n'restore view
   use 'lukas-reineke/lsp-format.nvim'                   -- format files
+  use 'kyazdani42/nvim-web-devicons'
 
   use 'lewis6991/spellsitter.nvim'                      -- spell check setup
   use "caenrique/swap-buffers.nvim"                     -- swap vim windows on demand
