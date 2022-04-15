@@ -11,4 +11,4 @@ function add_header()
 end
 
 local _group = vim.api.nvim_create_augroup("AutoHeader", { clear = true })
-vim.api.nvim_create_autocmd("BufNewFile", {pattern = "*", callback = add_header, once = true, group=_group})
+vim.api.nvim_create_autocmd("BufNewFile", {pattern = {"*.sh", "*.py"}, callback = add_header, once = true, group=_group})
