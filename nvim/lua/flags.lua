@@ -40,6 +40,7 @@ opt.swapfile = false -- no swap file, no
 opt.viewoptions = "cursor,folds,slash,unix" -- things saved in the view
 opt.infercase = true -- case sensible when doing completion
 opt.mouse = "i" -- enable mouse only in insert mode
+opt.spell = true -- enable spell checker
 
 -- Tab and indent
 opt.expandtab = true
