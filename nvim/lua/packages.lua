@@ -53,7 +53,7 @@ require("packer").startup(function(use)
             function()
               return {
                 exe = "black",
-                args = { "--line-length 100" },
+                args = { "- --line-length 100" },
                 stdin = true,
               }
             end,
