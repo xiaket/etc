@@ -137,9 +137,9 @@ export PYTHONDONTWRITEBYTECODE="False"
 export GOPATH="${xiaketDIR}/go"
 
 # user nvim for everything
-export GIT_EDITOR=/usr/local/Cellar/neovim/head/bin/nvim
-export VISUAL=/usr/local/Cellar/neovim/head/bin/nvim
-export EDITOR=/usr/local/Cellar/neovim/head/bin/nvim
+export GIT_EDITOR=nvim
+export VISUAL=nvim
+export EDITOR=nvim
 
 #################
 # accessibility #
