@@ -1,0 +1,5 @@
+benchmark () {
+  tmpfile=/tmp/nvim-startup.log
+  rm -f "$tmpfile" && nvim --startuptime "$tmpfile" -c exit && cat "$tmpfile"
+}
+export -f benchmark

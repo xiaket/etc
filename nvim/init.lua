@@ -1,17 +1,14 @@
--- packages/plugins that I install
+-- Speed up config loading.
+require("impatient")
+
+-- plugins
 require("packages")
 
 -- generic vim configurations
-require("neovim-options")
-
--- package/plugin options
-require("package-options")
+require("flags")
 
 -- keymaps
 require("keymaps")
-
--- snippets
-require("snippets")
 
 -- my line number setup
 require("line-number")
