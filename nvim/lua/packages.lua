@@ -234,7 +234,18 @@ require("packer").startup(function(use)
       require("opts.snippets")
     end,
   })
-  use({ "neovim/nvim-lspconfig" })
+  use({
+    "neovim/nvim-lspconfig",
+    config = function()
+      require("lspconfig").ltex.setup({
+        settings = {
+          ltex = {
+            additionalRules = { languageModel = "~/Documents/ngram/" },
+          },
+        },
+      })
+    end,
+  })
   use({
     "ray-x/lsp_signature.nvim",
     config = function()
