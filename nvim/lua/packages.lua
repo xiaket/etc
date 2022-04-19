@@ -49,11 +49,31 @@ require("packer").startup(function(use)
     config = function()
       require("formatter").setup({
         filetype = {
+          lua = {
+            function()
+              return {
+                exe = "stylua",
+                args = {
+                  "--config-path " .. os.getenv("XDG_CONFIG_HOME") .. "/stylua/stylua.toml",
+                  "-",
+                },
+                stdin = true,
+              }
+            end,
+          },
           python = {
             function()
               return {
                 exe = "black",
                 args = { "- --line-length 100" },
+                stdin = true,
+              }
+            end,
+          },
+          rust = {
+            function()
+              return {
+                exe = "rustfmt",
                 stdin = true,
               }
             end,
@@ -71,18 +91,6 @@ require("packer").startup(function(use)
             function()
               return {
                 exe = "yamlfix",
-                stdin = true,
-              }
-            end,
-          },
-          lua = {
-            function()
-              return {
-                exe = "stylua",
-                args = {
-                  "--config-path " .. os.getenv("XDG_CONFIG_HOME") .. "/stylua/stylua.toml",
-                  "-",
-                },
                 stdin = true,
               }
             end,
@@ -244,6 +252,7 @@ require("packer").startup(function(use)
           },
         },
       })
+      require("lspconfig").rust_analyzer.setup({})
     end,
   })
   use({
