@@ -245,6 +245,7 @@ require("packer").startup(function(use)
   use({
     "neovim/nvim-lspconfig",
     config = function()
+      require("lspconfig").gopls.setup({})
       require("lspconfig").ltex.setup({
         settings = {
           ltex = {
