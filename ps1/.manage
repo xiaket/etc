@@ -1,0 +1,8 @@
+update () {
+  cargo build --release
+  mv target/release/ps1 ../bin
+}
+run () {
+  cargo run 0
+}
+export -f update run
