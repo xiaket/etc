@@ -1,5 +1,6 @@
 update () {
   cargo build --release
+  strip target/release/ps1
   mv target/release/ps1 ../bin
 }
 run () {

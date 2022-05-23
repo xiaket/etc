@@ -37,50 +37,44 @@ fn get_last_color() -> Colour {
     }
 }
 
+// add indicator for venv setup
 fn venv_prompt() -> &'static str {
-    let virtual_env;
     match env::var("VIRTUAL_ENV") {
-        Ok(val) => virtual_env = val,
-        Err(_e) => return "",
+        Ok(val) => {
+            if !env!("PATH").contains(&val) {
+                VENV_INDICATOR
+            }else{
+                ""
+            }
+        },
+        Err(_e) => "",
     }
-
-    let path = env!("PATH");
-    if !path.contains(&virtual_env) {
-        return ""
-    }
-
-    return VENV_INDICATOR
 }
 
-// cwd_prompt would output the current path, and reduce the length of the output.
-// Example:
-// /usr/local/lib/python2.7/site-packages -> /usr/loc/lib/pyt/site-packages
+// cwd_prompt would output the current path, with intermediate path truncated. Example:
+//    /usr/local/lib/python2.7/site-packages -> /usr/loc/lib/pyt/site-packages
 fn cwd_prompt() -> String {
-    let mut dir = std::env::current_dir().unwrap().to_str().unwrap().to_string();
-    dir = dir.replacen(env!("HOME"), "~", 1);
-    let paths: Vec<&str> = dir.split("/").collect();
-    let mut short_paths: Vec<String> = [].to_vec();
-    for (i, path) in paths.iter().enumerate() {
+    let dir = std::env::current_dir().unwrap().to_str().unwrap().replacen(env!("HOME"), "~", 1);
+    let mut paths: Vec<String> = dir.split("/").map(|e| e.to_string()).collect::<Vec<String>>();
+    let segments = paths.len();
+    for (i, path) in paths.iter_mut().enumerate() {
         // Don't change short path, don't change last segment.
-        if path.len() < SHORT_PATH_TRUNCATE.into() || i == paths.len() - 1 {
-            short_paths.push(path.to_string());
+        if path.len() < SHORT_PATH_TRUNCATE.into() || i == segments - 1 {
             continue
         }
         let mut truncate = SHORT_PATH_TRUNCATE;
         if path.starts_with(".") {
             truncate += 1;
         }
-        let truncated: Vec<char> = path.chars().into_iter().take(truncate.into()).collect();
-        let truncated: String = truncated.into_iter().collect();
-        short_paths.push(truncated);
+        path.truncate(truncate.into());
     }
     return if paths.len() == 1 {
-        short_paths[0].to_string()
+        paths[0].to_string()
     }else{
         format!(
             "{short_path}/{current_path}",
-            short_path=SHORT_PATH_COLOR.paint(short_paths[..short_paths.len()-1].join("/")).to_string(),
-            current_path=CURRENT_PATH_COLOR.paint(short_paths.last().unwrap()),
+            short_path=SHORT_PATH_COLOR.paint(paths[..segments-1].join("/")).to_string(),
+            current_path=CURRENT_PATH_COLOR.paint(paths.last().unwrap()),
         )
     }
 }
@@ -97,8 +91,7 @@ fn get_git_st(repo: &Repository) -> Result<String, mpsc::RecvTimeoutError> {
     opts.include_untracked(true);
     opts.renames_head_to_index(true);
 
-    let statuses = repo.statuses(Some(&mut opts)).unwrap();
-    for entry in statuses.iter() {
+    for entry in repo.statuses(Some(&mut opts)).unwrap().iter() {
         let status = entry.status();
         if status.is_index_modified() || status.is_index_new() || status.is_index_deleted() || status.is_index_renamed() || status.is_index_typechange(){
             has_uncommited = true;
@@ -128,7 +121,7 @@ fn get_git_st(repo: &Repository) -> Result<String, mpsc::RecvTimeoutError> {
 }
 
 fn get_git_branch(repo: &Repository) -> String {
-    let branch_name = match repo.head() {
+    return match repo.head() {
         Err(_) => "Unknown".to_string(),
         Ok(reference) => {
             let branch = reference.shorthand().unwrap();
@@ -149,8 +142,7 @@ fn get_git_branch(repo: &Repository) -> String {
                 },
             }
         },
-    };
-    branch_name
+    }
 }
 
 fn main() {
