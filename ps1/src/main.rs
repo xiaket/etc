@@ -1,9 +1,9 @@
+use std::collections::HashMap;
 use std::env;
 use std::thread;
 use std::sync::mpsc;
 use std::time::Duration;
 
-use ansi_term::Colour;
 use git2::Repository;
 
 
@@ -19,21 +19,27 @@ const GIT_STASHED: &str = "¥";
 const VENV_INDICATOR: &str = "∇";
 const BRANCH_TRUNCATION: &str = "⁁";
 
-const CMD_EXIT_0_COLOR: Colour = Colour::Fixed(34);
-const CMD_EXIT_NON0_COLOR: Colour = Colour::Fixed(124);
-const CURRENT_PATH_COLOR: Colour = Colour::Fixed(33);
-const SHORT_PATH_COLOR: Colour = Colour::Fixed(15);
-const GIT_BRANCH_COLOR: Colour = Colour::Fixed(166);
-const GIT_STATUS_COLOR: Colour = Colour::Fixed(136);
-const VENV_COLOR: Colour = Colour::Fixed(166);
 
+fn colorize(text: &str, color: &str) -> String {
+    let colors = HashMap::from([
+        ("CMD_EXIT_0_COLOR", 34),
+        ("CMD_EXIT_NON0_COLOR", 124),
+        ("CURRENT_PATH_COLOR", 33),
+        ("SHORT_PATH_COLOR", 15),
+        ("GIT_BRANCH_COLOR", 166),
+        ("GIT_STATUS_COLOR", 136),
+        ("VENV_COLOR", 166),
+    ]);
+    let color = colors.get(color).unwrap();
+    format!("\x5c\x5b\x1b[38;5;{}m\x5c\x5d{}", color, text)
+}
 
-fn get_last_color() -> Colour {
+fn get_last_color() -> &'static str {
     let args: Vec<String> = env::args().collect();
 	if args.len() == 1 || args[1] == "0" {
-		CMD_EXIT_0_COLOR
+		"CMD_EXIT_0_COLOR"
 	}else{
-        CMD_EXIT_NON0_COLOR
+        "CMD_EXIT_NON0_COLOR"
     }
 }
 
@@ -73,8 +79,8 @@ fn cwd_prompt() -> String {
     }else{
         format!(
             "{short_path}/{current_path}",
-            short_path=SHORT_PATH_COLOR.paint(paths[..segments-1].join("/")).to_string(),
-            current_path=CURRENT_PATH_COLOR.paint(paths.last().unwrap()),
+            short_path=colorize(&paths[..segments-1].join("/"), "SHORT_PATH_COLOR"),
+            current_path=colorize(paths.last().unwrap(), "CURRENT_PATH_COLOR"),
         )
     }
 }
@@ -193,17 +199,17 @@ fn main() {
     let git_prompt = if has_git {
         format!(
             "{}{} ",
-            GIT_BRANCH_COLOR.paint(git_branch), GIT_STATUS_COLOR.paint(git_st)
+            colorize(&git_branch, "GIT_BRANCH_COLOR"), colorize(&git_st, "GIT_STATUS_COLOR")
         )
     }else{
         "".to_string()
     };
 
     println!(
-        "{start_bracket}{venv}{git}{cwd}{end_bracket}",
-        venv=VENV_COLOR.paint(venv_prompt()),
-        start_bracket=last_color.paint(START_BRACKET),
-        end_bracket=last_color.paint(END_BRACKET),
+        "{start_bracket}{venv}{git}{cwd}{end_bracket}\x5c\x5b\x1b[0m\x5c\x5d",
+        venv=colorize(venv_prompt(), "VENV_COLOR"),
+        start_bracket=colorize(START_BRACKET, last_color),
+        end_bracket=colorize(END_BRACKET, last_color),
         git=git_prompt,
         cwd=cwd,
     );
