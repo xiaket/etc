@@ -60,7 +60,7 @@ fn venv_prompt() -> &'static str {
 // cwd_prompt would output the current path, with intermediate path truncated. Example:
 //    /usr/local/lib/python2.7/site-packages -> /usr/loc/lib/pyt/site-packages
 fn cwd_prompt() -> String {
-    let dir = std::env::current_dir().unwrap().to_str().unwrap().replacen(env!("HOME"), "~", 1);
+    let dir = get_cwd().replacen(env!("HOME"), "~", 1);
     let mut paths: Vec<String> = dir.split("/").map(|e| e.to_string()).collect::<Vec<String>>();
     let segments = paths.len();
     for (i, path) in paths.iter_mut().enumerate() {
@@ -151,6 +151,14 @@ fn get_git_branch(repo: &Repository) -> String {
     }
 }
 
+fn get_cwd() -> String {
+    let current_dir = env::current_dir();
+    match current_dir {
+        Ok(current_dir) => current_dir.display().to_string(),
+        Err(_) => env::var("PWD").unwrap(),
+    }
+}
+
 fn main() {
     let last_color = get_last_color();
     let (sender, receiver) = mpsc::channel();
@@ -166,7 +174,7 @@ fn main() {
     // Spawning threads to do the heavy-lifting.
     thread::spawn(move || {cwd_sender.send(format!("cwd:{}", cwd_prompt())).unwrap();});
 
-    match Repository::discover(std::env::current_dir().unwrap()) {
+    match Repository::discover(get_cwd()) {
         Err(_e) => {},
         Ok(repo) => {
             has_git = true;
