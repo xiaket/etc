@@ -22,6 +22,7 @@ const BRANCH_TRUNCATION: &str = "⁁";
 
 fn colorize(text: &str, color: &str) -> String {
     let colors = HashMap::from([
+        ("PWD_DELETED", 178),
         ("CMD_EXIT_0_COLOR", 34),
         ("CMD_EXIT_NON0_COLOR", 124),
         ("CURRENT_PATH_COLOR", 33),
@@ -35,7 +36,13 @@ fn colorize(text: &str, color: &str) -> String {
 }
 
 fn get_last_color() -> &'static str {
+    match env::current_dir(){
+        Err(_) => return "PWD_DELETED",
+        _ => (),
+    }
+
     let args: Vec<String> = env::args().collect();
+
 	if args.len() == 1 || args[1] == "0" {
 		"CMD_EXIT_0_COLOR"
 	}else{
