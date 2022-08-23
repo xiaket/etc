@@ -27,6 +27,15 @@ then
 fi
 
 case "$command" in
+  "")
+    if [[ -n $(type -t "default") ]] && [[ $(type -t "default") = function ]]
+    then
+      default "$@"
+    else
+      list
+    fi
+  ;;
   *)
     list
+  ;;
 esac
