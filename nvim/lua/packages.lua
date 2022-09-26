@@ -170,7 +170,7 @@ require("packer").startup(function(use)
     "numtostr/FTerm.nvim",
     event = "BufRead",
     config = function()
-      require("FTerm").setup()
+      require("FTerm")
     end,
   })
   use({
