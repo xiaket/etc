@@ -4,9 +4,6 @@ local run = vim.cmd
 local global = vim.g
 local tabsize = 2
 
--- Don't load these plugins that I don't use.
-global.do_filetype_lua = 1
-global.did_load_filetypes = 0
 opt.shadafile = "NONE"
 global.loaded_netrwPlugin = 1
 global.loaded_matchparen = 1
