@@ -134,13 +134,6 @@ require("packer").startup(function(use)
       })
     end,
   })
-  use({
-    "lukas-reineke/indent-blankline.nvim",
-    event = "BufRead",
-    config = function()
-      require("indent_blankline").setup()
-    end,
-  })
   use({ -- stabilize buffer on windows size changes.
     "luukvbaal/stabilize.nvim",
     event = "BufRead",
@@ -157,13 +150,6 @@ require("packer").startup(function(use)
     event = "BufRead",
     config = function()
       require("matchparen").setup()
-    end,
-  })
-  use({
-    "numToStr/Comment.nvim",
-    event = "BufRead",
-    config = function()
-      require("Comment").setup()
     end,
   })
   use({ -- better :term.
