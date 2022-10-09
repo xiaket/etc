@@ -69,7 +69,6 @@ create-links () {
     ln -sf "$BASE_DIR/etc/hammerspoon" "$HOME/.hammerspoon"
     ln -sf "$BASE_DIR/etc/inputrc" "$HOME/.inputrc"
     ln -sf "$BASE_DIR/etc/pythonrc" "$HOME/.pythonrc"
-    ln -sf "$BASE_DIR/etc/ptpython" "$HOME/.ptpython"
     ln -sf "$BASE_DIR/etc/snape.json" "$HOME/.snape.json"
     ln -sf "$BASE_DIR/etc/linux/xinitrc" "$HOME/.xinitrc"
     ln -sf "$BASE_DIR/etc/nvim" "$HOME/.vim"
