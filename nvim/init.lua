@@ -1,5 +1,14 @@
+function opt_load(module)
+    -- return whether the module has been loaded.
+    local function requiref(module)
+        require(module)
+    end
+    res = pcall(requiref,module)
+    return res
+end
+
 -- Speed up config loading.
-require("impatient")
+opt_load("impatient")
 
 -- plugins
 require("packages")

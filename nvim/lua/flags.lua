@@ -18,7 +18,9 @@ global.loaded_shada_plugin = 1
 global.loaded_spellfile_plugin = 1
 
 -- color scheme
-run("colorscheme nightfox")
+if opt_load("nightfox") then
+  run("colorscheme nightfox")
+end
 
 -- session management
 opt.sessionoptions = "buffers,folds,winpos,terminal"
