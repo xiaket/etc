@@ -3,6 +3,7 @@ local magnet = require('magnet')
 
 local features = {
   -- Simple app maps
+  a = 'Arc',
   b = 'Books',
   d = 'Dash',
   f = 'Finder',
@@ -10,14 +11,11 @@ local features = {
   l = 'Slack',
   m = 'Mail',
   o = 'Obsidian',
-  s = 'Safari',
   t = 'Typora',
   x = 'Firefox',
   w = 'WeChat',
   z = 'zoom.us',
 
-  -- Rebalance the audio output, sometime my WH-H900N will end up unbalanced
-  a = function() hs.audiodevice.current()['device']:setBalance(0.5) end,
   -- Debug
   h = function() hs.reload(); hs.console.clearConsole() end,
   -- Lock screen
