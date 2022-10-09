@@ -70,16 +70,16 @@ create-links () {
     ln -sf "$BASE_DIR/etc/inputrc" "$HOME/.inputrc"
     ln -sf "$BASE_DIR/etc/pythonrc" "$HOME/.pythonrc"
     ln -sf "$BASE_DIR/etc/snape.json" "$HOME/.snape.json"
-    ln -sf "$BASE_DIR/etc/linux/xinitrc" "$HOME/.xinitrc"
     ln -sf "$BASE_DIR/etc/nvim" "$HOME/.vim"
     ln -sf "$BASE_DIR/share/github" "$HOME/.Github"
     ln -sf "$BASE_DIR/share/ssh" "$HOME/.ssh"
 
     # for configuration in .config
     mkdir -p "$HOME/.config"
-    rm -rf "$HOME/.config/nvim" "$HOME/.config/kitty"
+    rm -rf "$HOME/.config/nvim" "$HOME/.config/kitty" "$HOME/.config/autostart"
     ln -sf "$BASE_DIR/etc/nvim" "$HOME/.config/nvim"
     ln -sf "$BASE_DIR/etc/kitty" "$HOME/.config/kitty"
+    ln -sf "$BASE_DIR/etc/linux/autostart" "$HOME/.config/autostart"
     touch-done
 }
 
