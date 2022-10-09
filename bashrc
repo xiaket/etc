@@ -17,9 +17,12 @@ export TERM="xterm-256color"
 export ARCH=$(uname -s)
 
 if [ "x$ARCH" = "xLinux" ]; then
-	export MAN_POSIXLY_CORRECT=1
-	# running on a linux virtual machine.
-	COLORS=dircolors
+  export MAN_POSIXLY_CORRECT=1
+  COLORS=dircolors
+  # Force reload xmodmap
+  xmodmap ${HOME}/.xmodmaprc
+  # setup key repeat
+  xset r rate 180 80
 else
 	# running on a macOS machine.
 	COLORS=gdircolors
@@ -33,6 +36,8 @@ altdir=$xiaketDIR"/alt"
 export PATH="$altdir/bin:${HOME}/.xiaket/etc/bin:${HOME}/.xiaket/go/bin:/usr/local/opt/ruby/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/usr/sbin:/sbin:${HOME}/.cargo/bin:/usr/local/opt/coreutils/bin:/usr/local/opt/fzf/bin:${HOME}/Library/Python/3.9/bin:${HOME}/.local/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 export LANG=en_US.UTF-8
+# Fix Chinese translation in bash
+export LANGUAGE="en_US"
 export DYLD_FALLBACK_LIBRARY_PATH=/usr/local/opt/openssl/lib
 export XDG_CONFIG_HOME="$etcdir"
 
