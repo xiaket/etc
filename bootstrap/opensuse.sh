@@ -85,7 +85,7 @@ create-links () {
 
 misc-config () {
     check-done || return 0
-    chsh -s /bin/bash
+    sudo snapper create-config /
     nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
     (cd "$BASE_DIR/etc" && git remote set-url origin git@github.com:xiaket/etc.git)
     touch-done
