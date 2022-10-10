@@ -9,6 +9,8 @@ if [ "x$ARCH" = "xDarwin" ]; then
 	alias retouch='sudo pkill TouchBarServer'
 	alias mtr='sudo /usr/local/sbin/mtr'
 	alias typora='open -a Typora '
+  alias gcp='pbpaste | xargs git clone'
+  alias brewup='brew update && brew upgrade && brew cleanup'
 fi
 
 alias grep='grep --color'
@@ -48,11 +50,10 @@ alias ga='git add'
 alias act='source venv/bin/activate'
 alias rerc='. ~/.bashrc; unset PIPENV_ACTIVE VIRTUAL_ENV PIP_PYTHON_PATH'
 alias pipfix='pip install -U ptpython neovim black'
-alias gcp='pbpaste | xargs git clone'
+alias gcp='xclip -selection clipboard -o | xargs git clone'
 alias pcat='pygmentize -f terminal256 -O style=native -g'
 
 alias randport='python -c "import random; print(random.randint(1025, 32768))"'
-alias brewup='brew update && brew upgrade && brew cleanup'
 alias lvi='nvim --noplugin'
 alias dssh='ssh-keygen -R'
 alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
