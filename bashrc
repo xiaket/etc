@@ -20,7 +20,7 @@ if [ "x$ARCH" = "xLinux" ]; then
   export MAN_POSIXLY_CORRECT=1
   COLORS=dircolors
   # Force reload xmodmap
-  xmodmap ${HOME}/.xmodmaprc
+  xmodmap ${HOME}/.xmodmaprc 2>/dev/null &
   # setup key repeat
   xset r rate 180 80
 else
