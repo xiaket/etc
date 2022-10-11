@@ -199,7 +199,6 @@ require("packer").startup(function(use)
 
   use({ -- treesitter
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
     config = function()
       require("nvim-treesitter").setup({
         ensure_installed = { "python", "bash", "go", "json", "lua", "yaml" },
