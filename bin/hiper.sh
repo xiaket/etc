@@ -22,6 +22,11 @@ case "$app" in
     bin="ARCH=Linux kitty"
     action="switch"
     ;;
+  obsidian)
+    class="obsidian.obsidian"
+    bin="~/Applications/Obsidian-0.15.9.AppImage"
+    action="switch"
+    ;;
   yast)
     class="YaST2.org.opensuse.YaST"
     bin="/usr/bin/xdg-su -c /sbin/yast2"
