@@ -1,0 +1,41 @@
+# numlock is mapped to Alt_R in xmodmap
+keystate_numlock = enable
+
+"xmodmap ./.xmodmaprc"
+  control + p
+
+"hiper.sh dolphin"
+  mod2 + d
+
+"hiper.sh kitty"
+  mod2 + k
+
+"hiper.sh obsidian"
+  mod2 + o
+
+"hiper.sh firefox"
+  mod2 + x
+
+"hiper.sh yast"
+  mod2 + y
+
+"hiper.sh 0"
+  mod2 + 0
+
+"hiper.sh 1"
+  mod2 + 1
+
+"hiper.sh 2"
+  mod2 + 2
+
+"hiper.sh 3"
+  mod2 + 3
+
+"hiper.sh 4"
+  mod2 + 4
+
+"hiper.sh left"
+  mod2 + comma
+
+"hiper.sh right"
+  mod2 + period
