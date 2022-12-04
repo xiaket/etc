@@ -91,6 +91,11 @@ misc-config () {
     touch-done
 }
 
+rust-config () {
+  sudo zypper install rustup
+  rustup default stable
+}
+
 clone-etc
 packages
 python-packages
