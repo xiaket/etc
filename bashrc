@@ -58,7 +58,7 @@ fi
 
 # for fzf
 set rtp+=/usr/local/opt/fzf
-[ -f /usr/local/opt/fzf/shell/key-bindings.bash ] && source /usr/local/opt/fzf/shell/key-bindings.bash
+[ -f $etcdir/fzf/key-binding.sh ] && source $etcdir/fzf/key-binding.sh
 
 # For bash completion.
 . "$etcdir"/bash_completion
