@@ -1,7 +1,14 @@
-local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-    packer_bootstrap = vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd([[ packadd packer.nvim ]])
+  packer_bootstrap = vim.fn.system({
+    "git",
+    "clone",
+    "--depth",
+    "1",
+    "https://github.com/wbthomason/packer.nvim",
+    install_path,
+  })
+  vim.cmd([[ packadd packer.nvim ]])
 end
 
 require("packer").startup(function(use)
@@ -213,6 +220,14 @@ require("packer").startup(function(use)
   })
 
   -- cmp & friends
+  use({
+    "tzachar/cmp-tabnine",
+    requires = "hrsh7th/nvim-cmp",
+    run = "./install.sh",
+  })
+  use({
+    "onsails/lspkind.nvim",
+  })
   use({
     "hrsh7th/nvim-cmp",
     requires = {
