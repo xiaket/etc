@@ -32,6 +32,11 @@ case "$app" in
     bin="/usr/bin/xdg-su -c /sbin/yast2"
     action="switch"
     ;;
+  zeal)
+    class="zeal.Zeal"
+    bin="zeal"
+    action="switch"
+    ;;
   0)
     x=0
     y=0

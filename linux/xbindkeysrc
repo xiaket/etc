@@ -2,7 +2,7 @@
 keystate_numlock = enable
 
 "xmodmap ./.xmodmaprc"
-  control + p
+  control + grave
 
 "hiper.sh dolphin"
   mod2 + d
@@ -18,6 +18,9 @@ keystate_numlock = enable
 
 "hiper.sh yast"
   mod2 + y
+
+"hiper.sh zeal"
+  mod2 + z
 
 "hiper.sh 0"
   mod2 + 0
