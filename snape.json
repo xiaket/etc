@@ -131,6 +131,10 @@
     "content": "git diff origin/master master",
     "lang": "Bash"
   },
+  "git fix author": {
+    "content": "git commit --amend --reset-author --no-edit",
+    "lang": "Text only"
+  },
   "git remove remote branch": {
     "content": "git push origin --delete <branch name>",
     "lang": "Bash"
