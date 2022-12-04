@@ -18,6 +18,10 @@ require("packer").startup(function(use)
     "fatih/vim-go",
     ft = "go",
   })
+  use({ -- pest support.
+    "pest-parser/pest.vim",
+    ft = "pest",
+  })
   use({
     "hashivim/vim-terraform",
     ft = "terraform",
@@ -201,7 +205,7 @@ require("packer").startup(function(use)
     "nvim-treesitter/nvim-treesitter",
     config = function()
       require("nvim-treesitter").setup({
-        ensure_installed = { "python", "bash", "go", "json", "lua", "yaml" },
+        ensure_installed = { "python", "bash", "go", "json", "lua", "rust", "yaml" },
         highlight = { enable = true, additional_vim_regex_highlighting = false },
         indent = { enable = true, disable = { "python" } },
       })
