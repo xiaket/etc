@@ -1,0 +1,44 @@
+keymap:
+  - name: hiper
+    remap:
+      ALT_R-1:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "1"]
+      ALT_R-2:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "2"]
+      ALT_R-3:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "3"]
+      ALT_R-4:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "4"]
+      ALT_R-0:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "0"]
+      ALT_R-COMMA:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "left"]
+      ALT_R-DOT:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "right"]
+      ALT_R-D:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "dolphin"]
+      ALT_R-K:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "kitty"]
+      ALT_R-O:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "obsidian"]
+      ALT_R-X:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "firefox"]
+      ALT_R-Y:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "yast"]
+      ALT_R-Z:
+        launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "zeal"]
+  - name: macos like key bindings
+    remap:
+      ALT-T: C-T
+      ALT-F: C-F
+      ALT-C: C-C
+      ALT-V: C-V
+      C-A: Home
+      C-E: End
+      C-B: Left
+      C-F: Right
+      C-D: Delete
+      C-N: Down
+      C-P: Up
+    application:
+      not: kitty
