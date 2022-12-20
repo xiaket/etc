@@ -4,6 +4,7 @@ Description=xremap
 [Service]
 ExecStart=/home/xiaket/.cargo/bin/xremap /home/xiaket/.xiaket/etc/xremap/config.yml
 Type=simple
+KillMode=process
 Restart=always
 RestartSec=10
 
