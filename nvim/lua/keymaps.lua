@@ -15,8 +15,6 @@ vim.o.pastetoggle = "<C-S>"
 ---------------------
 -- leader family
 ---------------------
-vim.g.mapleader = ","
-
 -- show undotree
 vim.keymap.set("n", "<leader>u", ":UndotreeToggle<cr>", { noremap = true, silent = true })
 

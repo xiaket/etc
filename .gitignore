@@ -2,7 +2,6 @@ nvim/backup
 nvim/shada
 nvim/undo
 nvim/view
-nvim/plugin/packer_compiled.lua
 
 w3m/history
 w3m/w3mtmp*

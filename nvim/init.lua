@@ -1,26 +1,47 @@
-function opt_load(module)
-    -- return whether the module has been loaded.
-    local function requiref(module)
-        require(module)
-    end
-    res = pcall(requiref,module)
-    return res
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "--single-branch",
+    "https://github.com/folke/lazy.nvim.git",
+    lazypath,
+  })
+end
+vim.opt.runtimepath:prepend(lazypath)
+
+vim.g.mapleader = ","
+
+require("lazy").setup("packages", {
+  defaults = { lazy = true },
+  install = { colorscheme = { "nightfox" } },
+  performance = {
+    rtp = {
+      disabled_plugins = {
+        "gzip",
+        "matchit",
+        "matchparen",
+        "netrwPlugin",
+        "tarPlugin",
+        "tohtml",
+        "tutor",
+        "zipPlugin",
+      },
+    },
+  },
+})
+
+local function requiref(module)
+  require(module)
 end
 
--- Speed up config loading.
-opt_load("impatient")
+if pcall(requiref, "nightfox") then
+  vim.cmd("colorscheme nightfox")
+end
 
--- plugins
-require("packages")
-
--- generic vim configurations
 require("flags")
-
--- keymaps
 require("keymaps")
-
--- my line number setup
 require("line-number")
-
--- auto header: add a header to new python/shell scripts
 require("auto-header")
