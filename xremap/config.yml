@@ -37,7 +37,6 @@ keymap:
       C-E: End
       C-B: Left
       C-F: Right
-      C-D: Delete
       C-N: Down
       C-P: Up
     application:
