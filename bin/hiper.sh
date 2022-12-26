@@ -101,6 +101,7 @@ then
   fi
 else
   win_id=$(xdotool getactivewindow)
+  wmctrl -r :ACTIVE: -b remove,maximized_vert,maximized_horz
   xdotool windowsize "$win_id" "$width" "$height"
   xdotool windowmove "$win_id" "$x" "$y"
 fi
