@@ -104,6 +104,31 @@ return {
   },
 
   -- Load when BufRead
+  {
+    "echasnovski/mini.nvim",
+    event = "BufRead",
+    config = function()
+      local animate = require('mini.animate')
+      local options = {
+        enable = {timing = animate.gen_timing.linear({ duration = 50, unit = 'total' })},
+        disable = {enable = false},
+      }
+      animate.setup({
+        open = options.disable,
+        close = options.disable,
+        resize = options.enable,
+        cursor = options.enable,
+        scroll = options.enable,
+      })
+      require('mini.pairs').setup()
+      require('mini.sessions').setup({
+        autoread = true,
+        directory = ('%s%ssessions'):format(vim.fn.stdpath('data'), package.config:sub(1, 1)),
+      })
+      require('mini.statusline').setup()
+      require('mini.tabline').setup()
+    end,
+  },
   { -- show lsp errors in a buffer.
     "folke/trouble.nvim",
     event = "BufRead",
@@ -137,19 +162,6 @@ return {
   { -- better :term.
     "numtostr/FTerm.nvim",
     event = "BufRead",
-  },
-  {
-    "nvim-lualine/lualine.nvim",
-    event = "BufRead",
-    config = function()
-      require("lualine").setup({
-        options = { theme = "nightfox" },
-        sections = {
-          lualine_b = {},
-          lualine_x = { "encoding", "fileformat" },
-        },
-      })
-    end,
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -225,11 +237,5 @@ return {
       require("lsp_signature").setup()
     end,
     after = "nvim-lspconfig",
-  },
-  {
-    "windwp/nvim-autopairs",
-    config = function()
-      require("nvim-autopairs").setup({})
-    end,
   },
 }

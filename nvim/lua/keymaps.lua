@@ -15,6 +15,9 @@ vim.o.pastetoggle = "<C-S>"
 ---------------------
 -- leader family
 ---------------------
+-- buffer navigation
+vim.keymap.set("n", "<leader>a", ":bprevious<cr>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>s", ":bnext<cr>", { noremap = true, silent = true })
 -- show undotree
 vim.keymap.set("n", "<leader>u", ":UndotreeToggle<cr>", { noremap = true, silent = true })
 
