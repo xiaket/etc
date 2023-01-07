@@ -121,10 +121,6 @@ return {
         scroll = options.enable,
       })
       require('mini.pairs').setup()
-      require('mini.sessions').setup({
-        autoread = true,
-        directory = ('%s%ssessions'):format(vim.fn.stdpath('data'), package.config:sub(1, 1)),
-      })
       require('mini.statusline').setup()
       require('mini.tabline').setup()
     end,
@@ -136,6 +132,9 @@ return {
   { -- show git change statuses.
     "lewis6991/gitsigns.nvim",
     event = "BufRead",
+    config = function()
+      require('gitsigns').setup()
+    end,
   },
   { -- spell check setup
     "lewis6991/spellsitter.nvim",
@@ -236,6 +235,5 @@ return {
     config = function()
       require("lsp_signature").setup()
     end,
-    after = "nvim-lspconfig",
   },
 }

@@ -18,7 +18,7 @@ global.loaded_shada_plugin = 1
 global.loaded_spellfile_plugin = 1
 
 -- session management
-opt.sessionoptions = "buffers,folds,winpos,terminal"
+opt.sessionoptions = "buffers,curdir,folds,tabpages,winpos,terminal"
 
 -- generic options
 global.fileencodings = "utf-8,gbk,ucs-bom,cp936" -- try these encodings in order

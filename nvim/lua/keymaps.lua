@@ -96,3 +96,16 @@ vim.api.nvim_create_autocmd({ "InsertLeave", "FocusLost" }, {
   end,
   once = false,
 })
+
+-- auto save and load views.
+vim.api.nvim_create_autocmd("BufWrite", {
+  pattern = "*",
+  command = "mkview",
+  once = true,
+})
+
+vim.api.nvim_create_autocmd("BufRead", {
+  pattern = "*",
+  command = "silent! loadview",
+  once = true,
+})
