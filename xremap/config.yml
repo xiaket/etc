@@ -29,10 +29,11 @@ keymap:
         launch: ["/home/xiaket/.xiaket/etc/bin/hiper.sh", "zeal"]
   - name: macos like key bindings
     remap:
-      ALT-T: C-T
-      ALT-F: C-F
-      ALT-C: C-C
-      ALT-V: C-V
+      ALT-T: C-T  # new tab
+      ALT-F: C-F  # find
+      ALT-C: C-C  # copy
+      ALT-X: C-X  # cut
+      ALT-V: C-V  # paste
       C-A: Home
       C-E: End
       C-B: Left
@@ -41,3 +42,10 @@ keymap:
       C-P: Up
     application:
       not: kitty
+  - name: firefox tweaks
+    remap:
+      ALT-L: C-L
+      ALT-R: C-R
+      ALT-Z: Control-Shift-T
+    application:
+      only: firefox
