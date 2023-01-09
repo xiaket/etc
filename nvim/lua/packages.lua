@@ -125,6 +125,13 @@ return {
       require('mini.tabline').setup()
     end,
   },
+  {
+    "monkoose/matchparen.nvim",
+    event = "BufRead",
+    config = function()
+      require('matchparen').setup()
+    end,
+  },
   { -- show lsp errors in a buffer.
     "folke/trouble.nvim",
     event = "BufRead",
