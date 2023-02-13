@@ -1,6 +1,7 @@
 -- Module to manage windows in macos
 
 hs.window.animationDuration = 0
+hs.screen.strictScreenInDirection = false
 
 function magnet(how)
   --[[
