@@ -14,7 +14,7 @@ ls() {
 	fi
 
 	if [ "x$ARCH" = "xDarwin" ]; then
-		bin="/usr/local/bin/gls"
+		bin="gls"
 	else
 		bin="/bin/ls"
 	fi
