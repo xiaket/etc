@@ -7,6 +7,7 @@ if [ "x$ARCH" = "xDarwin" ]; then
 	alias awk='gawk'
 
 	alias retouch='sudo pkill TouchBarServer'
+	alias diablo='open "/Applications/Diablo III/Diablo III.app" --args -launch -OnlineService.Matchmaking.ServerPool=AU1'
 	alias mtr='sudo /usr/local/sbin/mtr'
 	alias typora='open -a Typora '
   alias gcp='pbpaste | xargs git clone'
