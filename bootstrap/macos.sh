@@ -6,7 +6,12 @@ set -o pipefail
 
 # This stage does not have any prerequisites. We should run this after the first boot.
 BASE_DIR="$HOME/.xiaket"
-
+if [ $(uname -m) = "arm64" ]
+then
+  brewdir=/opt/homebrew
+else
+  brewdir=/usr/local
+fi
 
 # helpers
 check-done () {
@@ -53,29 +58,40 @@ clone-etc () {
 homebrew () {
     check-done || return 0
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    brew tap homebrew/cask
+    brew tap homebrew/cask-fonts
+
+    touch-done
+}
+
+homebrew-packages () {
+    check-done || return 0
+    homebrew
 
     # system utils
     # development tools
     # utils
     brew install \
-        bash bash-completion coreutils findutils gawk gcc git-delta gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \
-        colordiff cwlogs ffmpeg fzf git go jq podman python3 rust shellcheck sqlite tig \
+        bash bash-completion coreutils findutils gawk gcc gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \
+        colordiff ffmpeg fzf git git-delta git-lfs go jq podman python3 rust shellcheck sqlite tig \
         mtr mpv neovim p7zip youtube-dl zoxide
 
-    brew tap homebrew/cask
-    brew tap homebrew/cask-fonts
+    touch-done
+}
 
-    brew install basictex bitwarden chiaki homebrew/cask/dash drawio firefox grammarly hammerspoon iina itsycal kitty slack typora virtualbox virtualbox-extension-pack zoom
+homebrew-casks () {
+    check-done || return 0
+    homebrew
+
+    brew install bitwarden homebrew/cask/dash drawio firefox grammarly hammerspoon iina itsycal kitty obsidian raycast slack typora zoom
     brew install --cask font-fira-code-nerd-font
-    podman machine init
-    podman machine start
     touch-done
 }
 
 python-packages () {
     check-done || return 0
     python3 -m pip install -U pip
-    python3 -m pip install ansible black icdiff neovim poetry psutil ptpython pyflakes pygments requests sh Snape termcolor virtualenv
+    python3 -m pip install black icdiff neovim poetry psutil ptpython pyflakes pygments requests sh Snape termcolor virtualenv
     touch-done
 }
 
@@ -112,9 +128,9 @@ write-defaults () {
 
 build-ps1 () {
     check-done || return 0
-    brew install libgit2
-    cd "$BASE_DIR/etc/go"
-    go build -o ../bin/ps1 ps1.go
+    $brewdir/bin/cargo build --release
+    strip target/release/ps1
+    mv target/release/ps1 ../bin
     touch-done
 }
 
@@ -136,23 +152,25 @@ create-links () {
     mkdir -p "$HOME/.config"
     ln -sf "$BASE_DIR/etc/nvim" "$HOME/.config/nvim"
     ln -sf "$BASE_DIR/etc/kitty" "$HOME/.config/kitty"
-    ln -sf /usr/local/bin/python3 /usr/local/bin/python
-    ln -sf /usr/local/bin/pip3 /usr/local/bin/pip
+    ln -sf $brewdir/bin/python3 $brewdir/bin/python
+    ln -sf $brewdir/bin/pip3 $brewdir/bin/pip
     touch-done
 }
 
 misc-config () {
     check-done || return 0
     chsh -s /bin/bash
-    nvim +PackerSync +qall
+    nvim +qall
     (cd "$BASE_DIR/etc" && git remote set-url origin git@github.com:xiaket/etc.git)
     touch-done
 }
 
 clone-etc
-homebrew
-python-packages
 write-defaults
+homebrew
+homebrew-packages
+homebrew-casks
+python-packages
 build-ps1
 create-links
 misc-config
