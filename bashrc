@@ -26,12 +26,19 @@ else
 	COLORS=gdircolors
 fi
 
+if [ $(uname -m) = "arm64" ]
+then
+  brewdir="/opt/homebrew"
+else
+  brewdir="/usr/local"
+fi
+
 xiaketDIR=~/.xiaket
 etcdir=$xiaketDIR"/etc"
 altdir=$xiaketDIR"/alt"
 
 # PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
-export PATH="$altdir/bin:${HOME}/.xiaket/etc/bin:${HOME}/.xiaket/go/bin:/opt/homebrew/bin:/usr/local/opt/ruby/bin:/usr/local/bin:/usr/local/sbin:/bin:/usr/bin:/usr/sbin:/sbin:${HOME}/.cargo/bin:/opt/homebrew/opt/coreutils/bin:/opt/homebrew/opt/fzf/bin:${HOME}/Library/Python/3.11/bin:${HOME}/.local/bin"
+export PATH="$altdir/bin:${HOME}/.xiaket/etc/bin:${HOME}/.xiaket/go/bin:$brewdir/bin:$brewdir/opt/ruby/bin:$brewdir/sbin:/bin:/usr/bin:/usr/sbin:/sbin:${HOME}/.cargo/bin:$brewdir/opt/coreutils/bin:$brewdir/opt/fzf/bin:${HOME}/Library/Python/3.11/bin:${HOME}/.local/bin"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 export LANG=en_US.UTF-8
 # Fix Chinese translation in bash
