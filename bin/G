@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+import pathlib
+import sys
+
+import requests
+
+
+token_path = pathlib.Path('~/.xiaket/var/run/chatgpt.token')
+with token_path.expanduser().open() as fobj:
+    token = fobj.read().strip()
+
+def make_request(prompt):
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    data = {
+        'model': 'gpt-3.5-turbo-0301',
+        'messages': [
+            {
+                'role': 'user',
+                'content': prompt,
+            }
+        ]
+    }
+
+    response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
+    response.raise_for_status()
+
+    return response.json()['choices'][0]['message']['content'].strip().strip('"')
+
+def polish_text(input_text):
+    leader = "Please help me to polish the text" if input_text.isascii() else "请帮我润色下面这段文本"
+    return make_request(f"{leader}: `{input_text}`")
+
+def generate_code(input_text, language="python"):
+    leader = f"Please write a snippet in {language}" if input_text.isascii() else f"请写一段{language}代码"
+    return make_request(f"{leader}: `{input_text}`")
+
+def main():
+    script_name = sys.argv[0].split("/")[-1]
+    if script_name == "G.c":
+        if len(sys.argv) == 2:
+            print(generate_code(sys.argv[1]))
+        else:
+            print(generate_code(sys.argv[2], language=sys.argv[1]))
+    elif script_name == "G.i":
+        print(polish_text(sys.argv[1]))
+
+if __name__ == '__main__':
+    main()
