@@ -37,15 +37,19 @@ def generate_code(input_text, language="python"):
     leader = f"Please write a snippet in {language}" if input_text.isascii() else f"请写一段{language}代码"
     return make_request(f"{leader}: `{input_text}`")
 
+def read_input(args):
+    return sys.stdin.read() if len(args) == 0 else args[0]
+
 def main():
     script_name = sys.argv[0].split("/")[-1]
+
     if script_name == "G.c":
         if len(sys.argv) == 2:
-            print(generate_code(sys.argv[1]))
+            print(generate_code(read_input(sys.argv[1:])))
         else:
             print(generate_code(sys.argv[2], language=sys.argv[1]))
     elif script_name == "G.i":
-        print(polish_text(sys.argv[1]))
+        print(polish_text(read_input(sys.argv[1:])))
 
 if __name__ == '__main__':
     main()
