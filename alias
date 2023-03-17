@@ -12,6 +12,8 @@ if [ "x$ARCH" = "xDarwin" ]; then
 	alias typora='open -a Typora '
   alias gcp='pbpaste | xargs git clone'
   alias brewup='brew update && brew upgrade && brew cleanup'
+else
+  alias gcp='xclip -selection clipboard -o | xargs git clone'
 fi
 
 alias grep='grep --color'
@@ -51,7 +53,6 @@ alias ga='git add'
 alias act='source venv/bin/activate'
 alias rerc='. ~/.bashrc; unset PIPENV_ACTIVE VIRTUAL_ENV PIP_PYTHON_PATH'
 alias pipfix='pip install -U ptpython neovim black'
-alias gcp='xclip -selection clipboard -o | xargs git clone'
 alias pcat='pygmentize -f terminal256 -O style=native -g'
 
 alias randport='python -c "import random; print(random.randint(1025, 32768))"'
