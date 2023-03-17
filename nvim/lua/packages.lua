@@ -209,8 +209,10 @@ return {
       "hrsh7th/cmp-nvim-lua",
       "saadparwaiz1/cmp_luasnip",
       {
-        "tzachar/cmp-tabnine",
-        build = "./install.sh",
+        "jcdickinson/codeium.nvim",
+        config = function()
+          require("codeium").setup({})
+        end
       },
       {
         "L3MON4D3/LuaSnip",
