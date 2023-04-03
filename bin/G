@@ -5,9 +5,19 @@ import sys
 import requests
 
 
-token_path = pathlib.Path('~/.xiaket/var/run/chatgpt.token')
-with token_path.expanduser().open() as fobj:
-    token = fobj.read().strip()
+TOKENS = {
+    '~/.xiaket/var/run/canva-chatgpt.token': "gpt-4",
+    '~/.xiaket/var/run/chatgpt.token': "gpt-3.5-turbo-0301",
+}
+
+for path in TOKENS:
+    token_path = pathlib.Path(path)
+    if not token_path.expanduser().exists():
+        continue
+    with token_path.expanduser().open() as fobj:
+        token = fobj.read().strip()
+        model = TOKENS[path]
+        break
 
 def make_request(prompt):
     headers = {
@@ -15,7 +25,7 @@ def make_request(prompt):
         'Authorization': f'Bearer {token}'
     }
     data = {
-        'model': 'gpt-3.5-turbo-0301',
+        'model': model,
         'messages': [
             {
                 'role': 'user',
