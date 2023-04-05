@@ -73,7 +73,7 @@ homebrew-packages () {
     # utils
     brew install \
         bash bash-completion coreutils findutils gawk gcc gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \
-        colordiff ffmpeg fzf git git-delta git-lfs go jq podman python3 rust shellcheck sqlite tig \
+        colordiff ffmpeg fzf git git-delta git-lfs go jq podman python3 rust rustfmt shellcheck shfmt sqlite stylua tig \
         mtr mpv neovim p7zip youtube-dl zoxide
 
     touch-done
@@ -91,7 +91,7 @@ homebrew-casks () {
 python-packages () {
     check-done || return 0
     python3 -m pip install -U pip
-    python3 -m pip install black icdiff neovim poetry psutil ptpython pyflakes pygments requests sh Snape termcolor virtualenv
+    python3 -m pip install black icdiff neovim poetry psutil ptpython pyflakes pygments requests sh Snape termcolor virtualenv yamlfix
     touch-done
 }
 
