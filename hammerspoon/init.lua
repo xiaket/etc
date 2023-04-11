@@ -11,7 +11,6 @@ local features = {
   m = 'Mail',
   o = 'Obsidian',
   s = 'Safari',
-  t = 'Typora',
   x = 'Firefox',
   w = 'WeChat',
   z = 'zoom.us',
