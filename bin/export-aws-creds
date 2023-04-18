@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# Input looks like:
+
+# {"Version": 1, "AccessKeyId": "some-access-key-id", "SecretAccessKey": "some-secret-access-key", "SessionToken": "some-session-token", "Expiration": "2023-04-19T05:18:50+00:00"}
+
+assume_role_output=$(cat -)
+access_key_id=$(echo "$assume_role_output" | jq -r ".AccessKeyId")
+secret_access_key=$(echo "$assume_role_output" | jq -r ".SecretAccessKey")
+session_token=$(echo "$assume_role_output" | jq -r ".SessionToken")
+
+echo "export AWS_ACCESS_KEY_ID=\"$access_key_id\""
+echo "export AWS_SECRET_ACCESS_KEY=\"$secret_access_key\""
+echo "export AWS_SESSION_TOKEN=\"$session_token\""
