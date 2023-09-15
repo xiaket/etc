@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-#coding=utf-8
+#!/usr/bin/env python3
 """
 Author:         Kai Xia <xiaket@gmail.com>
 Filename:       httpd-download.py
@@ -9,20 +8,20 @@ Last modified:  2013-09-13 10:38
 Description:
 """
 import os
+from random import randint
 import socket
 import sys
+from urllib.parse import quote
 
-from random import randint
-from urllib import quote
-from SocketServer import ThreadingMixIn
-from BaseHTTPServer import HTTPServer
-from SimpleHTTPServer import SimpleHTTPRequestHandler
+from http.server import HTTPServer, SimpleHTTPRequestHandler
+from socketserver import ThreadingMixIn
 
 
 class NotracebackServer(ThreadingMixIn, HTTPServer):
     """
     could make this a mixin, but decide to keep it simple for a simple script.
     """
+
     def handle_error(self, *args):
         """override default function to disable traceback."""
         pass
@@ -63,7 +62,7 @@ class PartialContentHandler(SimpleHTTPRequestHandler):
 
         ctype = self.guess_type(path)
         try:
-            f = open(path, 'rb')
+            f = open(path, "rb")
         except IOError:
             self.send_error(404, "File not found")
             return None
@@ -88,7 +87,7 @@ class PartialContentHandler(SimpleHTTPRequestHandler):
             self.send_header("Content-Length", str(fs[6] - pos))
             self.send_header("Last-Modified", self.date_time_string(fs.st_mtime))
             start = start.replace("=", " ")
-            self.send_header("Content-Range", "%s%s/%s" % (start, full-1, full))
+            self.send_header("Content-Range", "%s%s/%s" % (start, full - 1, full))
             self.end_headers()
             f.seek(pos)
             self.mycopy(f)
@@ -103,9 +102,8 @@ class PartialContentHandler(SimpleHTTPRequestHandler):
         return f
 
 
-def main(port, server_class=NotracebackServer,
-        handler_class=PartialContentHandler):
-    server_address = ('', port)
+def main(port, server_class=NotracebackServer, handler_class=PartialContentHandler):
+    server_address = ("", port)
     httpd = server_class(server_address, handler_class)
     httpd.serve_forever()
 
@@ -126,16 +124,16 @@ def get_ipaddress(host="www.163.com"):
 if __name__ == "__main__":
     port = randint(20000, 50000)
     ip = get_ipaddress()
-    print "serving on: http://%s:%s/" % (ip, port)
-    print "===== local files ====="
+    print("serving on: http://%s:%s/" % (ip, port))
+    print("===== local files =====")
     cwd = os.getcwd()
     for root, dirs, files in os.walk(cwd):
         for file in files:
             if file == sys.argv[0] or file.startswith("."):
                 continue
             filepath = os.path.join(root, file)
-            relative_path = quote("%s/%s" % (root[len(cwd)+1:], file))
+            relative_path = quote("%s/%s" % (root[len(cwd) + 1 :], file))
             if os.path.isfile(filepath):
-                print "link: http://%s:%s%s" % (ip, port, relative_path)
-    print "===== start logging =====\n"
+                print("link: http://%s:%s%s" % (ip, port, relative_path))
+    print("===== start logging =====\n")
     main(port=port)
