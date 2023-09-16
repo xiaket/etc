@@ -9,8 +9,6 @@ vim.keymap.set("n", "<C-E>", ":%s/\\s*$//g<cr>", { noremap = true })
 vim.keymap.set("n", "<C-V>", '"*p', { noremap = true })
 -- get out of term
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
--- Ctrl S to toggle paste mode
-vim.o.pastetoggle = "<C-S>"
 
 ---------------------
 -- leader family
