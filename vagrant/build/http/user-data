@@ -1,0 +1,21 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US
+  keyboard:
+    layout: us
+  ssh:
+    install-server: true
+    allow-pw: true
+  user-data:
+    preserve_hostname: false
+    hostname: ubuntu
+    package_upgrade: false
+    timezone: Australia/Melbourne
+    users:
+      - name: vagrant
+        plain_text_passwd: vagrant
+        groups: [adm, cdrom, dip, plugdev, lxd, sudo]
+        lock-passwd: false
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        shell: /bin/bash
