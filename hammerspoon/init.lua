@@ -3,12 +3,13 @@ local magnet = require('magnet')
 
 local features = {
   -- Simple app maps
+  a = 'Arc',
   b = 'Books',
   d = 'Dash',
   f = 'Finder',
   k = 'Kitty',
   l = 'Slack',
-  m = 'Mail',
+  m = 'Music',
   o = 'Obsidian',
   s = 'Safari',
   x = 'Firefox',
