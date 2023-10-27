@@ -135,6 +135,10 @@
     "content": "git commit --amend --reset-author --no-edit",
     "lang": "Text only"
   },
+  "git lfs skip smudge": {
+    "content": "git lfs install --skip-smudge\n# after your fix\ngit lfs pull\ngit lfs install --force",
+    "lang": "Text only"
+  },
   "git remove remote branch": {
     "content": "git push origin --delete <branch name>",
     "lang": "Bash"
