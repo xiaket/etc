@@ -177,3 +177,38 @@ fi
 bind -x '"\C-r": __atuin_history'
 bind -x '"\e[A": __atuin_history --shell-up-key-binding'
 bind -x '"\eOA": __atuin_history --shell-up-key-binding'
+
+#####################
+# ssh agent forward #
+#####################
+has_priv_files=$(ls -l ~/.ssh/*.priv >/dev/null 2>&1)
+if [ $? -eq 0 ]
+then
+  SSH_ENV="$HOME/.ssh/environment"
+
+  function start_agent {
+    content=$(/usr/bin/ssh-agent | sed "/^echo/d")
+    [ -f $SSH_ENV ] && return 0 || echo $content >$SSH_ENV
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" >/dev/null
+    /usr/bin/ssh-add ~/.ssh/*.priv
+  }
+
+  # Source SSH settings, if applicable
+  [ -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
+  lockfile ~/.xiaket/var/tmp/ssh.lock
+  if [ -f "${SSH_ENV}" ]
+  then
+    . "${SSH_ENV}" >/dev/null
+    ps ${SSH_AGENT_PID} | grep -q ssh-agent$
+    if [ $? -ne 0 ]
+    then
+      rm -f ${SSH_ENV}
+    start_agent
+    fi
+  else
+    start_agent
+  fi
+fi
+
+rm -f ~/.xiaket/var/tmp/ssh.lock
