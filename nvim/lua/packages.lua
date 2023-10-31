@@ -35,7 +35,7 @@ return {
     cmd = { "FocusSplitLeft", "FocusSplitDown", "FocusSplitUp", "FocusSplitRight" },
     config = function()
       require("focus").setup({
-        autoresize = { enable = false },
+        autoresize = { enable = true },
         ui = { number = false },
       })
     end,
