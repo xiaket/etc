@@ -64,8 +64,8 @@ if [ -f "$altdir/etc/bashrc" ]; then
 fi
 
 # for fzf
-set rtp+=/usr/local/opt/fzf
-[ -f $etcdir/fzf/key-binding.sh ] && source $etcdir/fzf/key-binding.sh
+#set rtp+=/usr/local/opt/fzf
+#[ -f $etcdir/fzf/key-binding.sh ] && source $etcdir/fzf/key-binding.sh
 
 # For bash completion.
 . "$etcdir"/bash_completion
@@ -85,13 +85,13 @@ export PROMPT_COMMAND='_xiaket_prompt'
 ################
 
 # don't put duplicate lines in the history. See bash(1) for more options
-export HISTCONTROL=ignoredups
+#export HISTCONTROL=ignoredups
 # unlimited playback.
-export HISTFILESIZE=99999
-export HISTSIZE=99999
-export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
+#export HISTFILESIZE=99999
+#export HISTSIZE=99999
+#export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
 # append to the history file, don't overwrite it
-shopt -s histappend
+#shopt -s histappend
 
 #########################
 # environment variables #
@@ -118,33 +118,62 @@ export MANPAGER='less -X'
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-#####################
-# ssh agent forward #
-#####################
-has_priv_files=$(ls -l ~/.ssh/*.priv >/dev/null 2>&1)
-if [ $? -eq 0 ]; then
-	SSH_ENV="$HOME/.ssh/environment"
+. "$etcdir"/bash_completion
 
-	function start_agent {
-		content=$(/usr/bin/ssh-agent | sed "/^echo/d")
-		[ -f $SSH_ENV ] && return 0 || echo $content >$SSH_ENV
-		chmod 600 "${SSH_ENV}"
-		. "${SSH_ENV}" >/dev/null
-		/usr/bin/ssh-add ~/.ssh/*.priv
-	}
 
-	# Source SSH settings, if applicable
-	[ -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
-	lockfile ~/.xiaket/var/tmp/ssh.lock
-	if [ -f "${SSH_ENV}" ]; then
-		. "${SSH_ENV}" >/dev/null
-		ps ${SSH_AGENT_PID} | grep -q ssh-agent$
-		if [ $? -ne 0 ]; then
-			rm -f ${SSH_ENV}
-			start_agent
-		fi
-	else
-		start_agent
-	fi
-	rm -f ~/.xiaket/var/tmp/ssh.lock
+###########################
+# bash history via atuin #
+###########################
+source "$etcdir/bash-preexec.sh"
+
+ATUIN_SESSION=$(atuin uuid)
+export ATUIN_SESSION
+
+_atuin_preexec() {
+    local id
+    id=$(atuin history start -- "$1")
+    export ATUIN_HISTORY_ID="${id}"
+}
+
+_atuin_precmd() {
+    local EXIT="$?"
+
+    [[ -z "${ATUIN_HISTORY_ID}" ]] && return
+
+    (ATUIN_LOG=error atuin history end --exit "${EXIT}" -- "${ATUIN_HISTORY_ID}" &) >/dev/null 2>&1
+    export ATUIN_HISTORY_ID=""
+}
+
+__atuin_history() {
+    # shellcheck disable=SC2048,SC2086
+    HISTORY="$(ATUIN_SHELL_BASH=t ATUIN_LOG=error atuin search $* -i -- "${READLINE_LINE}" 3>&1 1>&2 2>&3)"
+
+    if [[ $HISTORY == __atuin_accept__:* ]]
+    then
+      HISTORY=${HISTORY#__atuin_accept__:}
+      echo "$HISTORY"
+      # Need to run the pre/post exec functions manually
+      _atuin_preexec "$HISTORY"
+      eval "$HISTORY"
+      _atuin_precmd
+      echo
+      READLINE_LINE=""
+      READLINE_POINT=${#READLINE_LINE}
+    else
+      READLINE_LINE=${HISTORY}
+      READLINE_POINT=${#READLINE_LINE}
+    fi
+
+}
+
+if [[ -n "${BLE_VERSION-}" ]]; then
+    blehook PRECMD-+=_atuin_precmd
+    blehook PREEXEC-+=_atuin_preexec
+else
+    precmd_functions+=(_atuin_precmd)
+    preexec_functions+=(_atuin_preexec)
 fi
+
+bind -x '"\C-r": __atuin_history'
+bind -x '"\e[A": __atuin_history --shell-up-key-binding'
+bind -x '"\eOA": __atuin_history --shell-up-key-binding'

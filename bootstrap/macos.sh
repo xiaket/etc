@@ -74,7 +74,7 @@ homebrew-packages () {
     brew install \
         bash bash-completion coreutils findutils gawk gcc gnu-sed gnu-tar gnu-time gnutls openssl procmail readline tree wget \
         colordiff ffmpeg fzf git git-delta git-lfs go jq podman python3 ripgrep rust rustfmt shellcheck shfmt sqlite stylua tig \
-        mtr mpv neovim p7zip youtube-dl zoxide
+        atuin mtr mpv neovim p7zip youtube-dl zoxide
 
     touch-done
 }
