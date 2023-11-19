@@ -1,5 +1,6 @@
 local hiper = require('hiper').new('rightcmd')
 local magnet = require('magnet')
+local power = require('power')
 
 local features = {
   -- Simple app maps
@@ -11,7 +12,7 @@ local features = {
   l = 'Slack',
   m = 'Music',
   o = 'Obsidian',
-  s = 'Safari',
+  -- s = 'Safari',
   x = 'Firefox',
   w = 'WeChat',
   z = 'zoom.us',
