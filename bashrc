@@ -14,7 +14,7 @@ shopt -s cdspell
 
 # explicitly enable term colors.
 export TERM="xterm-256color"
-export ARCH=$(uname -s)
+ARCH=$(uname -s)
 
 if [ "x$ARCH" = "xLinux" ]; then
   export MAN_POSIXLY_CORRECT=1
