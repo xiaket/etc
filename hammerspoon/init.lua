@@ -6,6 +6,7 @@ local features = {
   -- Simple app maps
   a = 'Arc',
   b = 'Books',
+  c = 'Canva',
   d = 'Dash',
   f = 'Finder',
   k = 'Kitty',
