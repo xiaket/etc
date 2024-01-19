@@ -14,6 +14,7 @@ local features = {
   m = 'Music',
   o = 'Obsidian',
   -- s = 'Safari',
+  t = 'TickTick',
   x = 'Firefox',
   w = 'WeChat',
   z = 'zoom.us',
