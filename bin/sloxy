@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""
+Rewrite of https://github.com/jakob/sloxy in Python.
+"""
+import argparse
+import select
+import socket
+import struct
+import sys
+import time
+
+
+class ForwardTask:
+    def __init__(self):
+        self.incoming = 0
+        self.outgoing = 0
+        self.next = None
+
+
+buffer_size = 0
+buffer = bytearray()
+speedlimit = 5000
+delay = 0.1
+
+
+def readwrite(from_socket, to_socket):
+    global buffer, buffer_size, speedlimit, delay
+
+    read_bytes = from_socket.recv(buffer_size)
+    if len(read_bytes) == 0:
+        return 1
+
+    wait_time = len(read_bytes) / speedlimit
+    if len(read_bytes) < buffer_size:
+        wait_time += delay
+
+    time.sleep(wait_time)
+
+    to_socket.sendall(read_bytes)
+    return 0
+
+
+def main():
+    global buffer, buffer_size, speedlimit, delay
+
+    parser = argparse.ArgumentParser(
+        description="Forward data between a local and a remote socket with speed limit and delay."
+    )
+    parser.add_argument("listen_addr", help="Local address to listen on")
+    parser.add_argument("listen_port", type=int, help="Local port to listen on")
+    parser.add_argument("destination_addr", help="Remote address to forward data to")
+    parser.add_argument("destination_port", type=int, help="Remote port to forward data to")
+    parser.add_argument("speed_limit", type=float, help="Speed limit in KB/s")
+    parser.add_argument("delay", type=float, help="Delay in seconds")
+
+    args = parser.parse_args()
+
+    speedlimit = args.speed_limit
+    delay = args.delay
+
+    buffer_size = int(speedlimit)
+    if buffer_size > 1000000:
+        buffer_size = 1000000
+    buffer = bytearray(buffer_size)
+
+    print(f"      Delay: {delay*1000}ms")
+    print(f"Speed Limit: {speedlimit / 1000}KB/s")
+    print(f"Buffer Size: {buffer_size} bytes")
+    print("\n")
+
+    listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listen_socket.bind((args.listen_addr, args.listen_port))
+    listen_socket.listen(1)
+
+    forward_tasks = []
+    max_socket = listen_socket.fileno()
+
+    while True:
+        rfds, _, _ = select.select(
+            [listen_socket]
+            + [task.incoming for task in forward_tasks]
+            + [task.outgoing for task in forward_tasks],
+            [],
+            [],
+        )
+
+        if listen_socket in rfds:
+            print("Connecting to {}:{}".format(args.destination_addr, args.destination_port))
+            new_task = ForwardTask()
+            new_task.incoming, _ = listen_socket.accept()
+            if new_task.incoming.fileno() > max_socket:
+                max_socket = new_task.incoming.fileno()
+
+            target_sockaddr = (args.destination_addr, args.destination_port)
+            new_task.outgoing = socket.create_connection(target_sockaddr)
+            if new_task.outgoing.fileno() > max_socket:
+                max_socket = new_task.outgoing.fileno()
+
+            forward_tasks.append(new_task)
+            print("Connected.")
+
+        for task in forward_tasks:
+            should_close = False
+            if task.incoming in rfds:
+                should_close = readwrite(task.incoming, task.outgoing)
+            if not should_close and task.outgoing in rfds:
+                should_close = readwrite(task.outgoing, task.incoming)
+
+            if should_close:
+                task.incoming.close()
+                task.outgoing.close()
+                forward_tasks.remove(task)
+                print("Disconnected.")
+            else:
+                forward_tasks = [t for t in forward_tasks if t]
+
+
+if __name__ == "__main__":
+    main()
