@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+for file in $(git diff --name-only --cached --diff-filter=ACMR)
+do
+  if grep -iq "do not commit" "$file"; then
+      echo "Commit message contains 'do not commit'. Commit aborted."
+      exit 1
+  fi
+done
+
+exit 0

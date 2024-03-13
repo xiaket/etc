@@ -13,6 +13,7 @@
     excludesfile = ~/.xiaket/etc/gitignore_global
     pager = cat
     quotepath = false
+    hooksPath = ~/.xiaket/etc/git-hooks
 [push]
     default = current
 [color]
