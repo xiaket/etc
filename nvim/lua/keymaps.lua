@@ -81,7 +81,7 @@ vim.api.nvim_create_autocmd("BufRead", {
 local aug = vim.api.nvim_create_augroup("FormatAutogroup", {})
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-	pattern = "*.py,*.lua",
+	pattern = "*.py,*.lua,*.tf",
 	group = aug,
 	command = ":Format",
 })
