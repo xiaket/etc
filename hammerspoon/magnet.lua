@@ -14,20 +14,22 @@ function magnet(how)
     2: Move window to the top right corner
     3: Move window to the bottom left corner
     4: Move window to the bottom right corner
-  ]]--
+  ]]
+  --
   local win = hs.window.focusedWindow()
   local frame = win:screen():fullFrame()
 
   if how == "0" then
     win:maximize()
   elseif how == "1" then
-    win:setFrame({x=frame.x, y=frame.y, w=frame.w/2, h=frame.h/2})
+    win:setFrame({ x = frame.x, y = frame.y, w = frame.w / 2, h = frame.h / 2 })
   elseif how == "2" then
-    win:setFrame({x=frame.x+frame.w/2, y=frame.y, w=frame.w/2, h=frame.h/2})
+    win:setFrame({ x = frame.x + frame.w / 2, y = frame.y, w = frame.w / 2, h = frame.h / 2 })
   elseif how == "3" then
-    win:setFrame({x=frame.x, y=frame.y+frame.h/2, w=frame.w/2, h=frame.h/2})
+    win:setFrame({ x = frame.x, y = frame.y + frame.h / 2, w = frame.w / 2, h = frame.h / 2 })
   elseif how == "4" then
-    win:setFrame({x=frame.x+frame.w/2, y=frame.y+frame.h/2, w=frame.w/2, h=frame.h/2})
+    win:setFrame({ x = frame.x + frame.w / 2, y = frame.y + frame.h / 2, w = frame.w / 2, h = frame.h
+      / 2 })
   else
     sorted = sortScreens()
     if how == "," then
@@ -61,7 +63,7 @@ end
 function moveLeft(sorted, win)
   local frame = win:screen():fullFrame()
   old = win:frame()
-  win:setFrame({x=frame.x, y=frame.y, w=frame.w/2, h=frame.h})
+  win:setFrame({ x = frame.x, y = frame.y, w = frame.w / 2, h = frame.h })
   new = win:frame()
   if old.x ~= new.x or old.y ~= new.y or old.w ~= new.w or old.h ~= new.h then
     return
@@ -83,14 +85,14 @@ function moveLeft(sorted, win)
 
   win:moveOneScreenWest()
   local frame = win:screen():fullFrame()
-  win:setFrame({x=frame.x+frame.w/2, y=frame.y, w=frame.w/2, h=frame.h})
+  win:setFrame({ x = frame.x + frame.w / 2, y = frame.y, w = frame.w / 2, h = frame.h })
 end
 
 function moveRight(sorted, win)
   local frame = win:screen():fullFrame()
 
   old = win:frame()
-  win:setFrame({x=frame.x+frame.w/2, y=frame.y, w=frame.w/2, h=frame.h})
+  win:setFrame({ x = frame.x + frame.w / 2, y = frame.y, w = frame.w / 2, h = frame.h })
   new = win:frame()
   if old.x ~= new.x or old.y ~= new.y or old.w ~= new.w or old.h ~= new.h then
     return
@@ -112,7 +114,7 @@ function moveRight(sorted, win)
 
   win:moveOneScreenEast()
   frame = win:screen():fullFrame()
-  win:setFrame({x=frame.x, y=frame.y, w=frame.w/2, h=frame.h})
+  win:setFrame({ x = frame.x, y = frame.y, w = frame.w / 2, h = frame.h })
 end
 
 return magnet

@@ -46,7 +46,7 @@ Hiper.new = function(key_name)
     local keyCode = event:getKeyCode()
     local eventType = "up"
     if event:getType() == hs.eventtap.event.types.keyDown then
-      if event:getProperty(hs.eventtap.event.properties['keyboardEventAutorepeat']) == 0 then
+      if event:getProperty(hs.eventtap.event.properties["keyboardEventAutorepeat"]) == 0 then
         eventType = "down"
       else
         eventType = "repeat"
@@ -71,8 +71,11 @@ Hiper.new = function(key_name)
     return false
   end
 
-  self.featureTap = hs.eventtap.new({hs.eventtap.event.types.keyDown, hs.eventtap.event.types.keyUp}, featureHandler)
-  self.modifierTap = hs.eventtap.new({hs.eventtap.event.types.flagsChanged}, modifierHandler)
+  self.featureTap = hs.eventtap.new(
+    { hs.eventtap.event.types.keyDown, hs.eventtap.event.types.keyUp },
+    featureHandler
+  )
+  self.modifierTap = hs.eventtap.new({ hs.eventtap.event.types.flagsChanged }, modifierHandler)
   self.modifierTap:start()
 
   self.load_features = function(features)
