@@ -124,7 +124,6 @@ return {
         scroll = options.enable,
       })
       require("mini.pairs").setup()
-      require("mini.statusline").setup()
       require("mini.tabline").setup()
     end,
   },
@@ -144,16 +143,6 @@ return {
     event = "BufRead",
     config = function()
       require("gitsigns").setup()
-    end,
-  },
-  { -- spell check setup
-    "lewis6991/spellsitter.nvim",
-    event = "BufRead",
-    config = function()
-      require("spellsitter").setup({
-        hl = "SpellBad",
-        captures = { "comment", "string" },
-      })
     end,
   },
   { -- stabilize buffer on windows size changes.
