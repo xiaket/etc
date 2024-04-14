@@ -8,7 +8,7 @@ return {
     dir = "~/.Github/n.nvim",
     config = function()
       require("n").setup({
-        db = "~/.Github/etc/nvim/notes.db",
+        dbpath = "~/.Github/etc/nvim/notes.db",
       })
     end,
     dependencies = {
