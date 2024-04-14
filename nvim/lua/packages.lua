@@ -3,6 +3,20 @@ return {
   "kyazdani42/nvim-web-devicons",
   "EdenEast/nightfox.nvim",
 
+  -- wip
+  {
+    dir = "~/.Github/n.nvim",
+    config = function()
+      require("n").setup({
+        db = "~/.Github/etc/nvim/notes.db",
+      })
+    end,
+    dependencies = {
+      "kkharji/sqlite.lua",
+      "nvim-lua/plenary.nvim",
+    },
+  },
+
   -- Load by filetype
   {
     "ekalinin/Dockerfile.vim",

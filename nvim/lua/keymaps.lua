@@ -39,6 +39,13 @@ vim.keymap.set(
   { noremap = true, silent = true }
 )
 
+vim.keymap.set(
+  "n",
+  "<leader>n",
+  '<CMD>lua require("n").toggle()<CR>',
+  { noremap = true, silent = true }
+)
+
 -- toggle lsp errors
 vim.keymap.set("n", "<leader>e", "<cmd>TroubleToggle<cr>", { noremap = true, silent = true })
 
@@ -75,7 +82,10 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 vim.api.nvim_create_autocmd({ "InsertLeave", "FocusLost" }, {
   pattern = "*",
   callback = function()
-    vim.api.nvim_command("wall")
+    local bufname = vim.api.nvim_buf_get_name(0)
+    if bufname and #bufname > 0 then
+      vim.api.nvim_command("wall")
+    end
   end,
   once = false,
 })
