@@ -6,8 +6,13 @@
     st = status
     co = checkout
     p = push -u
+    c = cherry-pick
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     idff = diff
+    head = rev-parse HEAD
+    rb = misc rb # my rebase
+    br = misc br # my branch
+    blank = misc blank # create empty commit and push
 
 [core]
     excludesfile = ~/.xiaket/etc/gitignore_global
