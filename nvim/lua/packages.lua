@@ -142,6 +142,7 @@ return {
       })
       require("mini.pairs").setup()
       require("mini.tabline").setup()
+      require("mini.files").setup()
     end,
   },
   {
