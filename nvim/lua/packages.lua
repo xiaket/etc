@@ -50,7 +50,7 @@ return {
     config = function()
       require("focus").setup({
         autoresize = { enable = true },
-        ui = { number = false },
+        ui = { number = false, hybridnumber = false, relativenumber = false },
       })
     end,
   },
