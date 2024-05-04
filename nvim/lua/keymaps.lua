@@ -30,6 +30,15 @@ local leader_config = {
   },
   -- toggle notes
   ["n"] = { cmd = '<CMD>lua require("n").toggle()<CR>' },
+  -- toggle miniFiles
+  ["o"] = {
+    cmd = function()
+      require("mini.files")
+      if not MiniFiles.close() then
+        MiniFiles.open()
+      end
+    end,
+  },
   -- toggle lsp errors
   ["e"] = { cmd = "<cmd>TroubleToggle<cr>" },
   -- Telescope searches
