@@ -178,8 +178,8 @@ return {
     build = "make",
   },
 
-  -- Other plugins
-  { -- treesitter
+  -- treesitter
+  {
     "nvim-treesitter/nvim-treesitter",
     config = function()
       require("nvim-treesitter").setup({
@@ -190,14 +190,123 @@ return {
     end,
   },
 
-  -- cmp & friends
+  -- LSP
   {
-    "onsails/lspkind.nvim",
+    "williamboman/mason.nvim",
+    dependencies = {
+      "williamboman/mason-lspconfig.nvim",
+    },
+    event = "VeryLazy",
+    opts = {},
   },
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+    },
+    config = function()
+      local lspconfig = require("lspconfig")
+      local mason = require("mason-lspconfig")
+      local cmp = require("cmp_nvim_lsp")
+
+      mason.setup({
+        ensure_installed = {
+          "bashls",
+          "bzl",
+          "docker_compose_language_service",
+          "dockerls",
+          "gopls",
+          "lua_ls",
+          "pylsp",
+          "taplo", -- toml
+          "terraformls",
+        },
+        automatic_installation = true,
+      })
+      mason.setup_handlers({
+        -- default handler for installed servers
+        function(server_name)
+          lspconfig[server_name].setup({
+            capabilities = capabilities,
+          })
+        end,
+        ["bzl"] = function()
+          lspconfig["bzl"].setup({
+            filetypes = { "bzl", "BUILD", "bazel" },
+          })
+        end,
+        ["pylsp"] = function()
+          local get_python_venv = function()
+            if vim.env.VIRTUAL_ENV then
+              return vim.env.VIRTUAL_ENV
+            end
+
+            local cwd = vim.fn.getcwd()
+            while true do
+              if cwd == "/" then
+                break
+              end
+
+              local match = vim.fn.glob(cwd, "Venv")
+              if match ~= "" then
+                return cwd .. "/Venv"
+              end
+              local rev = string.reverse(cwd)
+              local index = string.find(rev, "/")
+              if index == nil then
+                break
+              end
+              cwd = string.reverse(string.sub(rev, index + 1))
+            end
+          end
+
+          local venv = get_python_venv()
+
+          lspconfig["pylsp"].setup({
+            capabilities = cmp.default_capabilities(vim.lsp.protocol.make_client_capabilities()),
+            settings = {
+              cmd = { "pylsp", "-v" },
+              cmd_env = { VIRTUAL_ENV = venv, PATH = venv .. "/bin:" .. vim.env.PATH },
+              pylsp = {
+                plugins = {
+                  autopep8 = { enabled = false },
+                  mccabe = { enabled = false },
+                  pydocstyle = { enabled = true },
+                  pylint = { enabled = false },
+                },
+              },
+            },
+          })
+        end,
+        ["lua_ls"] = function()
+          -- configure lua server (with special settings)
+          lspconfig["lua_ls"].setup({
+            capabilities = capabilities,
+            settings = {
+              Lua = {
+                -- make the language server recognize "vim" global
+                diagnostics = {
+                  globals = { "vim" },
+                },
+                completion = {
+                  callSnippet = "Replace",
+                },
+              },
+            },
+          })
+        end,
+      })
+    end,
+  },
+
+  -- cmp
   {
     "hrsh7th/nvim-cmp",
     event = "InsertEnter",
     dependencies = {
+      "onsails/lspkind.nvim",
+      "ray-x/lsp_signature.nvim",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-path",
@@ -217,17 +326,5 @@ return {
     config = function()
       require("opts.cmp")
     end,
-  },
-  {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require("lspconfig").gopls.setup({})
-      require("lspconfig").rust_analyzer.setup({})
-    end,
-  },
-  {
-    "ray-x/lsp_signature.nvim",
-    event = "VeryLazy",
-    opts = {},
   },
 }
