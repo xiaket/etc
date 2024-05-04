@@ -13,7 +13,6 @@ end
 local lspkind = require("lspkind")
 local source_mapping = {
   buffer = "[Buffer]",
-  cmp_tabnine = "[TN]",
   codeium = "[Codeium]",
   nvim_lsp = "[LSP]",
   nvim_lua = "[Lua]",
@@ -50,8 +49,6 @@ cmp.setup({
   },
   formatting = {
     format = function(entry, vim_item)
-      -- if you have lspkind installed, you can use it like
-      -- in the following line:
       vim_item.kind = lspkind.symbolic(vim_item.kind, { mode = "symbol" })
       vim_item.menu = source_mapping[entry.source.name]
       if entry.source.name == "codeium" then
