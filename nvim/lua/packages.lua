@@ -6,11 +6,9 @@ return {
   -- wip
   {
     dir = "~/.Github/n.nvim",
-    config = function()
-      require("n").setup({
-        dbpath = "~/.Github/etc/nvim/notes.db",
-      })
-    end,
+    opts = {
+      dbpath = "~/.Github/etc/nvim/notes.db",
+    },
     dependencies = {
       "kkharji/sqlite.lua",
       "nvim-lua/plenary.nvim",
@@ -47,20 +45,10 @@ return {
   { -- easier split management.
     "nvim-focus/focus.nvim",
     cmd = { "FocusSplitLeft", "FocusSplitDown", "FocusSplitUp", "FocusSplitRight" },
-    config = function()
-      require("focus").setup({
-        autoresize = { enable = true },
-        ui = { number = false, hybridnumber = false, relativenumber = false },
-      })
-    end,
-  },
-
-  {
-    "dstein64/vim-startuptime",
-    cmd = "StartupTime",
-    config = function()
-      vim.g.startuptime_tries = 10
-    end,
+    opts = {
+      autoresize = { enable = true },
+      ui = { number = false, hybridnumber = false, relativenumber = false },
+    },
   },
 
   {
@@ -153,9 +141,7 @@ return {
   {
     "monkoose/matchparen.nvim",
     event = "BufRead",
-    config = function()
-      require("matchparen").setup()
-    end,
+    opts = {},
   },
   { -- show lsp errors in a buffer.
     "folke/trouble.nvim",
@@ -164,9 +150,7 @@ return {
   { -- show git change statuses.
     "lewis6991/gitsigns.nvim",
     event = "BufRead",
-    config = function()
-      require("gitsigns").setup()
-    end,
+    opts = {},
   },
   { -- stabilize buffer on windows size changes.
     "luukvbaal/stabilize.nvim",
@@ -221,9 +205,7 @@ return {
       "saadparwaiz1/cmp_luasnip",
       {
         "Exafunction/codeium.nvim",
-        config = function()
-          require("codeium").setup({})
-        end,
+        opts = {},
       },
       {
         "L3MON4D3/LuaSnip",
@@ -245,8 +227,7 @@ return {
   },
   {
     "ray-x/lsp_signature.nvim",
-    config = function()
-      require("lsp_signature").setup()
-    end,
+    event = "VeryLazy",
+    opts = {},
   },
 }
