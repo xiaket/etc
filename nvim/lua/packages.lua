@@ -220,7 +220,7 @@ return {
       "hrsh7th/cmp-nvim-lua",
       "saadparwaiz1/cmp_luasnip",
       {
-        "jcdickinson/codeium.nvim",
+        "Exafunction/codeium.nvim",
         config = function()
           require("codeium").setup({})
         end,
