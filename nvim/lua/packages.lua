@@ -167,10 +167,6 @@ return {
     "luukvbaal/stabilize.nvim",
     event = "BufRead",
   },
-  { -- visualize undos
-    "mbbill/undotree",
-    event = "BufRead",
-  },
   { -- replace vimscript version of matchparen
     "monkoose/matchparen.nvim",
     event = "BufRead",
