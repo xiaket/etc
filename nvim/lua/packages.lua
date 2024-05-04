@@ -142,7 +142,12 @@ return {
       })
       require("mini.pairs").setup()
       require("mini.tabline").setup()
-      require("mini.files").setup()
+      require("mini.files").setup({
+        mappings = {
+          go_in = "L",
+          go_in_plus = "l",
+        },
+      })
     end,
   },
   {
