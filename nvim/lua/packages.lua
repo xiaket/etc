@@ -172,6 +172,16 @@ return {
     end,
   },
 
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+    opts = {},
+  },
+
   { -- telescope
     "nvim-telescope/telescope-fzf-native.nvim",
     event = "BufRead",
@@ -209,6 +219,55 @@ return {
       local lspconfig = require("lspconfig")
       local mason = require("mason-lspconfig")
       local cmp = require("cmp_nvim_lsp")
+      local keymap = vim.keymap
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+        callback = function(ev)
+          -- Buffer local mappings.
+          -- See `:help vim.lsp.*` for documentation on any of the below functions
+          local opts = { buffer = ev.buf, silent = true }
+
+          local keymap_config = {
+            ["R"] = {
+              desc = "Show LSP references",
+              cmd = "<cmd>Telescope lsp_references<CR>",
+            },
+            ["g"] = { desc = "Go to declaration", cmd = vim.lsp.buf.declaration },
+            ["d"] = { desc = "Show LSP definitions", cmd = "<cmd>Telescope lsp_definitions<CR>" },
+            ["i"] = {
+              desc = "Show LSP implementations",
+              cmd = "<cmd>Telescope lsp_implementations<CR>",
+            },
+            ["t"] = {
+              desc = "Show LSP type definitions",
+              cmd = "<cmd>Telescope lsp_type_definitions<CR>",
+            },
+            ["a"] = {
+              desc = "See available code actions",
+              cmd = vim.lsp.buf.code_action,
+              mode = { "n", "v" },
+            },
+            ["r"] = { desc = "Smart rename", cmd = vim.lsp.buf.rename },
+            ["D"] = {
+              desc = "Show buffer diagnostics",
+              cmd = "<cmd>Telescope diagnostics bufnr=0<CR>",
+            },
+            ["e"] = { desc = "Show line diagnostics", cmd = vim.diagnostic.open_float },
+            ["["] = { desc = "Go to previous diagnostic", cmd = vim.diagnostic.goto_prev },
+            ["]"] = { desc = "Go to next diagnostic", cmd = vim.diagnostic.goto_next },
+            ["m"] = {
+              desc = "Show documentation for what is under cursor",
+              cmd = vim.lsp.buf.hover,
+            },
+          }
+
+          for key, config in pairs(keymap_config) do
+            opts.desc = config.desc
+            keymap.set(config.mode or "n", "<leader>d" .. key, config.cmd, opts)
+          end
+        end,
+      })
 
       mason.setup({
         ensure_installed = {
@@ -224,6 +283,7 @@ return {
         },
         automatic_installation = true,
       })
+
       mason.setup_handlers({
         -- default handler for installed servers
         function(server_name)

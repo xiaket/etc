@@ -16,20 +16,24 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
 vim.g.mapleader = ","
 local leader_config = {
   -- buffer navigation
-  ["a"] = { cmd = ":bprevious<cr>" },
-  ["s"] = { cmd = ":bnext<cr>" },
+  ["a"] = { cmd = ":bprevious<cr>", desc = "previous buffer" },
+  ["s"] = { cmd = ":bnext<cr>", desc = "next buffer" },
   -- split windows
-  ["h"] = { cmd = ":FocusSplitLeft<cr>" },
-  ["j"] = { cmd = ":FocusSplitDown<cr>" },
-  ["k"] = { cmd = ":FocusSplitUp<cr>" },
-  ["l"] = { cmd = ":FocusSplitRight<cr>" },
+  ["h"] = { cmd = ":FocusSplitLeft<cr>", desc = "create split on left" },
+  ["j"] = { cmd = ":FocusSplitDown<cr>", desc = "create split below" },
+  ["k"] = { cmd = ":FocusSplitUp<cr>", desc = "create split above" },
+  ["l"] = { cmd = ":FocusSplitRight<cr>", desc = "create split on right" },
   -- toggle terminal
   ["t"] = {
-    { cmd = '<CMD>lua require("FTerm").toggle()<CR>', mode = "n" },
-    { cmd = '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>', mode = "t" },
+    { cmd = '<CMD>lua require("FTerm").toggle()<CR>', mode = "n", desc = "toggle terminal" },
+    {
+      cmd = '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>',
+      mode = "t",
+      desc = "toggle terminal",
+    },
   },
   -- toggle notes
-  ["n"] = { cmd = '<CMD>lua require("n").toggle()<CR>' },
+  ["n"] = { cmd = '<CMD>lua require("n").toggle()<CR>', desc = "toggle notes window" },
   -- toggle miniFiles
   ["o"] = {
     cmd = function()
@@ -38,18 +42,17 @@ local leader_config = {
         MiniFiles.open()
       end
     end,
+    desc = "toggle files window",
   },
   -- toggle lsp errors
-  ["e"] = { cmd = "<cmd>TroubleToggle<cr>" },
+  ["e"] = { cmd = "<cmd>TroubleToggle<cr>", desc = "toggle errors" },
   -- Telescope searches
-  ["f"] = { cmd = ":Telescope find_files<cr>", opts = { silent = false } },
-  ["g"] = { cmd = ":Telescope live_grep<cr>", opts = { silent = false } },
-  -- LSP searches
-  ["d"] = { cmd = "<cmd>lua vim.lsp.buf.definition()<cr>", opts = { silent = false } },
+  ["f"] = { cmd = ":Telescope find_files<cr>", opts = { silent = false }, desc = "find files" },
+  ["g"] = { cmd = ":Telescope live_grep<cr>", opts = { silent = false }, desc = "grep from files" },
 }
 
-local function set_keymap(key, cmd, opts, mode)
-  local options = { noremap = true, silent = true }
+local function set_keymap(key, cmd, opts, mode, desc)
+  local options = { noremap = true, silent = true, desc = desc }
   for k, v in pairs(opts or {}) do
     options[k] = v
   end
@@ -59,10 +62,10 @@ end
 for key, configs in pairs(leader_config) do
   if type(configs[1]) == "table" then
     for _, config in ipairs(configs) do
-      set_keymap(key, config.cmd, config.opts, config.mode)
+      set_keymap(key, config.cmd, config.opts, config.mode, config.desc)
     end
   else
-    set_keymap(key, configs.cmd, configs.opts, configs.mode)
+    set_keymap(key, configs.cmd, configs.opts, configs.mode, configs.desc)
   end
 end
 
