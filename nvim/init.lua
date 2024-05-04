@@ -17,6 +17,9 @@ vim.g.mapleader = ","
 require("lazy").setup("packages", {
   defaults = { lazy = true },
   install = { colorscheme = { "nightfox" } },
+  change_detection = {
+    notify = false,
+  },
   performance = {
     rtp = {
       disabled_plugins = {
