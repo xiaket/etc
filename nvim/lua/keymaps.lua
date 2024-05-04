@@ -13,53 +13,49 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
 ---------------------
 -- leader family
 ---------------------
--- buffer navigation
-vim.keymap.set("n", "<leader>a", ":bprevious<cr>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>s", ":bnext<cr>", { noremap = true, silent = true })
--- show undotree
-vim.keymap.set("n", "<leader>u", ":UndotreeToggle<cr>", { noremap = true, silent = true })
+vim.g.mapleader = ","
+local leader_config = {
+  -- buffer navigation
+  ["a"] = { cmd = ":bprevious<cr>" },
+  ["s"] = { cmd = ":bnext<cr>" },
+  -- split windows
+  ["h"] = { cmd = ":FocusSplitLeft<cr>" },
+  ["j"] = { cmd = ":FocusSplitDown<cr>" },
+  ["k"] = { cmd = ":FocusSplitUp<cr>" },
+  ["l"] = { cmd = ":FocusSplitRight<cr>" },
+  -- toggle terminal
+  ["t"] = {
+    { cmd = '<CMD>lua require("FTerm").toggle()<CR>', mode = "n" },
+    { cmd = '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>', mode = "t" },
+  },
+  -- toggle notes
+  ["n"] = { cmd = '<CMD>lua require("n").toggle()<CR>' },
+  -- toggle lsp errors
+  ["e"] = { cmd = "<cmd>TroubleToggle<cr>" },
+  -- Telescope searches
+  ["f"] = { cmd = ":Telescope find_files<cr>", opts = { silent = false } },
+  ["g"] = { cmd = ":Telescope live_grep<cr>", opts = { silent = false } },
+  -- LSP searches
+  ["d"] = { cmd = "<cmd>lua vim.lsp.buf.definition()<cr>", opts = { silent = false } },
+}
 
--- split windows
-vim.keymap.set("n", "<leader>h", ":FocusSplitLeft<cr>", { silent = true })
-vim.keymap.set("n", "<leader>j", ":FocusSplitDown<cr>", { silent = true })
-vim.keymap.set("n", "<leader>k", ":FocusSplitUp<cr>", { silent = true })
-vim.keymap.set("n", "<leader>l", ":FocusSplitRight<cr>", { silent = true })
+local function set_keymap(key, cmd, opts, mode)
+  local options = { noremap = true, silent = true }
+  for k, v in pairs(opts or {}) do
+    options[k] = v
+  end
+  vim.keymap.set(mode or "n", "<leader>" .. key, cmd, options)
+end
 
--- toggle terminal
-vim.keymap.set(
-  "n",
-  "<leader>t",
-  '<CMD>lua require("FTerm").toggle()<CR>',
-  { noremap = true, silent = true }
-)
-vim.keymap.set(
-  "t",
-  "<leader>t",
-  '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>',
-  { noremap = true, silent = true }
-)
-
-vim.keymap.set(
-  "n",
-  "<leader>n",
-  '<CMD>lua require("n").toggle()<CR>',
-  { noremap = true, silent = true }
-)
-
--- toggle lsp errors
-vim.keymap.set("n", "<leader>e", "<cmd>TroubleToggle<cr>", { noremap = true, silent = true })
-
--- Telescope searches
-vim.keymap.set("n", "<leader>f", ":Telescope find_files<cr>", { noremap = true, silent = false })
-vim.keymap.set("n", "<leader>g", ":Telescope live_grep<cr>", { noremap = true, silent = false })
-
--- LSP searches
-vim.keymap.set(
-  "n",
-  "<leader>d",
-  "<cmd>lua vim.lsp.buf.definition()<cr>",
-  { noremap = true, silent = false }
-)
+for key, configs in pairs(leader_config) do
+  if type(configs[1]) == "table" then
+    for _, config in ipairs(configs) do
+      set_keymap(key, config.cmd, config.opts, config.mode)
+    end
+  else
+    set_keymap(key, configs.cmd, configs.opts, configs.mode)
+  end
+end
 
 ---------------------
 -- misc
