@@ -46,8 +46,6 @@ opt.shiftwidth = tabsize
 -- Configure folding
 opt.foldmethod = "indent"
 opt.foldlevel = 99
--- Use space to toggle folds
-vim.api.nvim_set_keymap("n", "<space>", "za", { noremap = true })
 
 -- save undo history
 opt.undodir = os.getenv("HOME") .. "/.vim/undo"

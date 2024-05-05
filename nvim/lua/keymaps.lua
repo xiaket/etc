@@ -15,17 +15,27 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
 ---------------------
 -- leader family
 ---------------------
-vim.g.mapleader = ","
 local leader_config = {
-  -- buffer navigation
   ["a"] = { cmd = ":bprevious<cr>", desc = "previous buffer" },
-  ["s"] = { cmd = ":bnext<cr>", desc = "next buffer" },
-  -- split windows
+  -- ["d"] used down below in LSP keymaps.
+  ["e"] = { cmd = "<cmd>TroubleToggle<cr>", desc = "toggle errors" },
+  ["f"] = { cmd = ":Telescope find_files<cr>", opts = { silent = false }, desc = "find files" },
+  ["g"] = { cmd = ":Telescope live_grep<cr>", opts = { silent = false }, desc = "grep from files" },
   ["h"] = { cmd = ":FocusSplitLeft<cr>", desc = "create split on left" },
   ["j"] = { cmd = ":FocusSplitDown<cr>", desc = "create split below" },
   ["k"] = { cmd = ":FocusSplitUp<cr>", desc = "create split above" },
   ["l"] = { cmd = ":FocusSplitRight<cr>", desc = "create split on right" },
-  -- toggle terminal
+  ["n"] = { cmd = '<CMD>lua require("n").toggle()<CR>', desc = "toggle notes window" },
+  ["o"] = {
+    cmd = function()
+      local files = require("mini.files")
+      if not files.close() then
+        files.open()
+      end
+    end,
+    desc = "toggle files window",
+  },
+  ["s"] = { cmd = ":bnext<cr>", desc = "next buffer" },
   ["t"] = {
     { cmd = '<CMD>lua require("FTerm").toggle()<CR>', mode = "n", desc = "toggle terminal" },
     {
@@ -34,23 +44,41 @@ local leader_config = {
       desc = "toggle terminal",
     },
   },
-  -- toggle notes
-  ["n"] = { cmd = '<CMD>lua require("n").toggle()<CR>', desc = "toggle notes window" },
-  -- toggle miniFiles
-  ["o"] = {
-    cmd = function()
-      require("mini.files")
-      if not MiniFiles.close() then
-        MiniFiles.open()
-      end
-    end,
-    desc = "toggle files window",
+  ["z"] = { cmd = "za", desc = "toggle fold" },
+}
+
+-- LSP shortcuts has <leader> + d as prefix.
+local lsp_keymap_config = {
+  ["a"] = {
+    desc = "See available code actions",
+    cmd = vim.lsp.buf.code_action,
   },
-  -- toggle lsp errors
-  ["e"] = { cmd = "<cmd>TroubleToggle<cr>", desc = "toggle errors" },
-  -- Telescope searches
-  ["f"] = { cmd = ":Telescope find_files<cr>", opts = { silent = false }, desc = "find files" },
-  ["g"] = { cmd = ":Telescope live_grep<cr>", opts = { silent = false }, desc = "grep from files" },
+  ["d"] = { desc = "Show LSP definitions", cmd = "<cmd>Telescope lsp_definitions<CR>" },
+  ["D"] = {
+    desc = "Show buffer diagnostics",
+    cmd = "<cmd>Telescope diagnostics bufnr=0<CR>",
+  },
+  ["e"] = { desc = "Show line diagnostics", cmd = vim.diagnostic.open_float },
+  ["g"] = { desc = "Go to declaration", cmd = vim.lsp.buf.declaration },
+  ["i"] = {
+    desc = "Show LSP implementations",
+    cmd = "<cmd>Telescope lsp_implementations<CR>",
+  },
+  ["m"] = {
+    desc = "Show documentation for what is under cursor",
+    cmd = vim.lsp.buf.hover,
+  },
+  ["r"] = { desc = "Smart rename", cmd = vim.lsp.buf.rename },
+  ["R"] = {
+    desc = "Show LSP references",
+    cmd = "<cmd>Telescope lsp_references<CR>",
+  },
+  ["t"] = {
+    desc = "Show LSP type definitions",
+    cmd = "<cmd>Telescope lsp_type_definitions<CR>",
+  },
+  ["["] = { desc = "Go to previous diagnostic", cmd = vim.diagnostic.goto_prev },
+  ["]"] = { desc = "Go to next diagnostic", cmd = vim.diagnostic.goto_next },
 }
 
 local function set_keymap(key, cmd, opts, mode, desc)
@@ -71,6 +99,9 @@ for key, configs in pairs(leader_config) do
   end
 end
 
+for key, config in pairs(lsp_keymap_config) do
+  set_keymap("d" .. key, config.cmd, config.opts, "n", config.desc)
+end
 ---------------------
 -- misc
 ---------------------
