@@ -224,7 +224,7 @@ return {
           "dockerls",
           "gopls",
           "lua_ls",
-          "pylsp",
+          "pyright",
           "taplo", -- toml
           "terraformls",
         },
@@ -243,7 +243,7 @@ return {
             filetypes = { "bzl", "BUILD", "bazel" },
           })
         end,
-        ["pylsp"] = function()
+        ["pyright"] = function()
           local get_python_venv = function()
             if vim.env.VIRTUAL_ENV then
               return vim.env.VIRTUAL_ENV
@@ -270,17 +270,19 @@ return {
 
           local venv = get_python_venv()
 
-          lspconfig["pylsp"].setup({
+          lspconfig["pyright"].setup({
             capabilities = cmp.default_capabilities(vim.lsp.protocol.make_client_capabilities()),
             settings = {
-              cmd = { "pylsp", "-v" },
-              cmd_env = { VIRTUAL_ENV = venv, PATH = venv .. "/bin:" .. vim.env.PATH },
-              pylsp = {
-                plugins = {
-                  autopep8 = { enabled = false },
-                  mccabe = { enabled = false },
-                  pydocstyle = { enabled = true },
-                  pylint = { enabled = false },
+              pyright = {
+                autoImportCompletion = true,
+              },
+              python = {
+                pythonPath = venv .. "/bin/python3",
+                analysis = {
+                  autoSearchPaths = true,
+                  diagnosticMode = "openFilesOnly",
+                  useLibraryCodeForTypes = true,
+                  typeCheckingMode = "off",
                 },
               },
             },
