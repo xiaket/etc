@@ -1,6 +1,5 @@
 -- vars
 local opt = vim.o
-local run = vim.cmd
 local global = vim.g
 local tabsize = 2
 
@@ -49,4 +48,4 @@ opt.foldlevel = 99
 
 -- save undo history
 opt.undodir = os.getenv("HOME") .. "/.vim/undo"
-run("set undofile")
+opt.undofile = true
