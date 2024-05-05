@@ -24,10 +24,6 @@ return {
     "fatih/vim-go",
     ft = "go",
   },
-  { -- pest support.
-    "pest-parser/pest.vim",
-    ft = "pest",
-  },
   {
     "hashivim/vim-terraform",
     ft = "terraform",
