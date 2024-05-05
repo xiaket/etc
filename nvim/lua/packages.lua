@@ -124,14 +124,22 @@ return {
         cursor = options.enable,
         scroll = options.enable,
       })
-      require("mini.pairs").setup()
-      require("mini.tabline").setup()
+      require("mini.comment").setup()
+      require("mini.cursorword").setup()
       require("mini.files").setup({
         mappings = {
           go_in = "L",
           go_in_plus = "l",
         },
       })
+      require("mini.indentscope").setup({
+        draw = {
+          delay = 40,
+          animation = require("mini.indentscope").gen_animation.none(),
+        },
+      })
+      require("mini.pairs").setup()
+      require("mini.tabline").setup({ show_icons = false })
     end,
   },
   {
