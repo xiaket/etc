@@ -46,6 +46,11 @@ opt.shiftwidth = tabsize
 opt.foldmethod = "indent"
 opt.foldlevel = 99
 
+-- UI enhancements
+opt.pumblend = 10 -- Make builtin completion menus slightly transparent
+opt.pumheight = 10 -- Make popup menu smaller
+opt.winblend = 10 -- Make floating windows slightly transparent
+
 -- save undo history
 opt.undodir = os.getenv("HOME") .. "/.vim/undo"
 opt.undofile = true
