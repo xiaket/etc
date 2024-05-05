@@ -7,6 +7,8 @@ vim.keymap.set("n", "<C-F>", ":Format<cr>", { noremap = true, silent = true })
 vim.keymap.set("n", "<C-E>", ":%s/\\s*$//g<cr>", { noremap = true })
 -- Ctrl V to paste in
 vim.keymap.set("n", "<C-V>", '"*p', { noremap = true })
+-- Use Ctrl-L to toggle the line number display.
+vim.keymap.set("n", "<C-L>", ":lua Toggleln()<CR>", { noremap = true, silent = true })
 -- get out of term
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
 
