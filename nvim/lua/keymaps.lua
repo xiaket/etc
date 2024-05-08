@@ -11,6 +11,7 @@ vim.keymap.set("n", "<C-V>", '"*p', { noremap = true })
 vim.keymap.set("n", "<C-L>", ":lua Toggleln()<CR>", { noremap = true, silent = true })
 -- get out of term
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
+vim.keymap.set("n", ",", " ", { remap = true })
 
 ---------------------
 -- leader family
