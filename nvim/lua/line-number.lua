@@ -51,4 +51,5 @@ function Toggleln()
     vim.b.lnstatus = "number"
   end
   require("gitsigns").toggle_signs()
+  require("mini.indentscope").undraw()
 end
