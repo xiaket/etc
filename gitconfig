@@ -7,6 +7,7 @@
     co = checkout
     p = push -u
     c = cherry-pick
+    r = rebase
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     idff = diff
     head = rev-parse HEAD
