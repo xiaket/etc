@@ -16,7 +16,7 @@ shopt -s cdspell
 export TERM="xterm-256color"
 ARCH=$(uname -s)
 
-if [ "x$ARCH" = "xLinux" ]; then
+if [ "$ARCH" = "Linux" ]; then
   export MAN_POSIXLY_CORRECT=1
   COLORS=dircolors
   # setup key repeat
@@ -26,7 +26,7 @@ else
 	COLORS=gdircolors
 fi
 
-if [ $(uname -m) = "arm64" ]
+if [ "$(uname -m)" = "arm64" ]
 then
   brewdir="/opt/homebrew"
 else
@@ -109,7 +109,7 @@ export EDITOR=nvim
 #################
 # accessibility #
 #################
-eval $("$COLORS" "$HOME/.xiaket/etc/dir_colors")
+eval "$("$COLORS" "$HOME/.xiaket/etc/dir_colors")"
 
 # Don’t clear the screen after quitting a manual page.
 export MANPAGER='less -X'
@@ -181,14 +181,13 @@ bind -x '"\eOA": __atuin_history --shell-up-key-binding'
 #####################
 # ssh agent forward #
 #####################
-has_priv_files=$(ls -l ~/.ssh/*.priv >/dev/null 2>&1)
-if [ $? -eq 0 ]
+if ls -l ~/.ssh/*.priv >/dev/null 2>&1
 then
   SSH_ENV="$HOME/.ssh/environment"
 
   function start_agent {
     content=$(/usr/bin/ssh-agent | sed "/^echo/d")
-    [ -f $SSH_ENV ] && return 0 || echo $content >$SSH_ENV
+    [ -f "$SSH_ENV" ] && return 0 || echo "$content" >"$SSH_ENV"
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" >/dev/null
     /usr/bin/ssh-add ~/.ssh/*.priv
@@ -200,10 +199,9 @@ then
   if [ -f "${SSH_ENV}" ]
   then
     . "${SSH_ENV}" >/dev/null
-    ps ${SSH_AGENT_PID} | grep -q ssh-agent$
-    if [ $? -ne 0 ]
+    if ! pgrep -q "ssh-agent$"
     then
-      rm -f ${SSH_ENV}
+      rm -f "${SSH_ENV}"
     start_agent
     fi
   else
