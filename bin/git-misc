@@ -13,7 +13,7 @@ br () {
   git for-each-ref --sort=-committerdate refs/heads --format='%(authoremail) %(refname:short) %(committerdate:short)' | grep '^<kaix' | awk '$3 >= "'$(date -v-14d +%Y-%m-%d)'" {print $2}'
 }
 
-rb () {
+get-primary-branch () {
   has_green=$(git rev-parse --verify green >/dev/null 2>&1 || echo "failed")
   has_main=$(git rev-parse --verify main >/dev/null 2>&1 || echo "failed")
 
@@ -26,14 +26,24 @@ rb () {
   else
     main_branch="master"
   fi
+  echo "$main_branch"
+}
 
+rb () {
+  main_branch=$(get-primary-branch)
   current=$(git rev-parse --abbrev-ref HEAD)
   git co "$main_branch" && git pull && git co "${current}" && git rebase "origin/$main_branch"
+}
+
+b () {
+  main_branch=$(get-primary-branch)
+  git checkout "$main_branch" && git pull && git checkout -b "$1"
 }
 
 case $1 in
     "blank") blank ;;
     "br") br ;;
     "rb") rb ;;
+    "b") b "$2";;
     *) echo "Not a valid subcommand." ;;
 esac

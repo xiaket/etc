@@ -13,6 +13,7 @@
     head = rev-parse HEAD
     rb = misc rb # my rebase
     br = misc br # my branch
+    b = misc b # create branch from latest master
     blank = misc blank # create empty commit and push
 
 [core]
