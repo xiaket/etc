@@ -19,6 +19,7 @@ fi
 alias grep='grep --color'
 alias vi='nvim'
 alias v='nvim'
+alias K='kubectl'
 
 # Generic
 alias su='su -'
