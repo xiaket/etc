@@ -15,6 +15,14 @@ cmp.setup({
     end,
   },
   mapping = {
+    ["<C-n>"] = cmp.mapping(
+      cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+      { "i" }
+    ),
+    ["<C-p>"] = cmp.mapping(
+      cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+      { "i" }
+    ),
     ["<CR>"] = cmp.mapping.confirm({ select = true }),
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
