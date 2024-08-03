@@ -1,10 +1,16 @@
 import sys
 
-from pip._vendor.rich import pretty, print
-pretty.install()
+try:
+  from pip._vendor.rich import pretty, print
+  pretty.install()
+  has_rich = True
+except ImportError:
+  has_rich = False
 
 
 sys.ps1 = "> "
 sys.ps2 = "  "
 
-del pretty, sys
+del sys
+if has_rich:
+  del has_rich, pretty
