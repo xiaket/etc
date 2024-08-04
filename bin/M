@@ -22,7 +22,10 @@ command=${1:-""}
 if [[ -n $(type -t "${command}") ]] && [[ $(type -t "${command}") = function ]]
 then
   shift
-  eval "$command" "$@"
+  for arg in "$@"; do
+    command="$command $(printf '%q' "$arg")"
+  done
+  eval "$command"
   exit $?
 fi
 
