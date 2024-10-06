@@ -6,7 +6,7 @@ set -o pipefail
 
 # This stage does not have any prerequisites. We should run this after the first boot.
 BASE_DIR="$HOME/.xiaket"
-if [ $(uname -m) = "arm64" ]
+if [ "$(uname -m)" = "arm64" ]
 then
   brewdir=/opt/homebrew
 else
@@ -58,9 +58,6 @@ clone-etc () {
 homebrew () {
     check-done || return 0
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    brew tap homebrew/cask
-    brew tap homebrew/cask-fonts
-
     touch-done
 }
 
@@ -83,15 +80,16 @@ homebrew-casks () {
     check-done || return 0
     homebrew
 
-    brew install bitwarden homebrew/cask/dash drawio firefox grammarly hammerspoon iina itsycal kitty obsidian raycast slack typora zoom
-    brew install --cask font-fira-code-nerd-font
+    brew install bitwarden homebrew/cask/dash drawio firefox hammerspoon iina itsycal kitty obsidian raycast
+    # brew install slack zoom
+    brew install font-fira-code-nerd-font
     touch-done
 }
 
 python-packages () {
     check-done || return 0
-    python3 -m pip install -U pip
-    python3 -m pip install black icdiff neovim poetry psutil ptpython pyflakes pygments requests sh Snape termcolor virtualenv yamlfix
+    brew install pipx
+    pipx install black icdiff neovim poetry ptpython pyflakes pygments Snape termcolor
     touch-done
 }
 
