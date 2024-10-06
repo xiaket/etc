@@ -61,3 +61,57 @@ aws-extract() {
 		eval "export $name=\"$value\""
 	done < <(cat ~/.aws/credentials | grep -A 3 "\[default\]" | tail -n 3)
 }
+
+cd () {
+  if [ "$#" = 0 ]
+  then
+    builtin cd
+    return
+  fi
+
+  # bookmarked dirs.
+  case "$1" in
+    "=e")
+      builtin cd ~/.xiaket/etc
+      return
+      ;;
+    "=g")
+      builtin cd "$(git rev-parse --show-toplevel)"
+      return
+      ;;
+  esac
+
+  # dest is a file, go to its dir
+  if [[ -f "$1" ]]
+  then
+    dir_name="$(dirname $1)"
+    builtin cd "$dir_name"
+    return
+  fi
+
+  if [[ -d "$1" ]] || [[ $1 == */* ]] || [[ $1 == "-" ]]
+  then
+    # default cd behavior
+    builtin cd "$1"
+    return
+  fi
+
+  found=$(find . -name "$1" -type d)
+  # Check if the output is empty
+  if [ -z "$found" ]; then
+    matches=0
+  else
+    matches=$(echo "$found" | grep -c '^')
+  fi
+
+  if [ "$matches" = "0" ]
+  then
+    # fallback to default cd behavior, but this would probably fail
+    builtin cd "$@"
+  elif [ "$matches" = "1" ]
+  then
+    builtin cd "$found"
+  else
+    echo -e "found $matches dirs:\n\n$found"
+  fi
+}
