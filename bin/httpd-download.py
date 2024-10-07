@@ -134,6 +134,6 @@ if __name__ == "__main__":
             filepath = os.path.join(root, file)
             relative_path = quote("%s/%s" % (root[len(cwd) + 1 :], file))
             if os.path.isfile(filepath):
-                print("link: http://%s:%s%s" % (ip, port, relative_path))
+                print("link: http://%s:%s/%s" % (ip, port, relative_path.lstrip("/")))
     print("===== start logging =====\n")
     main(port=port)
