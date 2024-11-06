@@ -53,9 +53,6 @@ return {
     config = function()
       require("formatter").setup({
         filetype = {
-          html = {
-            require("formatter.filetypes.html").tidy,
-          },
           lua = {
             function()
               return {
