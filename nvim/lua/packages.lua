@@ -53,9 +53,6 @@ return {
     config = function()
       require("formatter").setup({
         filetype = {
-          html = {
-            require("formatter.filetypes.html").tidy,
-          },
           lua = {
             function()
               return {
@@ -70,22 +67,24 @@ return {
           },
           python = {
             function()
-              local util = require("formatter.util")
-              if not util.get_current_buffer_file_path():find("ithub/canva") ~= nil then
-                -- use isort in canva
-                return {
-                  exe = "isort",
-                  args = {
-                    "-q - --settings-file /Users/kai/.Github/canva/tools/dprint/config/python/isort.toml",
-                  },
-                  stdin = true,
-                }
-              end
-            end,
-            function()
               return {
                 exe = "black",
                 args = { "- --line-length 100" },
+                stdin = true,
+              }
+            end,
+            function()
+              local util = require("formatter.util")
+              return {
+                exe = "ruff",
+                args = {
+                  "check",
+                  "--select",
+                  "I001",
+                  "--fix",
+                  "--stdin-filename",
+                  util.escape_path(util.get_current_buffer_file_path()),
+                },
                 stdin = true,
               }
             end,

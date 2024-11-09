@@ -30,6 +30,7 @@ alias diff='colordiff'
 alias clera='clear'
 alias ls-l='ls -lhtl'
 alias gti='git'
+alias gerp='grep'
 
 # Acesssibilities
 alias py3='python3'
