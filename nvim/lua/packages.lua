@@ -208,6 +208,7 @@ return {
     "williamboman/mason.nvim",
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
     },
     event = "VeryLazy",
     opts = {},
@@ -215,13 +216,14 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-    },
-    config = function()
+    config = function(_, opts)
       local lspconfig = require("lspconfig")
       local mason = require("mason-lspconfig")
-      local cmp = require("cmp_nvim_lsp")
+
+      for server, config in pairs(opts.servers or {}) do
+        config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+        lspconfig[server].setup(config)
+      end
 
       mason.setup({
         ensure_installed = {
@@ -278,7 +280,6 @@ return {
           local venv = get_python_venv()
 
           lspconfig["pyright"].setup({
-            capabilities = cmp.default_capabilities(vim.lsp.protocol.make_client_capabilities()),
             settings = {
               pyright = {
                 autoImportCompletion = true,
@@ -316,31 +317,68 @@ return {
     end,
   },
 
-  -- cmp
   {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    -- dir = "/Users/kaix/.Github/blink.cmp",
+    -- dev = true,
+    "saghen/blink.cmp",
     dependencies = {
-      "onsails/lspkind.nvim",
-      "ray-x/lsp_signature.nvim",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-nvim-lua",
-      "saadparwaiz1/cmp_luasnip",
+      { "saghen/blink.compat", opts = { enable_events = true } },
       {
         "Exafunction/codeium.nvim",
+        dependencies = {
+          "nvim-lua/plenary.nvim",
+        },
         opts = {},
       },
-      {
-        "L3MON4D3/LuaSnip",
-        config = function()
-          require("opts.snippets")
-        end,
+    },
+    lazy = false,
+    version = "v0.*", -- use a release tag to download pre-built binaries
+
+    opts = {
+      -- Press tab to select and enter to accept, shift tab to reverse.
+      keymap = {
+        preset = "enter",
+        ["<Tab>"] = {
+          function(cmp)
+            if cmp.is_in_snippet() then
+              return cmp.accept()
+            else
+              return cmp.select_next()
+            end
+          end,
+          "snippet_forward",
+          "fallback",
+        },
+        ["<S-Tab>"] = {
+          "snippet_backward",
+          "select_prev",
+          "fallback",
+        },
+      },
+      accept = {
+        auto_brackets = { enabled = true },
+        -- expand_snippet = luasnip.lsp_expand,
+      },
+      trigger = { signature_help = { enabled = true } },
+
+      sources = {
+        completion = {
+          enabled_providers = { "lsp", "path", "snippets", "buffer", "codeium" },
+        },
+
+        providers = {
+          buffer = {
+            name = "Buffer",
+            module = "blink.cmp.sources.buffer",
+            score_offset = -3,
+          },
+          codeium = {
+            name = "codeium",
+            module = "blink.compat.source",
+            score_offset = 3,
+          },
+        },
       },
     },
-    config = function()
-      require("opts.cmp")
-    end,
   },
 }
