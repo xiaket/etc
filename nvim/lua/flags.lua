@@ -54,3 +54,6 @@ opt.winblend = 10 -- Make floating windows slightly transparent
 -- save undo history
 opt.undodir = os.getenv("HOME") .. "/.vim/undo"
 opt.undofile = true
+
+-- avante
+opt.laststatus = 3

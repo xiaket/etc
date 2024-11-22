@@ -46,6 +46,7 @@ local leader_config = {
       desc = "toggle terminal",
     },
   },
+  ["v"] = { cmd = ":AvanteAsk<cr>", desc = "Avante Ask" },
   ["z"] = { cmd = "za", desc = "toggle fold" },
 }
 
