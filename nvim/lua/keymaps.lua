@@ -1,8 +1,6 @@
 ---------------------
 -- Control family
 ---------------------
--- Ctrl F to format the file.
-vim.keymap.set("n", "<C-F>", ":Format<cr>", { noremap = true, silent = true })
 -- Ctrl E to clean up trailing whitespaces
 vim.keymap.set("n", "<C-E>", ":%s/\\s*$//g<cr>", { noremap = true })
 -- Ctrl V to paste in
@@ -19,7 +17,10 @@ vim.keymap.set("n", ",", " ", { remap = true })
 local leader_config = {
   ["a"] = { cmd = ":bprevious<cr>", desc = "previous buffer" },
   -- ["d"] used down below in LSP keymaps.
-  ["e"] = { cmd = "<cmd>TroubleToggle<cr>", desc = "toggle errors" },
+  ["e"] = {
+    cmd = '<cmd>lua require("trouble").toggle("diagnostics")<cr>',
+    desc = "toggle errors",
+  },
   ["f"] = { cmd = ":Telescope find_files<cr>", opts = { silent = false }, desc = "find files" },
   ["g"] = { cmd = ":Telescope live_grep<cr>", opts = { silent = false }, desc = "grep from files" },
   ["h"] = { cmd = ":FocusSplitLeft<cr>", desc = "create split on left" },
@@ -45,6 +46,7 @@ local leader_config = {
       desc = "toggle terminal",
     },
   },
+  ["v"] = { cmd = ":AvanteAsk<cr>", desc = "Avante Ask" },
   ["z"] = { cmd = "za", desc = "toggle fold" },
 }
 
@@ -143,12 +145,4 @@ vim.api.nvim_create_autocmd("BufRead", {
   pattern = "*",
   command = "silent! loadview",
   once = true,
-})
-
-local aug = vim.api.nvim_create_augroup("FormatAutogroup", {})
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = "*.html,*.lua,*.py,*.tf",
-  group = aug,
-  command = ":Format",
 })

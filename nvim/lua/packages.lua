@@ -47,63 +47,47 @@ return {
     },
   },
 
+  -- Load when BufWritePre
   {
-    "mhartington/formatter.nvim",
-    cmd = { "Format" },
-    config = function()
-      require("formatter").setup({
-        filetype = {
-          lua = {
-            function()
-              return {
-                exe = "stylua",
-                args = {
-                  "--config-path " .. os.getenv("XDG_CONFIG_HOME") .. "/stylua/stylua.toml",
-                  "-",
-                },
-                stdin = true,
-              }
-            end,
-          },
-          python = {
-            function()
-              return {
-                exe = "black",
-                args = { "- --line-length 100" },
-                stdin = true,
-              }
-            end,
-            function()
-              local util = require("formatter.util")
-              return {
-                exe = "ruff",
-                args = {
-                  "check",
-                  "--select",
-                  "I001",
-                  "--fix",
-                  "--stdin-filename",
-                  util.escape_path(util.get_current_buffer_file_path()),
-                },
-                stdin = true,
-              }
-            end,
-          },
-          rust = {
-            require("formatter.filetypes.rust").rustfmt,
-          },
-          sh = {
-            require("formatter.filetypes.sh").shfmt,
-          },
-          terraform = {
-            require("formatter.filetypes.terraform").terraformfmt,
-          },
-          yaml = {
-            require("formatter.filetypes.yaml").pyaml,
+    "stevearc/conform.nvim",
+
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    opts = {
+      -- Define your formatters
+      formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "black", "ruff_fix" },
+        sh = { "shfmt" },
+        rust = { "rustfmt" },
+        terraform = { "terraform_fmt" },
+        yaml = { "yamlfix" },
+      },
+      -- Set default options
+      default_format_opts = {
+        lsp_format = "fallback",
+      },
+      -- Set up format-on-save
+      format_on_save = { timeout_ms = 500 },
+      -- Customize formatters
+      formatters = {
+        shfmt = {
+          prepend_args = { "-i", "2" },
+        },
+        black = {
+          prepend_args = { "--line-length", "100" },
+        },
+        ruff_fix = {
+          append_args = { "--select", "I001" },
+        },
+        stylua = {
+          prepend_args = {
+            "--config-path",
+            os.getenv("XDG_CONFIG_HOME") .. "/stylua/stylua.toml",
           },
         },
-      })
-    end,
+      },
+    },
   },
 
   -- Load when BufRead
@@ -175,16 +159,6 @@ return {
     end,
   },
 
-  {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    init = function()
-      vim.o.timeout = true
-      vim.o.timeoutlen = 300
-    end,
-    opts = {},
-  },
-
   { -- telescope
     "nvim-telescope/telescope-fzf-native.nvim",
     event = "BufRead",
@@ -208,6 +182,7 @@ return {
     "williamboman/mason.nvim",
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
     },
     event = "VeryLazy",
     opts = {},
@@ -215,13 +190,14 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-    },
-    config = function()
+    config = function(_, opts)
       local lspconfig = require("lspconfig")
       local mason = require("mason-lspconfig")
-      local cmp = require("cmp_nvim_lsp")
+
+      for server, config in pairs(opts.servers or {}) do
+        config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+        lspconfig[server].setup(config)
+      end
 
       mason.setup({
         ensure_installed = {
@@ -278,7 +254,6 @@ return {
           local venv = get_python_venv()
 
           lspconfig["pyright"].setup({
-            capabilities = cmp.default_capabilities(vim.lsp.protocol.make_client_capabilities()),
             settings = {
               pyright = {
                 autoImportCompletion = true,
@@ -316,31 +291,112 @@ return {
     end,
   },
 
-  -- cmp
   {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+    opts = {},
+  },
+
+  {
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    lazy = false,
+    version = false, -- set this if you want to always pull the latest change
+    opts = {
+      provider = "openai",
+      auto_suggestions_provider = "openai",
+    },
+    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    build = "make",
+    -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
     dependencies = {
-      "onsails/lspkind.nvim",
-      "ray-x/lsp_signature.nvim",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-path",
-      "hrsh7th/cmp-nvim-lua",
-      "saadparwaiz1/cmp_luasnip",
+      "nvim-treesitter/nvim-treesitter",
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      --- The below dependencies are optional,
+      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
       {
-        "Exafunction/codeium.nvim",
-        opts = {},
-      },
-      {
-        "L3MON4D3/LuaSnip",
-        config = function()
-          require("opts.snippets")
-        end,
+        -- Make sure to set this up properly if you have lazy=true
+        "MeanderingProgrammer/render-markdown.nvim",
+        opts = {
+          file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
       },
     },
-    config = function()
-      require("opts.cmp")
-    end,
+  },
+
+  {
+    -- dir = "/Users/kaix/.Github/blink.cmp",
+    -- dev = true,
+    "saghen/blink.cmp",
+    dependencies = {
+      {
+        "saghen/blink.compat",
+        opts = { enable_events = true, debug = true },
+        commit = "006a34130ed17248affefbef702f7226aeb29e0b",
+      },
+      {
+        "Exafunction/codeium.nvim",
+        dependencies = {
+          "nvim-lua/plenary.nvim",
+        },
+        opts = {},
+      },
+    },
+    lazy = false,
+    version = "v0.*", -- use a release tag to download pre-built binaries
+
+    opts = {
+      -- Press tab to select and enter to accept, shift tab to reverse.
+      keymap = {
+        preset = "enter",
+        ["<Tab>"] = {
+          function(cmp)
+            if cmp.is_in_snippet() then
+              return cmp.accept()
+            else
+              return cmp.select_next()
+            end
+          end,
+          "snippet_forward",
+          "fallback",
+        },
+        ["<S-Tab>"] = {
+          "snippet_backward",
+          "select_prev",
+          "fallback",
+        },
+      },
+      accept = {
+        auto_brackets = { enabled = true },
+        -- expand_snippet = luasnip.lsp_expand,
+      },
+      trigger = { signature_help = { enabled = true } },
+
+      sources = {
+        completion = {
+          enabled_providers = { "lsp", "path", "snippets", "buffer", "codeium" },
+        },
+
+        providers = {
+          buffer = {
+            name = "Buffer",
+            module = "blink.cmp.sources.buffer",
+            score_offset = -3,
+          },
+          codeium = {
+            name = "codeium",
+            module = "blink.compat.source",
+            score_offset = 3,
+          },
+        },
+      },
+    },
   },
 }
