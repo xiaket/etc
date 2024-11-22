@@ -1,8 +1,6 @@
 ---------------------
 -- Control family
 ---------------------
--- Ctrl F to format the file.
-vim.keymap.set("n", "<C-F>", ":Format<cr>", { noremap = true, silent = true })
 -- Ctrl E to clean up trailing whitespaces
 vim.keymap.set("n", "<C-E>", ":%s/\\s*$//g<cr>", { noremap = true })
 -- Ctrl V to paste in
@@ -143,12 +141,4 @@ vim.api.nvim_create_autocmd("BufRead", {
   pattern = "*",
   command = "silent! loadview",
   once = true,
-})
-
-local aug = vim.api.nvim_create_augroup("FormatAutogroup", {})
-
-vim.api.nvim_create_autocmd("BufWritePost", {
-  pattern = "*.html,*.lua,*.py,*.tf",
-  group = aug,
-  command = ":Format",
 })

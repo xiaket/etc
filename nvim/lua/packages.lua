@@ -47,63 +47,47 @@ return {
     },
   },
 
+  -- Load when BufWritePre
   {
-    "mhartington/formatter.nvim",
-    cmd = { "Format" },
-    config = function()
-      require("formatter").setup({
-        filetype = {
-          lua = {
-            function()
-              return {
-                exe = "stylua",
-                args = {
-                  "--config-path " .. os.getenv("XDG_CONFIG_HOME") .. "/stylua/stylua.toml",
-                  "-",
-                },
-                stdin = true,
-              }
-            end,
-          },
-          python = {
-            function()
-              return {
-                exe = "black",
-                args = { "- --line-length 100" },
-                stdin = true,
-              }
-            end,
-            function()
-              local util = require("formatter.util")
-              return {
-                exe = "ruff",
-                args = {
-                  "check",
-                  "--select",
-                  "I001",
-                  "--fix",
-                  "--stdin-filename",
-                  util.escape_path(util.get_current_buffer_file_path()),
-                },
-                stdin = true,
-              }
-            end,
-          },
-          rust = {
-            require("formatter.filetypes.rust").rustfmt,
-          },
-          sh = {
-            require("formatter.filetypes.sh").shfmt,
-          },
-          terraform = {
-            require("formatter.filetypes.terraform").terraformfmt,
-          },
-          yaml = {
-            require("formatter.filetypes.yaml").pyaml,
+    "stevearc/conform.nvim",
+
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
+    opts = {
+      -- Define your formatters
+      formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "black", "ruff_fix" },
+        sh = { "shfmt" },
+        rust = { "rustfmt" },
+        terraform = { "terraform_fmt" },
+        yaml = { "yamlfix" },
+      },
+      -- Set default options
+      default_format_opts = {
+        lsp_format = "fallback",
+      },
+      -- Set up format-on-save
+      format_on_save = { timeout_ms = 500 },
+      -- Customize formatters
+      formatters = {
+        shfmt = {
+          prepend_args = { "-i", "2" },
+        },
+        black = {
+          prepend_args = { "--line-length", "100" },
+        },
+        ruff_fix = {
+          append_args = { "--select", "I001" },
+        },
+        stylua = {
+          prepend_args = {
+            "--config-path",
+            os.getenv("XDG_CONFIG_HOME") .. "/stylua/stylua.toml",
           },
         },
-      })
-    end,
+      },
+    },
   },
 
   -- Load when BufRead
@@ -322,7 +306,11 @@ return {
     -- dev = true,
     "saghen/blink.cmp",
     dependencies = {
-      { "saghen/blink.compat", opts = { enable_events = true } },
+      {
+        "saghen/blink.compat",
+        opts = { enable_events = true, debug = true },
+        commit = "006a34130ed17248affefbef702f7226aeb29e0b",
+      },
       {
         "Exafunction/codeium.nvim",
         dependencies = {
