@@ -17,7 +17,10 @@ vim.keymap.set("n", ",", " ", { remap = true })
 local leader_config = {
   ["a"] = { cmd = ":bprevious<cr>", desc = "previous buffer" },
   -- ["d"] used down below in LSP keymaps.
-  ["e"] = { cmd = "<cmd>TroubleToggle<cr>", desc = "toggle errors" },
+  ["e"] = {
+    cmd = '<cmd>lua require("trouble").toggle("diagnostics")<cr>',
+    desc = "toggle errors",
+  },
   ["f"] = { cmd = ":Telescope find_files<cr>", opts = { silent = false }, desc = "find files" },
   ["g"] = { cmd = ":Telescope live_grep<cr>", opts = { silent = false }, desc = "grep from files" },
   ["h"] = { cmd = ":FocusSplitLeft<cr>", desc = "create split on left" },
