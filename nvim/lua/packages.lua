@@ -25,6 +25,11 @@ return {
     ft = "go",
   },
   {
+    "maxandron/goplements.nvim",
+    ft = "go",
+    opts = {},
+  },
+  {
     "hashivim/vim-terraform",
     ft = "terraform",
   },
@@ -107,6 +112,7 @@ return {
         cursor = options.enable,
         scroll = options.enable,
       })
+      require("mini.jump2d").setup()
       require("mini.comment").setup()
       require("mini.cursorword").setup()
       require("mini.files").setup({

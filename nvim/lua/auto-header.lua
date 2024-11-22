@@ -3,8 +3,8 @@ Headers = {
   sh = { "#!/bin/bash", "", "set -o errexit", "set -o nounset", "set -o pipefail", "", "" },
 }
 
-function add_header()
-  filetype = vim.fn.expand("%:e")
+local function add_header()
+  local filetype = vim.fn.expand("%:e")
   if Headers[filetype] ~= nil then
     vim.fn.setline(".", Headers[filetype])
   end
