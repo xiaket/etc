@@ -1,0 +1,12 @@
+{
+    "dtime": {
+        "prefix": "dtime",
+        "body": ["${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE} ${CURRENT_HOUR}:${CURRENT_MINUTE}"],
+        "description": "Put the datetime in (Y-m-d H:M) format"
+    },
+    "date": {
+      "prefix": "date",
+      "body": ["${CURRENT_DATE}-${CURRENT_MONTH}-${CURRENT_YEAR}"],
+      "description": "Put date in (Y-m-d) format"
+    }
+}

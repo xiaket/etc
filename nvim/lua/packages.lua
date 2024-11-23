@@ -342,6 +342,7 @@ return {
     -- dev = true,
     "saghen/blink.cmp",
     dependencies = {
+      "rafamadriz/friendly-snippets",
       {
         "saghen/blink.compat",
         opts = { enable_events = true, debug = true },
