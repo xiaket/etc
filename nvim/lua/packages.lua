@@ -345,8 +345,8 @@ return {
       "rafamadriz/friendly-snippets",
       {
         "saghen/blink.compat",
-        opts = { enable_events = true, debug = true },
-        commit = "006a34130ed17248affefbef702f7226aeb29e0b",
+        version = "*",
+        opts = { enable_events = true },
       },
       {
         "Exafunction/codeium.nvim",
