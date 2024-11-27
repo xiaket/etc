@@ -97,6 +97,11 @@ return {
 
   -- Load when BufRead
   {
+    "sunjon/shade.nvim",
+    event = "BufRead",
+    opts = {},
+  },
+  {
     "echasnovski/mini.nvim",
     event = "BufRead",
     config = function()
