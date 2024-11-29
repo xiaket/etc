@@ -226,8 +226,22 @@ return {
         automatic_installation = true,
       })
 
+      local auto_configure_servers = {
+        "bashls",
+        "docker_compose_language_service",
+        "dockerls",
+        "gopls",
+        "taplo",
+        "terraformls",
+      }
+
       mason.setup_handlers({
         -- default handler for installed servers
+        function(server_name)
+          if vim.tbl_contains(auto_configure_servers, server_name) then
+            lspconfig[server_name].setup({})
+          end
+        end,
         ["bzl"] = function()
           lspconfig["bzl"].setup({
             filetypes = { "bzl", "BUILD", "bazel" },
@@ -344,12 +358,7 @@ return {
     dependencies = {
       "rafamadriz/friendly-snippets",
       {
-        "saghen/blink.compat",
-        version = "*",
-        opts = { enable_events = true },
-      },
-      {
-        "Exafunction/codeium.nvim",
+        "xiaket/codeium.nvim",
         dependencies = {
           "nvim-lua/plenary.nvim",
         },
@@ -398,8 +407,8 @@ return {
             score_offset = -3,
           },
           codeium = {
-            name = "codeium",
-            module = "blink.compat.source",
+            name = "Codeium",
+            module = "codeium.blink",
             score_offset = 3,
           },
         },
