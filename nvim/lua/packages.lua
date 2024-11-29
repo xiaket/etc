@@ -200,6 +200,7 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
+    commit = "c646154d6e4db9b2979eeb517d0b817ad00c9c47",
     event = { "BufReadPre", "BufNewFile" },
     config = function(_, opts)
       local lspconfig = require("lspconfig")
@@ -227,11 +228,6 @@ return {
 
       mason.setup_handlers({
         -- default handler for installed servers
-        function(server_name)
-          lspconfig[server_name].setup({
-            capabilities = capabilities,
-          })
-        end,
         ["bzl"] = function()
           lspconfig["bzl"].setup({
             filetypes = { "bzl", "BUILD", "bazel" },
@@ -284,7 +280,6 @@ return {
         ["lua_ls"] = function()
           -- configure lua server (with special settings)
           lspconfig["lua_ls"].setup({
-            capabilities = capabilities,
             settings = {
               Lua = {
                 -- make the language server recognize "vim" global
