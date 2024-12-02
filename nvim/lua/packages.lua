@@ -193,7 +193,6 @@ return {
     "williamboman/mason.nvim",
     dependencies = {
       "williamboman/mason-lspconfig.nvim",
-      "saghen/blink.cmp",
     },
     event = "VeryLazy",
     opts = {},
@@ -202,6 +201,7 @@ return {
     "neovim/nvim-lspconfig",
     commit = "c646154d6e4db9b2979eeb517d0b817ad00c9c47",
     event = { "BufReadPre", "BufNewFile" },
+    dependencies = { "saghen/blink.cmp" },
     config = function(_, opts)
       local lspconfig = require("lspconfig")
       local mason = require("mason-lspconfig")
@@ -352,8 +352,6 @@ return {
   },
 
   {
-    -- dir = "/Users/kaix/.Github/blink.cmp",
-    -- dev = true,
     "saghen/blink.cmp",
     dependencies = {
       "rafamadriz/friendly-snippets",
