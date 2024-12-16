@@ -372,7 +372,7 @@ return {
         preset = "enter",
         ["<Tab>"] = {
           function(cmp)
-            if cmp.is_in_snippet() then
+            if cmp.snippet_active() then
               return cmp.accept()
             else
               return cmp.select_next()
