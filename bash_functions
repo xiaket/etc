@@ -62,6 +62,27 @@ aws-extract() {
 	done < <(cat ~/.aws/credentials | grep -A 3 "\[default\]" | tail -n 3)
 }
 
+cat-dir() {
+  local dir="$1"
+
+  # Use current working directory if no directory is provided
+  if [[ -z "$dir" ]]; then
+    dir=$(pwd)
+  fi
+
+  if [[ ! -d "$dir" ]]; then
+    echo "Error: '$dir' is not a valid directory."
+    return 1
+  fi
+
+  # Find all files in the directory and print each file with its name
+  find "$dir" -type f | while read -r file; do
+    echo "File: $(basename "$file")"
+    cat "$file"
+    echo "--------------------"
+  done
+}
+
 cd () {
   if [ "$#" = 0 ]
   then
