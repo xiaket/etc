@@ -23,20 +23,11 @@ local leader_config = {
   },
   ["f"] = { cmd = ":Telescope find_files<cr>", opts = { silent = false }, desc = "find files" },
   ["g"] = { cmd = ":Telescope live_grep<cr>", opts = { silent = false }, desc = "grep from files" },
-  ["h"] = { cmd = ":FocusSplitLeft<cr>", desc = "create split on left" },
-  ["j"] = { cmd = ":FocusSplitDown<cr>", desc = "create split below" },
-  ["k"] = { cmd = ":FocusSplitUp<cr>", desc = "create split above" },
-  ["l"] = { cmd = ":FocusSplitRight<cr>", desc = "create split on right" },
-  ["n"] = { cmd = '<CMD>lua require("n").toggle()<CR>', desc = "toggle notes window" },
-  ["o"] = {
-    cmd = function()
-      local files = require("mini.files")
-      if not files.close() then
-        files.open()
-      end
-    end,
-    desc = "toggle files window",
-  },
+  ["h"] = { cmd = ":WSplitLeft<cr>", desc = "create split on left" },
+  ["j"] = { cmd = ":WSplitDown<cr>", desc = "create split below" },
+  ["k"] = { cmd = ":WSplitUp<cr>", desc = "create split above" },
+  ["l"] = { cmd = ":WSplitRight<cr>", desc = "create split on right" },
+  ["o"] = { cmd = ":WToggleExplorer<cr>", desc = "Toggle file window" },
   ["s"] = { cmd = ":bnext<cr>", desc = "next buffer" },
   ["t"] = {
     { cmd = '<CMD>lua require("FTerm").toggle()<CR>', mode = "n", desc = "toggle terminal" },

@@ -3,18 +3,6 @@ return {
   "kyazdani42/nvim-web-devicons",
   "EdenEast/nightfox.nvim",
 
-  -- wip
-  {
-    dir = "~/.Github/n.nvim",
-    opts = {
-      dbpath = "~/.Github/etc/nvim/notes.db",
-    },
-    dependencies = {
-      "kkharji/sqlite.lua",
-      "nvim-lua/plenary.nvim",
-    },
-  },
-
   -- Load by filetype
   {
     "ekalinin/Dockerfile.vim",
@@ -43,13 +31,21 @@ return {
   },
 
   -- Load by cmd
-  { -- easier split management.
-    "nvim-focus/focus.nvim",
-    cmd = { "FocusSplitLeft", "FocusSplitDown", "FocusSplitUp", "FocusSplitRight" },
-    opts = {
-      autoresize = { enable = true },
-      ui = { number = false, hybridnumber = false, relativenumber = false },
-    },
+  {
+    "xiaket/w.nvim",
+    cmd = { "WToggleExplorer", "WSplitLeft", "WSplitRight", "WSplitUp", "WSplitDown" },
+    event = "BufEnter",
+    init = function()
+      local arg = vim.v.argv[#vim.v.argv]
+      if vim.fn.isdirectory(arg) == 1 then
+        vim.schedule(function()
+          local explorer = require("w.explorer")
+          explorer.set_root(arg)
+          explorer.toggle_explorer()
+        end)
+      end
+    end,
+    opts = {},
   },
 
   -- Load when BufWritePre
@@ -57,7 +53,6 @@ return {
     "stevearc/conform.nvim",
 
     event = { "BufWritePre" },
-    cmd = { "ConformInfo" },
     opts = {
       -- Define your formatters
       formatters_by_ft = {
@@ -65,15 +60,13 @@ return {
         python = { "black", "ruff_fix" },
         sh = { "shfmt" },
         rust = { "rustfmt" },
-        terraform = { "terraform_fmt" },
-        yaml = { "yamlfix" },
       },
       -- Set default options
       default_format_opts = {
         lsp_format = "fallback",
       },
       -- Set up format-on-save
-      format_on_save = { timeout_ms = 500 },
+      format_on_save = { timeout_ms = 300 },
       -- Customize formatters
       formatters = {
         shfmt = {
@@ -97,11 +90,6 @@ return {
 
   -- Load when BufRead
   {
-    "sunjon/shade.nvim",
-    event = "BufRead",
-    opts = {},
-  },
-  {
     "echasnovski/mini.nvim",
     event = "BufRead",
     config = function()
@@ -120,12 +108,6 @@ return {
       require("mini.jump2d").setup()
       require("mini.comment").setup()
       require("mini.cursorword").setup()
-      require("mini.files").setup({
-        mappings = {
-          go_in = "L",
-          go_in_plus = "l",
-        },
-      })
       require("mini.indentscope").setup({
         draw = {
           delay = 40,
@@ -386,10 +368,6 @@ return {
           "select_prev",
           "fallback",
         },
-      },
-      accept = {
-        auto_brackets = { enabled = true },
-        -- expand_snippet = luasnip.lsp_expand,
       },
       trigger = { signature_help = { enabled = true } },
 
