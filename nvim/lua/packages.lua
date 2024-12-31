@@ -346,7 +346,7 @@ return {
       },
     },
     lazy = false,
-    version = "v0.*", -- use a release tag to download pre-built binaries
+    version = "*", -- use a release tag to download pre-built binaries
 
     opts = {
       -- Press tab to select and enter to accept, shift tab to reverse.
@@ -369,12 +369,10 @@ return {
           "fallback",
         },
       },
-      trigger = { signature_help = { enabled = true } },
+      signature = { enabled = true },
 
       sources = {
-        completion = {
-          enabled_providers = { "lsp", "path", "snippets", "buffer", "codeium" },
-        },
+        default = { "lsp", "path", "snippets", "buffer", "codeium" },
 
         providers = {
           buffer = {
