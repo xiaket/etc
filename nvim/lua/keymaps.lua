@@ -15,7 +15,7 @@ vim.keymap.set("n", ",", " ", { remap = true })
 -- leader family
 ---------------------
 local leader_config = {
-  ["a"] = { cmd = ":bprevious<cr>", desc = "previous buffer" },
+  ["a"] = { cmd = ":WPrevBuffer<cr>", desc = "previous buffer" },
   -- ["d"] used down below in LSP keymaps.
   ["e"] = {
     cmd = '<cmd>lua require("trouble").toggle("diagnostics")<cr>',
@@ -28,7 +28,7 @@ local leader_config = {
   ["k"] = { cmd = ":WSplitUp<cr>", desc = "create split above" },
   ["l"] = { cmd = ":WSplitRight<cr>", desc = "create split on right" },
   ["o"] = { cmd = ":WToggleExplorer<cr>", desc = "Toggle file window" },
-  ["s"] = { cmd = ":bnext<cr>", desc = "next buffer" },
+  ["s"] = { cmd = ":WNextBuffer<cr>", desc = "next buffer" },
   ["t"] = {
     { cmd = '<CMD>lua require("FTerm").toggle()<CR>', mode = "n", desc = "toggle terminal" },
     {

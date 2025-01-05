@@ -32,19 +32,10 @@ return {
 
   -- Load by cmd
   {
-    "xiaket/w.nvim",
+    --"xiaket/w.nvim",
+    dir = "~/.Github/w.nvim",
     cmd = { "WToggleExplorer", "WSplitLeft", "WSplitRight", "WSplitUp", "WSplitDown" },
     event = "BufEnter",
-    init = function()
-      local arg = vim.v.argv[#vim.v.argv]
-      if vim.fn.isdirectory(arg) == 1 then
-        vim.schedule(function()
-          local explorer = require("w.explorer")
-          explorer.set_root(arg)
-          explorer.toggle_explorer()
-        end)
-      end
-    end,
     opts = {},
   },
 
