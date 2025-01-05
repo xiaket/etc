@@ -364,6 +364,7 @@ return {
 
       sources = {
         default = { "lsp", "path", "snippets", "buffer", "codeium" },
+        cmdline = {},
 
         providers = {
           buffer = {
