@@ -1,4 +1,9 @@
 local function relativeln(target)
+  local current_ft = vim.bo.filetype
+  if current_ft == "WExplorer" then
+    return
+  end
+
   if vim.b.lnstatus == nil then
     vim.b.lnstatus = "number"
   end

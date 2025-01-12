@@ -13,6 +13,7 @@
   "mason-lspconfig.nvim": { "branch": "main", "commit": "97d9f1d3ad205dece6bcafd1d71cf1507608f3c7" },
   "mason.nvim": { "branch": "main", "commit": "e2f7f9044ec30067bc11800a9e266664b88cda22" },
   "matchparen.nvim": { "branch": "main", "commit": "190861577d83167021dcb3339dd3aa594279f2f3" },
+  "mini.icons": { "branch": "main", "commit": "1c79feb7478ca773fa3dac5cadf43ced9180e861" },
   "mini.nvim": { "branch": "main", "commit": "3a3178419ce9947f55708966dabf030eca40735a" },
   "nightfox.nvim": { "branch": "main", "commit": "595ffb8f291fc4a9bef3201a28b7c0379a41cdee" },
   "nui.nvim": { "branch": "main", "commit": "53e907ffe5eedebdca1cd503b00aa8692068ca46" },
@@ -29,6 +30,6 @@
   "vim-go": { "branch": "master", "commit": "6adc82bfef7f9a4b0db78065ae51b8ebb145c355" },
   "vim-python-pep8-indent": { "branch": "master", "commit": "60ba5e11a61618c0344e2db190210145083c91f8" },
   "vim-terraform": { "branch": "master", "commit": "174789e2f0a1c8348ae129223581760807162e82" },
-  "w.nvim": { "branch": "main", "commit": "c4ec05b90843b421245c5c44240ecfb72431f928" },
+  "w.nvim": { "branch": "main", "commit": "44369534d68e86043006a7e74049fe04486b6ef9" },
   "which-key.nvim": { "branch": "main", "commit": "1f8d414f61e0b05958c342df9b6a4c89ce268766" }
 }
