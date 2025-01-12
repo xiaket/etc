@@ -36,12 +36,6 @@ return {
     --dir = "~/.Github/w.nvim",
     cmd = { "WToggleExplorer", "WSplitLeft", "WSplitRight", "WSplitUp", "WSplitDown" },
     event = "BufEnter",
-    dependencies = {
-      {
-        "echasnovski/mini.icons",
-        version = false,
-      },
-    },
     opts = {},
   },
 
