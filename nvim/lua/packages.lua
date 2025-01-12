@@ -32,8 +32,7 @@ return {
 
   -- Load by cmd
   {
-    --"xiaket/w.nvim",
-    dir = "~/.Github/w.nvim",
+    "xiaket/w.nvim",
     cmd = { "WToggleExplorer", "WSplitLeft", "WSplitRight", "WSplitUp", "WSplitDown" },
     event = "BufEnter",
     opts = {},
