@@ -22,12 +22,11 @@ if [ "$ARCH" = "Linux" ]; then
   # setup key repeat
   xset r rate 180 80
 else
-	# running on a macOS machine.
-	COLORS=gdircolors
+  # running on a macOS machine.
+  COLORS=gdircolors
 fi
 
-if [ "$(uname -m)" = "arm64" ]
-then
+if [ "$(uname -m)" = "arm64" ]; then
   brewdir="/opt/homebrew"
 else
   brewdir="/usr/local"
@@ -55,12 +54,12 @@ export XDG_CONFIG_HOME="$etcdir"
 
 # For things that can only be done as a bash function.
 if [ -f "$etcdir"/bash_functions ]; then
-	. "$etcdir"/bash_functions
+  . "$etcdir"/bash_functions
 fi
 
 # For Alternative settings
 if [ -f "$altdir/etc/bashrc" ]; then
-	. "$altdir/etc/bashrc"
+  . "$altdir/etc/bashrc"
 fi
 
 # for fzf
@@ -72,10 +71,10 @@ fi
 
 # I love my prompt
 function _xiaket_prompt {
-	status=$?
-	PS1="$(ps1 $status)"
-	history -a
-	history -n
+  status=$?
+  PS1="$(ps1 $status)"
+  history -a
+  history -n
 }
 
 export PROMPT_COMMAND='_xiaket_prompt'
@@ -118,9 +117,6 @@ export MANPAGER='less -X'
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-. "$etcdir"/bash_completion
-
-
 ###########################
 # bash history via atuin #
 ###########################
@@ -130,48 +126,47 @@ ATUIN_SESSION=$(atuin uuid)
 export ATUIN_SESSION
 
 _atuin_preexec() {
-    local id
-    id=$(atuin history start -- "$1")
-    export ATUIN_HISTORY_ID="${id}"
+  local id
+  id=$(atuin history start -- "$1")
+  export ATUIN_HISTORY_ID="${id}"
 }
 
 _atuin_precmd() {
-    local EXIT="$?"
+  local EXIT="$?"
 
-    [[ -z "${ATUIN_HISTORY_ID}" ]] && return
+  [[ -z "${ATUIN_HISTORY_ID}" ]] && return
 
-    (ATUIN_LOG=error atuin history end --exit "${EXIT}" -- "${ATUIN_HISTORY_ID}" &) >/dev/null 2>&1
-    export ATUIN_HISTORY_ID=""
+  (ATUIN_LOG=error atuin history end --exit "${EXIT}" -- "${ATUIN_HISTORY_ID}" &) >/dev/null 2>&1
+  export ATUIN_HISTORY_ID=""
 }
 
 __atuin_history() {
-    # shellcheck disable=SC2048,SC2086
-    HISTORY="$(ATUIN_SHELL_BASH=t ATUIN_LOG=error atuin search $* -i -- "${READLINE_LINE}" 3>&1 1>&2 2>&3)"
+  # shellcheck disable=SC2048,SC2086
+  HISTORY="$(ATUIN_SHELL_BASH=t ATUIN_LOG=error atuin search $* -i -- "${READLINE_LINE}" 3>&1 1>&2 2>&3)"
 
-    if [[ $HISTORY == __atuin_accept__:* ]]
-    then
-      HISTORY=${HISTORY#__atuin_accept__:}
-      echo "$HISTORY"
-      # Need to run the pre/post exec functions manually
-      _atuin_preexec "$HISTORY"
-      eval "$HISTORY"
-      _atuin_precmd
-      echo
-      READLINE_LINE=""
-      READLINE_POINT=${#READLINE_LINE}
-    else
-      READLINE_LINE=${HISTORY}
-      READLINE_POINT=${#READLINE_LINE}
-    fi
+  if [[ $HISTORY == __atuin_accept__:* ]]; then
+    HISTORY=${HISTORY#__atuin_accept__:}
+    echo "$HISTORY"
+    # Need to run the pre/post exec functions manually
+    _atuin_preexec "$HISTORY"
+    eval "$HISTORY"
+    _atuin_precmd
+    echo
+    READLINE_LINE=""
+    READLINE_POINT=${#READLINE_LINE}
+  else
+    READLINE_LINE=${HISTORY}
+    READLINE_POINT=${#READLINE_LINE}
+  fi
 
 }
 
 if [[ -n "${BLE_VERSION-}" ]]; then
-    blehook PRECMD-+=_atuin_precmd
-    blehook PREEXEC-+=_atuin_preexec
+  blehook PRECMD-+=_atuin_precmd
+  blehook PREEXEC-+=_atuin_preexec
 else
-    precmd_functions+=(_atuin_precmd)
-    preexec_functions+=(_atuin_preexec)
+  precmd_functions+=(_atuin_precmd)
+  preexec_functions+=(_atuin_preexec)
 fi
 
 bind -x '"\C-r": __atuin_history'
@@ -181,8 +176,7 @@ bind -x '"\eOA": __atuin_history --shell-up-key-binding'
 #####################
 # ssh agent forward #
 #####################
-if ls -l ~/.ssh/*.priv >/dev/null 2>&1
-then
+if ls -l ~/.ssh/*.priv >/dev/null 2>&1; then
   SSH_ENV="$HOME/.ssh/environment"
 
   function start_agent {
@@ -196,13 +190,11 @@ then
   # Source SSH settings, if applicable
   [ -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
   lockfile ~/.xiaket/var/tmp/ssh.lock
-  if [ -f "${SSH_ENV}" ]
-  then
+  if [ -f "${SSH_ENV}" ]; then
     . "${SSH_ENV}" >/dev/null
-    if ! pgrep -q "ssh-agent$"
-    then
+    if ! pgrep -q "ssh-agent$"; then
       rm -f "${SSH_ENV}"
-    start_agent
+      start_agent
     fi
   else
     start_agent
