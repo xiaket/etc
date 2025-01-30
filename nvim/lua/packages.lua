@@ -50,13 +50,21 @@ return {
         python = { "black", "ruff_fix" },
         sh = { "shfmt" },
         rust = { "rustfmt" },
+        c = { "clang-format" },
       },
       -- Set default options
       default_format_opts = {
         lsp_format = "fallback",
       },
       -- Set up format-on-save
-      format_on_save = { timeout_ms = 300 },
+      format_on_save = function(bufnr)
+        -- Check only the buffer-local variable
+        if vim.b[bufnr].conform_disable_autoformat then
+          -- Return nothing to disable autoformat
+          return
+        end
+        return { timeout_ms = 300 }
+      end,
       -- Customize formatters
       formatters = {
         shfmt = {

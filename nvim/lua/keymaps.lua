@@ -16,6 +16,10 @@ vim.keymap.set("n", ",", " ", { remap = true })
 ---------------------
 local leader_config = {
   ["a"] = { cmd = ":WPrevBuffer<cr>", desc = "previous buffer" },
+  ["c"] = {
+    cmd = ":ConformFormatToggle<cr>",
+    desc = "Toggle autoformat-on-save for the current buffer",
+  },
   -- ["d"] used down below in LSP keymaps.
   ["e"] = {
     cmd = '<cmd>lua require("trouble").toggle("diagnostics")<cr>',
@@ -136,4 +140,20 @@ vim.api.nvim_create_autocmd("BufRead", {
   pattern = "*",
   command = "silent! loadview",
   once = true,
+})
+
+-- Create a user command to toggle autoformat for the current buffer
+vim.api.nvim_create_user_command("ConformFormatToggle", function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  -- Toggle the buffer-local autoformat flag
+  vim.b[bufnr].conform_disable_autoformat = not vim.b[bufnr].conform_disable_autoformat
+
+  -- Notify the user about the current status
+  if vim.b[bufnr].conform_disable_autoformat then
+    vim.notify("Autoformat on save is disabled for this buffer.", vim.log.levels.INFO)
+  else
+    vim.notify("Autoformat on save is enabled for this buffer.", vim.log.levels.INFO)
+  end
+end, {
+  desc = "Toggle autoformat-on-save for the current buffer",
 })
