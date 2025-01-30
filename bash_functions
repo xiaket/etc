@@ -83,6 +83,26 @@ cat-dir() {
   done
 }
 
+cat-files() {
+  # Check if at least one filename is provided
+  if [[ $# -eq 0 ]]; then
+    echo "Error: No files provided."
+    return 1
+  fi
+
+  # Iterate over each provided filename
+  for file in "$@"; do
+    # Check if the file exists and is a regular file
+    if [[ -f "$file" ]]; then
+      echo "File: $(basename "$file")"
+      cat "$file"
+      echo "--------------------"
+    else
+      echo "Error: '$file' is not a valid file."
+    fi
+  done
+}
+
 cd () {
   if [ "$#" = 0 ]
   then
