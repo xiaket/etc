@@ -1,6 +1,7 @@
 local hiper = require("hiper").new("rightcmd")
 local magnet = require("magnet")
 local power = require("power")
+local is_switch = require("is_switch")
 
 local features = {
   -- Simple app maps
