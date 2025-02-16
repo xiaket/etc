@@ -342,10 +342,13 @@ return {
         },
         opts = {},
       },
+      {
+        "Kaiser-Yang/blink-cmp-dictionary",
+        dependencies = { "nvim-lua/plenary.nvim" },
+      },
     },
     lazy = false,
     version = "*", -- use a release tag to download pre-built binaries
-
     opts = {
       -- Press tab to select and enter to accept, shift tab to reverse.
       keymap = {
@@ -368,10 +371,14 @@ return {
         },
       },
       signature = { enabled = true },
-
+      cmdline = {
+        keymap = {
+          preset = "enter",
+          ["<CR>"] = { "select_accept_and_enter", "fallback" },
+        },
+      },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer", "codeium" },
-        cmdline = {},
+        default = { "dictionary", "lsp", "path", "snippets", "buffer", "codeium" },
 
         providers = {
           buffer = {
@@ -383,6 +390,15 @@ return {
             name = "Codeium",
             module = "codeium.blink",
             score_offset = 3,
+          },
+          dictionary = {
+            module = "blink-cmp-dictionary",
+            name = "Dict",
+            min_keyword_length = 3,
+            max_items = 4,
+            opts = {
+              dictionary_directories = { vim.fn.expand("~/.local/state/nvim/dictionary") },
+            },
           },
         },
       },
