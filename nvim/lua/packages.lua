@@ -35,9 +35,26 @@ return {
     "xiaket/w.nvim",
     cmd = { "WToggleExplorer", "WSplitLeft", "WSplitRight", "WSplitUp", "WSplitDown" },
     event = "BufEnter",
-    opts = {},
+    opts = {
+      explorer = {
+        window_width = 30,
+      },
+    },
   },
-
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    build = ":Copilot auth",
+    event = "InsertEnter",
+    opts = {
+      suggestion = { enabled = false },
+      panel = { enabled = false },
+      filetypes = {
+        markdown = true,
+        help = true,
+      },
+    },
+  },
   -- Load when BufWritePre
   {
     "stevearc/conform.nvim",
@@ -68,7 +85,7 @@ return {
       -- Customize formatters
       formatters = {
         shfmt = {
-          prepend_args = { "-i", "2" },
+          prepend_args = { "--indent", "2", "--case-indent", "--space-redirects" },
         },
         black = {
           prepend_args = { "--line-length", "100" },
@@ -91,18 +108,6 @@ return {
     "echasnovski/mini.nvim",
     event = "BufRead",
     config = function()
-      local animate = require("mini.animate")
-      local options = {
-        enable = { timing = animate.gen_timing.linear({ duration = 50, unit = "total" }) },
-        disable = { enable = false },
-      }
-      animate.setup({
-        open = options.disable,
-        close = options.disable,
-        resize = options.enable,
-        cursor = options.enable,
-        scroll = options.enable,
-      })
       require("mini.jump2d").setup()
       require("mini.comment").setup()
       require("mini.cursorword").setup()
@@ -336,11 +341,11 @@ return {
     dependencies = {
       "rafamadriz/friendly-snippets",
       {
-        "xiaket/codeium.nvim",
-        dependencies = {
-          "nvim-lua/plenary.nvim",
+        "fang2hou/blink-copilot",
+        opts = {
+          max_completions = 3,
+          max_attempts = 2,
         },
-        opts = {},
       },
       {
         "Kaiser-Yang/blink-cmp-dictionary",
@@ -370,6 +375,11 @@ return {
           "fallback",
         },
       },
+      completion = {
+        accept = {
+          auto_brackets = { enabled = false },
+        },
+      },
       signature = { enabled = true },
       cmdline = {
         keymap = {
@@ -378,7 +388,7 @@ return {
         },
       },
       sources = {
-        default = { "dictionary", "lsp", "path", "snippets", "buffer", "codeium" },
+        default = { "dictionary", "lsp", "path", "snippets", "buffer", "copilot" },
 
         providers = {
           buffer = {
@@ -386,10 +396,11 @@ return {
             module = "blink.cmp.sources.buffer",
             score_offset = -3,
           },
-          codeium = {
-            name = "Codeium",
-            module = "codeium.blink",
-            score_offset = 3,
+          copilot = {
+            name = "copilot",
+            module = "blink-copilot",
+            score_offset = 8,
+            async = true,
           },
           dictionary = {
             module = "blink-cmp-dictionary",
