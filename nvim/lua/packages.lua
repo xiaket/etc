@@ -80,7 +80,7 @@ return {
           -- Return nothing to disable autoformat
           return
         end
-        return { timeout_ms = 300 }
+        return { timeout_ms = 1500 }
       end,
       -- Customize formatters
       formatters = {
@@ -171,6 +171,19 @@ return {
         indent = { enable = true, disable = { "python" } },
       })
     end,
+  },
+
+  -- Copilot Chat
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    opts = {
+      question_header = "## User ",
+      answer_header = "## Copilot ",
+      error_header = "## Error ",
+      model = "claude-3.5-sonnet",
+      auto_follow_cursor = false, -- Don't follow the cursor after getting response
+    },
+    event = "VeryLazy",
   },
 
   -- LSP
