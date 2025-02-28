@@ -180,7 +180,7 @@ return {
       question_header = "## User ",
       answer_header = "## Copilot ",
       error_header = "## Error ",
-      model = "claude-3.5-sonnet",
+      model = "claude-3.7-sonnet",
       auto_follow_cursor = false, -- Don't follow the cursor after getting response
     },
     event = "VeryLazy",
