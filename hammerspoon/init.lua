@@ -14,6 +14,7 @@ local features = {
   k = "Kitty",
   l = "Slack",
   m = "Music",
+  n = "Notes",
   o = "Obsidian",
   s = "Superlist",
   x = "Firefox",
