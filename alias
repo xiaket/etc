@@ -10,7 +10,7 @@ if [ "x$ARCH" = "xDarwin" ]; then
 	alias mtr='sudo /usr/local/sbin/mtr'
 	alias typora='open -a Typora '
   alias gcp='pbpaste | xargs git clone'
-  alias brewup='brew update && brew bundle install --cleanup --file="~/.Github/etc/Brewfile" --no-lock && brew upgrade && brew cleanup'
+  alias brewup='brew update && brew bundle install --cleanup --file="~/.Github/etc/Brewfile" && brew upgrade && brew cleanup'
 else
   alias gcp='xclip -selection clipboard -o | xargs git clone'
 fi
