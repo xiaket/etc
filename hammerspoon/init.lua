@@ -13,13 +13,18 @@ local features = {
   g = "Cherry Studio",
   k = "Kitty",
   l = "Slack",
-  m = "Music",
+  m = "Mail",
   n = "Notes",
   o = "Obsidian",
   s = "Superlist",
   x = "Firefox",
   w = "WeChat",
-  z = "zoom.us",
+  z = "Zed",
+
+  -- uppercase as we are running low on characters
+  C = "Calendar",
+  M = "Music",
+  Z = "zoom.us",
 
   -- Debug
   h = function()

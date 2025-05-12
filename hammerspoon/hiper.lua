@@ -44,31 +44,34 @@ Hiper.new = function(key_name)
 
   local featureHandler = function(event)
     local keyCode = event:getKeyCode()
-    local eventType = "up"
-    if event:getType() == hs.eventtap.event.types.keyDown then
-      if event:getProperty(hs.eventtap.event.properties["keyboardEventAutorepeat"]) == 0 then
-        eventType = "down"
-      else
-        eventType = "repeat"
-      end
-    end
+    local isKeyUp = event:getType() ~= hs.eventtap.event.types.keyDown
+    local isRepeat = not isKeyUp and event:getProperty(hs.eventtap.event.properties["keyboardEventAutorepeat"]) ~= 0
 
+    -- Handle hyper key itself
     if keyCode == self.key then
-      if eventType == "up" then
-        return false
-      else
-        return true
+      return not isKeyUp
+    end
+
+    -- Only process keydowns that aren't repeats
+    if isKeyUp or isRepeat or not self.features[keyCode] then
+      return false
+    end
+
+    local feature = self.features[keyCode]
+    local shiftPressed = event:getFlags().shift
+
+    -- Execute appropriate function based on type and case
+    if type(feature) == "function" then
+      feature() -- Legacy format
+    elseif type(feature) == "table" then
+      if shiftPressed and feature.hasUpper then
+        feature.upperFn()
+      elseif not shiftPressed and feature.hasLower then
+        feature.lowerFn()
       end
     end
 
-    if self.features[keyCode] ~= nil then
-      if eventType == "down" then
-        self.features[keyCode]()
-        return true
-      end
-    end
-
-    return false
+    return true
   end
 
   self.featureTap = hs.eventtap.new(
@@ -79,8 +82,28 @@ Hiper.new = function(key_name)
   self.modifierTap:start()
 
   self.load_features = function(features)
+    local keymap = {}
+
+    -- Collect keycodes with case info
     for key, fn in pairs(features) do
-      self.features[hs.keycodes.map[key]] = fn
+      local keycode = hs.keycodes.map[key:lower()]
+      if keycode then
+        keymap[keycode] = keymap[keycode] or {}
+
+        -- Store function based on case
+        if key:match("[A-Z]") then
+          keymap[keycode].upperFn = fn
+          keymap[keycode].hasUpper = true
+        else
+          keymap[keycode].lowerFn = fn
+          keymap[keycode].hasLower = true
+        end
+      end
+    end
+
+    -- Map to final features table
+    for keycode, info in pairs(keymap) do
+      self.features[keycode] = info
     end
   end
 
