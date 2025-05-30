@@ -24,12 +24,10 @@ impl CacheManager {
             match self.read_existing_metadata(&metadata_path).await {
                 Ok(existing_metadata) => {
                     if existing_metadata.original_hash != current_hash {
-                        println!("File hash mismatch detected. Cleaning up previous cache files...");
                         self.cleanup_all_cached_files().await?;
                     }
                 }
                 Err(_) => {
-                    println!("Cannot read existing metadata. Cleaning up cache files...");
                     self.cleanup_all_cached_files().await?;
                 }
             }
@@ -65,7 +63,6 @@ impl CacheManager {
         }
         
         fs::write(&metadata_path, metadata_json).await?;
-        println!("Created metadata file: {}", metadata_path);
 
         Ok(())
     }
@@ -96,7 +93,6 @@ impl CacheManager {
 
     /// Clean up all temporary files after successful processing
     pub async fn cleanup_temp_files(&self) -> Result<()> {
-        println!("Cleaning up temporary files...");
         
         let segment_dir = self.config.temp_dir_path().to_string_lossy().to_string();
         
@@ -123,20 +119,18 @@ impl CacheManager {
         match fs::read_dir(&segment_dir).await {
             Ok(mut dir) => {
                 while let Ok(Some(entry)) = dir.next_entry().await {
-                    if let Err(e) = fs::remove_file(entry.path()).await {
-                        println!("Warning: Failed to remove cached file {}: {}", entry.path().display(), e);
+                    if let Err(_e) = fs::remove_file(entry.path()).await {
+                        // Ignore error - file might already be removed
                     }
                 }
                 
                 // Try to remove the directory itself
-                if let Err(e) = fs::remove_dir(&segment_dir).await {
-                    println!("Warning: Failed to remove cache directory {}: {}", segment_dir, e);
-                } else {
-                    println!("Cache directory cleaned up successfully");
+                if let Err(_e) = fs::remove_dir(&segment_dir).await {
+                    // Ignore error - directory might not be empty or already removed
                 }
             }
-            Err(e) => {
-                println!("Warning: Failed to read cache directory {}: {}", segment_dir, e);
+            Err(_e) => {
+                // Ignore error - directory might not exist
             }
         }
         

@@ -94,9 +94,10 @@ pub async fn validate_input_file(file_path: &Path) -> Result<()> {
 }
 
 /// Save transcription to file
-pub fn save_transcription(input_path: &Path, content: &str) -> Result<PathBuf> {
+pub async fn save_transcription(input_path: &Path, content: &str) -> Result<PathBuf> {
     let output_path = input_path.with_extension("txt");
-    std::fs::write(&output_path, content)
+    tokio::fs::write(&output_path, content)
+        .await
         .context("Failed to write output file")?;
     Ok(output_path)
 }
@@ -165,21 +166,21 @@ mod tests {
         assert_eq!(config.chunk_size_bytes(), 23 * 1024 * 1024);
     }
 
-    #[test]
-    fn test_save_transcription() {
+    #[tokio::test]
+    async fn test_save_transcription() {
         let temp_file = NamedTempFile::new().unwrap();
         let path = temp_file.path().to_path_buf();
         
         let content = "Test transcription content";
-        let result = save_transcription(&path, content);
+        let result = save_transcription(&path, content).await;
         
         assert!(result.is_ok());
         let output_path = result.unwrap();
         assert_eq!(output_path.extension().unwrap(), "txt");
         
-        let saved_content = std::fs::read_to_string(&output_path).unwrap();
+        let saved_content = tokio::fs::read_to_string(&output_path).await.unwrap();
         assert_eq!(saved_content, content);
         
-        std::fs::remove_file(output_path).ok();
+        tokio::fs::remove_file(output_path).await.ok();
     }
 }

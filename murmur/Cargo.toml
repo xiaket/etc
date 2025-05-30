@@ -13,6 +13,10 @@ clap = { version = "4.0", features = ["derive"] }
 anyhow = "1.0"
 dotenvy = "0.15"
 env_logger = "0.11"
+cpal = "0.15"
+hound = "3.5"
+crossterm = "0.27"
+chrono = { version = "0.4", features = ["serde"] }
 
 [dev-dependencies]
 tokio-test = "0.4"

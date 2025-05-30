@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use std::path::Path;
 use std::process::Command;
 
@@ -20,7 +20,6 @@ impl AudioChunker {
         let total_size = utils::get_file_size(input_path).await?;
         let segment_dir = self.prepare_segment_directory().await?;
 
-        println!("Using temporary directory: {}", segment_dir);
 
         let duration = self.get_audio_duration(input_path)?;
         let chunks = self.create_chunks(input_path, total_size, duration, &segment_dir)?;
@@ -48,7 +47,7 @@ impl AudioChunker {
                 "-v", "error",
                 "-show_entries", "format=duration",
                 "-of", "default=noprint_wrappers=1:nokey=1",
-                input_path.to_str().unwrap(),
+                input_path.to_str().context("Invalid file path encoding")?,
             ])
             .output()?;
 
@@ -73,10 +72,6 @@ impl AudioChunker {
     ) -> Result<Vec<String>> {
         let chunk_info = self.calculate_chunk_parameters(total_size, duration);
         
-        println!(
-            "Splitting file into approximately {} chunks of ~{}MB each",
-            chunk_info.estimated_chunks, self.config.chunk_size_mb
-        );
 
         let mut chunks = Vec::new();
         let mut start_time = 0.0;
@@ -122,11 +117,9 @@ impl AudioChunker {
         let bytes_per_second = total_size as f64 / duration;
         let target_size_bytes = self.config.chunk_size_bytes() as f64;
         let seconds_per_chunk = target_size_bytes / bytes_per_second;
-        let estimated_chunks = (duration / seconds_per_chunk).ceil() as u64;
 
         ChunkInfo {
             seconds_per_chunk,
-            estimated_chunks,
         }
     }
 
@@ -140,7 +133,7 @@ impl AudioChunker {
         let output = Command::new("ffmpeg")
             .args([
                 "-y", // Overwrite output files without asking
-                "-i", input_path.to_str().unwrap(),
+                "-i", input_path.to_str().context("Invalid file path encoding")?,
                 "-ss", &start_time.to_string(),
                 "-t", &chunk_duration.to_string(),
                 "-c:a", "copy", // Just copy audio stream, no re-encoding
@@ -160,7 +153,6 @@ impl AudioChunker {
 
 struct ChunkInfo {
     seconds_per_chunk: f64,
-    estimated_chunks: u64,
 }
 
 #[cfg(test)]
@@ -179,10 +171,9 @@ mod tests {
         let chunk_info = chunker.calculate_chunk_parameters(total_size, duration);
         
         assert!(chunk_info.seconds_per_chunk > 0.0);
-        assert!(chunk_info.estimated_chunks > 0);
         
-        // Should create approximately 4-5 chunks for 100MB file with 23MB target
-        assert!(chunk_info.estimated_chunks >= 4 && chunk_info.estimated_chunks <= 6);
+        // With 100MB file and ~23MB target chunk size, should have reasonable chunk duration
+        assert!(chunk_info.seconds_per_chunk > 200.0 && chunk_info.seconds_per_chunk < 300.0);
     }
 
     #[test]
