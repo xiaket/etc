@@ -1,0 +1,20 @@
+[package]
+name = "murmur"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.0", features = ["full"] }
+reqwest = { version = "0.12", features = ["json", "multipart"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha256 = "1.5"
+clap = { version = "4.0", features = ["derive"] }
+anyhow = "1.0"
+dotenvy = "0.15"
+env_logger = "0.11"
+
+[dev-dependencies]
+tokio-test = "0.4"
+wiremock = "0.6"
+tempfile = "3.0"

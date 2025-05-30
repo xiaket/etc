@@ -16,4 +16,8 @@ vagrant/*/.vagrant/
 vagrant/*.log
 vagrant/freebsd/*/*.box
 
+ps1/target
+murmur/target
+
 bin/ps1
+bin/murmur
