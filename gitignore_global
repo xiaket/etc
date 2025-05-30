@@ -4,3 +4,4 @@
 .coverage
 *.egg-info
 .manage
+**/.claude/settings.local.json
