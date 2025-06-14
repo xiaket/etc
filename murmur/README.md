@@ -1,10 +1,12 @@
 # Murmur
 
-A command-line tool to transcribe audio files using the OpenAI Whisper API.
+A command-line tool to transcribe audio files using the OpenAI Whisper API, with support for both file transcription and real-time voice recording.
 
 ## Features
 
-- Transcribe audio files using OpenAI's Whisper API
+- **File Transcription**: Transcribe audio files using OpenAI's Whisper API
+- **Voice Recording**: Real-time voice recording and transcription with spacebar control
+- **Text Enhancement**: Automatically improve transcribed text grammar and formatting using OpenAI
 - Support for language specification
 - Automatically handles large audio files by splitting them into chunks
 - Intelligently merges transcripts from multiple chunks with overlap detection
@@ -17,6 +19,7 @@ A command-line tool to transcribe audio files using the OpenAI Whisper API.
 - Rust (latest stable version)
 - FFmpeg (for processing large audio files)
 - OpenAI API key
+- Audio system support (for voice recording mode)
 
 ## Installation
 
@@ -42,19 +45,31 @@ A command-line tool to transcribe audio files using the OpenAI Whisper API.
 
 ## Usage
 
+### File Transcription Mode
 ```bash
 murmur --input <FILE_PATH> [--language <LANGUAGE_CODE>]
 ```
 
+### Voice Recording Mode
+```bash
+murmur [--language <LANGUAGE_CODE>]
+```
+
 ### Arguments:
 
-- `--input`, `-i`: Path to the audio file (MP3 format)
+- `--input`, `-i` (optional): Path to the audio file (MP3 format). If not provided, enters voice recording mode
 - `--language`, `-l` (optional): Language code (e.g., "en" for English, "es" for Spanish)
 
-### Example:
+### Examples:
 
+**File transcription:**
 ```bash
 murmur --input recording.mp3 --language en
+```
+
+**Voice recording (no input file specified):**
+```bash
+murmur --language en
 ```
 
 ## Size Limitations
@@ -66,7 +81,16 @@ murmur --input recording.mp3 --language en
 
 ## Output
 
+### File Transcription Mode
 The transcription will be saved as a text file in the same directory as the input file, with the same name but a `.txt` extension.
+
+### Voice Recording Mode
+- Press and hold the **spacebar** to start recording
+- Release the **spacebar** to stop recording and begin transcription
+- Status messages will show processing progress:
+  - "Waiting for Whisper response..." during transcription
+  - "Waiting for OpenAI response..." during text enhancement
+- The enhanced transcription will be displayed in the terminal and the program will exit normally
 
 ## Debugging
 

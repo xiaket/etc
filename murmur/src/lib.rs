@@ -1,5 +1,5 @@
 //! Murmur - Audio transcription using OpenAI Whisper API
-//! 
+//!
 //! This library provides functionality to transcribe audio files using OpenAI's Whisper API,
 //! with support for large file chunking and caching.
 
@@ -25,7 +25,9 @@ pub use voice_recorder::VoiceRecorder;
 /// Command line arguments
 #[derive(Parser, Debug, Clone)]
 #[command(name = "murmur")]
-#[command(about = "Transcribe MP3 audio files using OpenAI Whisper API or enable voice recording mode")]
+#[command(
+    about = "Transcribe MP3 audio files using OpenAI Whisper API or enable voice recording mode"
+)]
 pub struct Args {
     /// Input MP3 file path (optional - if not provided, enters voice recording mode)
     #[arg(short, long)]
@@ -67,9 +69,9 @@ impl MurmurProcessor {
             Some(input_path) => {
                 // File mode - process existing audio file
                 utils::validate_input_file(input_path).await?;
-                
+
                 let file_size = utils::get_file_size(input_path).await?;
-                
+
                 if file_size <= self.config.max_file_size_bytes() {
                     // Small file - process directly
                     self.process_small_file(args).await
@@ -88,26 +90,44 @@ impl MurmurProcessor {
     async fn process_voice_recording(&self, args: &Args) -> Result<String> {
         // Record audio using voice recorder
         let audio_file = VoiceRecorder::record_with_spacebar().await?;
-        
+
         // Create temporary args with the recorded file
         let mut temp_args = args.clone();
         temp_args.input = Some(audio_file.clone());
-        
+
+        // Show status while waiting for Whisper API
+        print!("\rWaiting for Whisper response...");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
         // Transcribe the recorded audio
         let transcription = self.client.transcribe(&temp_args).await?;
-        
+
+        // Clear the status line
+        print!("\r\x1b[K");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
         // Clean up temporary audio file
         if audio_file.exists() {
             std::fs::remove_file(&audio_file)?;
         }
-        
+
+        // Show status while waiting for OpenAI enhancement
+        print!("\rWaiting for OpenAI response...");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
         // Enhance the transcription using OpenAI
-        self.enhance_transcription(&transcription).await
+        let result = self.enhance_transcription(&transcription).await?;
+
+        // Clear the status line
+        print!("\r\x1b[K");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
+        Ok(result)
     }
 
     async fn enhance_transcription(&self, text: &str) -> Result<String> {
         let prompt = format!(
-            "Please improve and format the following transcribed text. Fix any grammar issues, add proper punctuation, and make it more readable while preserving the original meaning. Output only the improved text without any explanations:\n\n{}", 
+            "Please improve and format the following transcribed text. Fix any grammar issues, make it coherent, add proper punctuation, and make it more readable while preserving the original meaning. Output only the improved text without any explanations:\n\n{}",
             text
         );
 
@@ -122,23 +142,27 @@ impl MurmurProcessor {
     async fn process_large_file(&self, args: &Args) -> Result<String> {
         let file_path = args.input.as_ref().unwrap();
         let file_size_mb = utils::bytes_to_mb(utils::get_file_size(file_path).await?);
-        
+
         println!("Processing large file ({:.1} MB)...", file_size_mb);
 
         // Calculate file hash and handle cache validation
         let file_hash = utils::calculate_file_hash(file_path).await?;
-        self.cache_manager.validate_and_cleanup_if_needed(&file_hash).await?;
+        self.cache_manager
+            .validate_and_cleanup_if_needed(&file_hash)
+            .await?;
 
         // Split the audio file into chunks
         let chunks = self.chunker.split_audio_file(file_path).await?;
-        
+
         // Create metadata file
-        self.cache_manager.create_metadata_file(
-            file_path,
-            utils::get_file_size(file_path).await?,
-            &file_hash,
-            chunks.len(),
-        ).await?;
+        self.cache_manager
+            .create_metadata_file(
+                file_path,
+                utils::get_file_size(file_path).await?,
+                &file_hash,
+                chunks.len(),
+            )
+            .await?;
 
         // Process each chunk with size info
         let mut transcripts = Vec::new();
@@ -146,15 +170,20 @@ impl MurmurProcessor {
             // Get chunk size for display
             let chunk_size = utils::get_file_size(std::path::Path::new(chunk_path)).await?;
             let chunk_size_mb = utils::bytes_to_mb(chunk_size);
-            
-            print!("\r\x1b[KProcessing... {}/{} ({:.1}MB)", i + 1, chunks.len(), chunk_size_mb);
+
+            print!(
+                "\r\x1b[KProcessing... {}/{} ({:.1}MB)",
+                i + 1,
+                chunks.len(),
+                chunk_size_mb
+            );
             std::io::Write::flush(&mut std::io::stdout()).unwrap();
 
             let text = self.process_chunk(args, chunk_path, i).await?;
             transcripts.push(text);
         }
-        
-        print!("\r\x1b[K");  // Clear from cursor to end of line
+
+        print!("\r\x1b[K"); // Clear from cursor to end of line
 
         // Clean up temporary files
         self.cache_manager.cleanup_temp_files().await?;
@@ -163,7 +192,12 @@ impl MurmurProcessor {
         Ok(self.merger.merge_transcripts(transcripts))
     }
 
-    async fn process_chunk(&self, args: &Args, chunk_path: &str, chunk_index: usize) -> Result<String> {
+    async fn process_chunk(
+        &self,
+        args: &Args,
+        chunk_path: &str,
+        chunk_index: usize,
+    ) -> Result<String> {
         // Check cache first
         if let Some(cached_text) = self.cache_manager.get_cached_transcript(chunk_path).await? {
             return Ok(cached_text);
@@ -176,7 +210,9 @@ impl MurmurProcessor {
         match self.client.transcribe(&chunk_args).await {
             Ok(text) => {
                 // Cache the result
-                self.cache_manager.save_transcript_cache(chunk_path, &text).await?;
+                self.cache_manager
+                    .save_transcript_cache(chunk_path, &text)
+                    .await?;
                 Ok(text)
             }
             Err(e) => {
@@ -186,7 +222,11 @@ impl MurmurProcessor {
         }
     }
 
-    pub async fn save_transcription(&self, input_path: &std::path::Path, content: &str) -> Result<PathBuf> {
+    pub async fn save_transcription(
+        &self,
+        input_path: &std::path::Path,
+        content: &str,
+    ) -> Result<PathBuf> {
         utils::save_transcription(input_path, content).await
     }
 }
