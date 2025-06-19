@@ -2,7 +2,7 @@ use anyhow::{Context, Result};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use cpal::{Device, Stream, StreamConfig};
 use crossterm::{
-    event::{self, Event, KeyCode, KeyEvent},
+    event::{self, Event, KeyCode, KeyEvent, KeyModifiers},
     terminal::{disable_raw_mode, enable_raw_mode},
 };
 use hound::{WavSpec, WavWriter};
@@ -30,6 +30,59 @@ impl VoiceRecorder {
             .into();
         
         Ok(Self { device, config })
+    }
+
+    pub async fn record_directly() -> Result<PathBuf> {
+        println!("Recording...");
+
+        let recorder = Self::new()?;
+        let temp_dir = std::env::temp_dir();
+        let audio_file = temp_dir.join("murmur_recording.wav");
+
+        enable_raw_mode()?;
+        
+        let audio_data: Arc<Mutex<Vec<f32>>> = Arc::new(Mutex::new(Vec::new()));
+        
+        // Start recording immediately
+        let data_clone = Arc::clone(&audio_data);
+        data_clone.lock().unwrap().clear();
+        let stream = recorder.start_recording(data_clone)?;
+
+        // Wait for 'q' key to stop recording or Ctrl+C to exit
+        loop {
+            if event::poll(Duration::from_millis(100))? {
+                if let Event::Key(KeyEvent { code, modifiers, .. }) = event::read()? {
+                    match code {
+                        KeyCode::Char('q') => {
+                            break;
+                        }
+                        KeyCode::Char('c') if modifiers.contains(KeyModifiers::CONTROL) => {
+                            // Ctrl+C pressed - exit the entire program
+                            disable_raw_mode()?;
+                            std::process::exit(0);
+                        }
+                        _ => {}
+                    }
+                }
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+
+        // Stop recording
+        drop(stream);
+        
+        let data = audio_data.lock().unwrap();
+        let result = if !data.is_empty() {
+            Self::save_audio_data(&data, &audio_file, &recorder.config)
+                .context("Failed to save audio data")
+                .map(|_| audio_file)
+        } else {
+            Err(anyhow::anyhow!("No audio data recorded"))
+        };
+        
+        // Always cleanup terminal state
+        disable_raw_mode()?;
+        result
     }
 
     pub async fn record_with_spacebar() -> Result<PathBuf> {

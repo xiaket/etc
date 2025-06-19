@@ -36,6 +36,10 @@ pub struct Args {
     /// Language code (e.g., 'en' for English, 'es' for Spanish)
     #[arg(short, long)]
     pub language: Option<String>,
+
+    /// Watch mode - continuously record and transcribe audio
+    #[arg(short = 'w', long)]
+    pub watch: bool,
 }
 
 /// Main transcription orchestrator
@@ -65,26 +69,91 @@ impl MurmurProcessor {
     }
 
     pub async fn process(&self, args: &Args) -> Result<String> {
-        match &args.input {
-            Some(input_path) => {
-                // File mode - process existing audio file
-                utils::validate_input_file(input_path).await?;
+        if args.watch {
+            // Watch mode - continuous recording
+            self.process_watch_mode(args).await
+        } else {
+            match &args.input {
+                Some(input_path) => {
+                    // File mode - process existing audio file
+                    utils::validate_input_file(input_path).await?;
 
-                let file_size = utils::get_file_size(input_path).await?;
+                    let file_size = utils::get_file_size(input_path).await?;
 
-                if file_size <= self.config.max_file_size_bytes() {
-                    // Small file - process directly
-                    self.process_small_file(args).await
-                } else {
-                    // Large file - use chunking strategy
-                    self.process_large_file(args).await
+                    if file_size <= self.config.max_file_size_bytes() {
+                        // Small file - process directly
+                        self.process_small_file(args).await
+                    } else {
+                        // Large file - use chunking strategy
+                        self.process_large_file(args).await
+                    }
+                }
+                None => {
+                    // Voice recording mode
+                    self.process_voice_recording(args).await
                 }
             }
-            None => {
-                // Voice recording mode
-                self.process_voice_recording(args).await
+        }
+    }
+
+    async fn process_watch_mode(&self, args: &Args) -> Result<String> {
+        println!("Watch mode: continuous recording and transcription.");
+        println!("Press 'q' to stop recording and transcribe, Ctrl+C to exit.");
+        println!();
+        
+        loop {
+            // Process voice recording directly
+            match self.process_watch_recording(args).await {
+                Ok(transcription) => {
+                    // Print the transcription with a timestamp
+                    let timestamp = chrono::Local::now().format("%H:%M:%S");
+                    println!("[{}] {}", timestamp, transcription);
+                    println!(); // Add blank line for readability
+                }
+                Err(e) => {
+                    eprintln!("Error during transcription: {}", e);
+                    // Continue watching even if one transcription fails
+                }
             }
         }
+    }
+
+    async fn process_watch_recording(&self, args: &Args) -> Result<String> {
+        // Record audio using direct recording method
+        let audio_file = VoiceRecorder::record_directly().await?;
+
+        // Create temporary args with the recorded file
+        let mut temp_args = args.clone();
+        temp_args.input = Some(audio_file.clone());
+
+        // Show status while waiting for Whisper API
+        print!("Waiting for Whisper response...");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
+        // Transcribe the recorded audio
+        let transcription = self.client.transcribe(&temp_args).await?;
+
+        // Clear the status line
+        print!("\r\x1b[K");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
+        // Clean up temporary audio file
+        if audio_file.exists() {
+            std::fs::remove_file(&audio_file)?;
+        }
+
+        // Show status while waiting for OpenAI enhancement
+        print!("Waiting for OpenAI response...");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
+        // Enhance the transcription using OpenAI
+        let result = self.enhance_transcription(&transcription).await?;
+
+        // Clear the status line
+        print!("\r\x1b[K");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+
+        Ok(result)
     }
 
     async fn process_voice_recording(&self, args: &Args) -> Result<String> {
@@ -228,5 +297,64 @@ impl MurmurProcessor {
         content: &str,
     ) -> Result<PathBuf> {
         utils::save_transcription(input_path, content).await
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+
+    #[test]
+    fn test_args_default_values() {
+        let args = Args {
+            input: None,
+            language: None,
+            watch: false,
+        };
+        
+        assert_eq!(args.input, None);
+        assert_eq!(args.language, None);
+        assert_eq!(args.watch, false);
+    }
+
+    #[test]
+    fn test_args_with_watch_mode() {
+        let args = Args {
+            input: None,
+            language: Some("en".to_string()),
+            watch: true,
+        };
+        
+        assert_eq!(args.input, None);
+        assert_eq!(args.language, Some("en".to_string()));
+        assert_eq!(args.watch, true);
+    }
+
+    #[test]
+    fn test_args_with_input_file() {
+        let args = Args {
+            input: Some(PathBuf::from("test.mp3")),
+            language: Some("zh".to_string()),
+            watch: false,
+        };
+        
+        assert_eq!(args.input, Some(PathBuf::from("test.mp3")));
+        assert_eq!(args.language, Some("zh".to_string()));
+        assert_eq!(args.watch, false);
+    }
+
+    #[test]
+    fn test_watch_mode_conflicts_with_input() {
+        // This is a logical test - watch mode should typically be used without input file
+        let args = Args {
+            input: Some(PathBuf::from("test.mp3")),
+            language: None,
+            watch: true,
+        };
+        
+        // Both input and watch are set - this should work but watch mode will take precedence
+        assert_eq!(args.input, Some(PathBuf::from("test.mp3")));
+        assert_eq!(args.watch, true);
     }
 }

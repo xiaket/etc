@@ -16,7 +16,9 @@ pub struct WhisperClient {
 impl WhisperClient {
     pub fn new(api_key: String, config: &Config) -> Result<Self> {
         let client = reqwest::Client::builder()
-            .timeout(std::time::Duration::from_secs(config.whisper_timeout_seconds))
+            .timeout(std::time::Duration::from_secs(
+                config.whisper_timeout_seconds,
+            ))
             .build()?;
 
         Ok(Self {
@@ -27,7 +29,9 @@ impl WhisperClient {
     }
 
     pub async fn transcribe(&self, args: &Args) -> Result<String> {
-        let input_path = args.input.as_ref()
+        let input_path = args
+            .input
+            .as_ref()
             .context("Input file path is required for transcription")?;
 
         // Validate input file exists
@@ -37,7 +41,7 @@ impl WhisperClient {
 
         let file_size = utils::get_file_size(input_path).await?;
         let file_size_mb = utils::bytes_to_mb(file_size);
-        
+
         // Check size limit for direct API calls
         if file_size_mb > utils::MAX_FILE_SIZE_MB as f64 {
             anyhow::bail!(
@@ -73,7 +77,12 @@ impl WhisperClient {
         path.to_string_lossy().contains("murmur_recording")
     }
 
-    fn build_form(&self, file_name: &str, file_bytes: Vec<u8>, language: &Option<String>) -> Result<Form> {
+    fn build_form(
+        &self,
+        file_name: &str,
+        file_bytes: Vec<u8>,
+        language: &Option<String>,
+    ) -> Result<Form> {
         let mut form = Form::new()
             .text("model", "whisper-1")
             .text("response_format", "text")
@@ -106,9 +115,11 @@ impl WhisperClient {
         if !status.is_success() {
             let error_text = response.text().await?;
             let error_message = match status.as_u16() {
-                401 => "Invalid API key. Please check your OPENAI_API_KEY environment variable.".to_string(),
+                401 => "Invalid API key. Please check your OPENAI_API_KEY environment variable."
+                    .to_string(),
                 429 => "Rate limit exceeded. Please wait a moment and try again.".to_string(),
-                413 => "File too large for API. This shouldn't happen with proper chunking.".to_string(),
+                413 => "File too large for API. This shouldn't happen with proper chunking."
+                    .to_string(),
                 400 => format!("Bad request: {}", error_text),
                 500..=599 => "OpenAI server error. Please try again later.".to_string(),
                 _ => format!("API error ({}): {}", status, error_text),
@@ -155,7 +166,9 @@ impl WhisperClient {
             anyhow::bail!("{}", error_message);
         }
 
-        let response_json: serde_json::Value = response.json().await
+        let response_json: serde_json::Value = response
+            .json()
+            .await
             .context("Failed to parse enhancement response")?;
 
         let enhanced_text = response_json["choices"][0]["message"]["content"]
@@ -201,6 +214,7 @@ mod tests {
         let args = Args {
             input: Some(temp_file.path().to_path_buf()),
             language: Some("en".to_string()),
+            watch: false,
         };
 
         let result = client.transcribe(&args).await;
