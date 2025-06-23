@@ -8,7 +8,6 @@ local features = {
   a = "Arc",
   b = "Books",
   c = "Canva",
-  d = "Dash",
   f = "Finder",
   g = "Cherry Studio",
   k = "Kitty",
