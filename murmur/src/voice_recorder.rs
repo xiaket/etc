@@ -100,8 +100,13 @@ impl VoiceRecorder {
 
         loop {
             if event::poll(Duration::from_millis(50))? {
-                if let Event::Key(KeyEvent { code, .. }) = event::read()? {
+                if let Event::Key(KeyEvent { code, modifiers, .. }) = event::read()? {
                     match code {
+                        KeyCode::Char('c') if modifiers.contains(KeyModifiers::CONTROL) => {
+                            // Ctrl+C pressed - exit the entire program
+                            disable_raw_mode()?;
+                            std::process::exit(0);
+                        }
                         KeyCode::Char(' ') if !recording => {
                             print!("\r\x1b[2K\x1b[1G\x1b[0mRecording...");
                             std::io::stdout().flush().unwrap();
