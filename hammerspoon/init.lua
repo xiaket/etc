@@ -5,7 +5,7 @@ local is_switch = require("is_switch")
 
 local features = {
   -- Simple app maps
-  a = "Arc",
+  a = "Safari",
   b = "Books",
   c = "Canva",
   f = "Finder",
@@ -14,16 +14,13 @@ local features = {
   l = "Slack",
   m = "Mail",
   n = "Notes",
-  o = "Obsidian",
   s = "Superlist",
-  x = "Firefox",
   w = "WeChat",
-  z = "Zed",
+  z = "zoom.us",
 
   -- uppercase as we are running low on characters
   C = "Calendar",
   M = "Music",
-  Z = "zoom.us",
 
   -- Debug
   h = function()
