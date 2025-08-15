@@ -7,7 +7,7 @@ umask 0022
 # Global settings.
 
 # Prepend cd to directory names automatically
-shopt -s autocd 2>/dev/null
+shopt -s autocd 2> /dev/null
 
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
@@ -37,7 +37,7 @@ etcdir=$xiaketDIR"/etc"
 altdir=$xiaketDIR"/alt"
 
 # PATH ordering policy: Alt dir things > My own script > Homebrew > System, bin > sbin
-export PATH="$altdir/bin:${HOME}/.xiaket/etc/bin:${HOME}/.xiaket/go/bin:$brewdir/bin:$brewdir/opt/ruby/bin:$brewdir/sbin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin:${HOME}/.cargo/bin:$brewdir/opt/coreutils/bin:$brewdir/opt/fzf/bin:$HOME/.rye/shims:${HOME}/Library/Python/3.11/bin:${HOME}/.local/bin"
+export PATH="$altdir/bin:${HOME}/.xiaket/etc/bin:${HOME}/.xiaket/go/bin:$brewdir/bin:$brewdir/opt/ruby/bin:$brewdir/sbin:/usr/local/bin:/bin:/usr/bin:/usr/sbin:/sbin:${HOME}/.cargo/bin:$brewdir/opt/coreutils/bin:$brewdir/opt/fzf/bin:$HOME/.rye/shims:${HOME}/Library/Python/3.11/bin:${HOME}/.local/bin:${HOME}/.claude/local"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
 export LANG=en_US.UTF-8
 # Fix Chinese translation in bash
@@ -136,7 +136,7 @@ _atuin_precmd() {
 
   [[ -z "${ATUIN_HISTORY_ID}" ]] && return
 
-  (ATUIN_LOG=error atuin history end --exit "${EXIT}" -- "${ATUIN_HISTORY_ID}" &) >/dev/null 2>&1
+  (ATUIN_LOG=error atuin history end --exit "${EXIT}" -- "${ATUIN_HISTORY_ID}" &) > /dev/null 2>&1
   export ATUIN_HISTORY_ID=""
 }
 
@@ -176,22 +176,30 @@ bind -x '"\eOA": __atuin_history --shell-up-key-binding'
 #####################
 # ssh agent forward #
 #####################
-if ls -l ~/.ssh/*.priv >/dev/null 2>&1; then
+if ls -l ~/.ssh/*.priv > /dev/null 2>&1; then
   SSH_ENV="$HOME/.ssh/environment"
 
   function start_agent {
     content=$(/usr/bin/ssh-agent | sed "/^echo/d")
-    [ -f "$SSH_ENV" ] && return 0 || echo "$content" >"$SSH_ENV"
+    [ -f "$SSH_ENV" ] && return 0 || echo "$content" > "$SSH_ENV"
     chmod 600 "${SSH_ENV}"
-    . "${SSH_ENV}" >/dev/null
+    . "${SSH_ENV}" > /dev/null
     /usr/bin/ssh-add ~/.ssh/*.priv
   }
 
-  # Source SSH settings, if applicable
+  # Define a lock file
+  LOCKFILE=~/.xiaket/var/tmp/ssh.lock
+
+  # Create the directory if it doesn't exist
   [ -d ~/.xiaket/var/tmp ] || mkdir -p ~/.xiaket/var/tmp
-  lockfile ~/.xiaket/var/tmp/ssh.lock
+
+  # Use flock for locking
+  exec 200> "$LOCKFILE"
+  flock -n 200 || exit 1
+  trap 'rm -f "$LOCKFILE"; exit $?' INT TERM EXIT
+
   if [ -f "${SSH_ENV}" ]; then
-    . "${SSH_ENV}" >/dev/null
+    . "${SSH_ENV}" > /dev/null
     if ! pgrep -q "ssh-agent$"; then
       rm -f "${SSH_ENV}"
       start_agent
@@ -199,6 +207,8 @@ if ls -l ~/.ssh/*.priv >/dev/null 2>&1; then
   else
     start_agent
   fi
-fi
 
-rm -f ~/.xiaket/var/tmp/ssh.lock
+  # Remove lock file
+  rm -f "$LOCKFILE"
+  trap - INT TERM EXIT
+fi
