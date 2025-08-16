@@ -24,11 +24,12 @@ impl VoiceRecorder {
         let device = host
             .default_input_device()
             .context("No input device available. Please check microphone permissions.")?;
-        
-        let config = device.default_input_config()
+
+        let config = device
+            .default_input_config()
             .context("Failed to get default input config")?
             .into();
-        
+
         Ok(Self { device, config })
     }
 
@@ -40,9 +41,9 @@ impl VoiceRecorder {
         let audio_file = temp_dir.join("murmur_recording.wav");
 
         enable_raw_mode()?;
-        
+
         let audio_data: Arc<Mutex<Vec<f32>>> = Arc::new(Mutex::new(Vec::new()));
-        
+
         // Start recording immediately
         let data_clone = Arc::clone(&audio_data);
         data_clone.lock().unwrap().clear();
@@ -51,7 +52,10 @@ impl VoiceRecorder {
         // Wait for 'q' key to stop recording or Ctrl+C to exit
         loop {
             if event::poll(Duration::from_millis(100))? {
-                if let Event::Key(KeyEvent { code, modifiers, .. }) = event::read()? {
+                if let Event::Key(KeyEvent {
+                    code, modifiers, ..
+                }) = event::read()?
+                {
                     match code {
                         KeyCode::Char('q') => {
                             break;
@@ -70,7 +74,7 @@ impl VoiceRecorder {
 
         // Stop recording
         drop(stream);
-        
+
         let data = audio_data.lock().unwrap();
         let result = if !data.is_empty() {
             Self::save_audio_data(&data, &audio_file, &recorder.config)
@@ -79,7 +83,7 @@ impl VoiceRecorder {
         } else {
             Err(anyhow::anyhow!("No audio data recorded"))
         };
-        
+
         // Always cleanup terminal state
         disable_raw_mode()?;
         result
@@ -93,14 +97,17 @@ impl VoiceRecorder {
         let audio_file = temp_dir.join("murmur_recording.wav");
 
         enable_raw_mode()?;
-        
+
         let mut recording = false;
         let mut stream: Option<Stream> = None;
         let audio_data: Arc<Mutex<Vec<f32>>> = Arc::new(Mutex::new(Vec::new()));
 
         loop {
             if event::poll(Duration::from_millis(50))? {
-                if let Event::Key(KeyEvent { code, modifiers, .. }) = event::read()? {
+                if let Event::Key(KeyEvent {
+                    code, modifiers, ..
+                }) = event::read()?
+                {
                     match code {
                         KeyCode::Char('c') if modifiers.contains(KeyModifiers::CONTROL) => {
                             // Ctrl+C pressed - exit the entire program
@@ -111,15 +118,19 @@ impl VoiceRecorder {
                             print!("\r\x1b[2K\x1b[1G\x1b[0mRecording...");
                             std::io::stdout().flush().unwrap();
                             recording = true;
-                            
+
                             let data_clone = Arc::clone(&audio_data);
                             data_clone.lock().unwrap().clear();
 
                             let stream_result = recorder.start_recording(data_clone)?;
                             stream = Some(stream_result);
-                            
+
                             while event::poll(Duration::from_millis(1))? {
-                                if let Event::Key(KeyEvent { code: KeyCode::Char(' '), .. }) = event::read()? {
+                                if let Event::Key(KeyEvent {
+                                    code: KeyCode::Char(' '),
+                                    ..
+                                }) = event::read()?
+                                {
                                 } else {
                                     break;
                                 }
@@ -130,12 +141,12 @@ impl VoiceRecorder {
                 }
             } else if recording {
                 thread::sleep(Duration::from_millis(100));
-                
+
                 // Double-check that space key is actually released
                 if !event::poll(Duration::from_millis(10))? {
                     print!("\r\x1b[2K\x1b[0G");
                     std::io::stdout().flush().unwrap();
-                    
+
                     if let Some(s) = stream.take() {
                         drop(s);
                     }
@@ -148,28 +159,31 @@ impl VoiceRecorder {
                     } else {
                         Err(anyhow::anyhow!("No audio data recorded"))
                     };
-                    
+
                     // Always cleanup terminal state
                     disable_raw_mode()?;
                     return result;
                 }
             }
-            
+
             thread::sleep(Duration::from_millis(10));
         }
     }
 
     fn start_recording(&self, audio_data: Arc<Mutex<Vec<f32>>>) -> Result<Stream> {
-        let stream = self.device.build_input_stream(
-            &self.config,
-            move |data: &[f32], _: &cpal::InputCallbackInfo| {
-                if let Ok(mut buffer) = audio_data.lock() {
-                    buffer.extend_from_slice(data);
-                }
-            },
-            |err| eprintln!("Audio stream error: {}", err),
-            None,
-        ).context("Failed to build input stream")?;
+        let stream = self
+            .device
+            .build_input_stream(
+                &self.config,
+                move |data: &[f32], _: &cpal::InputCallbackInfo| {
+                    if let Ok(mut buffer) = audio_data.lock() {
+                        buffer.extend_from_slice(data);
+                    }
+                },
+                |err| eprintln!("Audio stream error: {}", err),
+                None,
+            )
+            .context("Failed to build input stream")?;
 
         stream.play().context("Failed to start audio stream")?;
         Ok(stream)

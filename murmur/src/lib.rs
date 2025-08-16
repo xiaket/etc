@@ -19,7 +19,7 @@ pub use cache::CacheManager;
 pub use chunking::AudioChunker;
 pub use client::WhisperClient;
 pub use transcription::TranscriptMerger;
-pub use utils::{Config, FileMetadata};
+pub use utils::{Config, FileCleanupHelper, FileMetadata, ProgressDisplay, StatusLineManager};
 pub use voice_recorder::VoiceRecorder;
 
 /// Command line arguments
@@ -100,7 +100,7 @@ impl MurmurProcessor {
         println!("Watch mode: continuous recording and transcription.");
         println!("Press 'q' to stop recording and transcribe, Ctrl+C to exit.");
         println!();
-        
+
         loop {
             // Process voice recording directly
             match self.process_watch_recording(args).await {
@@ -121,75 +121,56 @@ impl MurmurProcessor {
     async fn process_watch_recording(&self, args: &Args) -> Result<String> {
         // Record audio using direct recording method
         let audio_file = VoiceRecorder::record_directly().await?;
-
-        // Create temporary args with the recorded file
-        let mut temp_args = args.clone();
-        temp_args.input = Some(audio_file.clone());
-
-        // Show status while waiting for Whisper API
-        print!("Waiting for Whisper response...");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
-
-        // Transcribe the recorded audio
-        let transcription = self.client.transcribe(&temp_args).await?;
-
-        // Clear the status line
-        print!("\r\x1b[K");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
-
-        // Clean up temporary audio file
-        if audio_file.exists() {
-            std::fs::remove_file(&audio_file)?;
-        }
-
-        // Show status while waiting for OpenAI enhancement
-        print!("Waiting for OpenAI response...");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
-
-        // Enhance the transcription using OpenAI
-        let result = self.enhance_transcription(&transcription).await?;
-
-        // Clear the status line
-        print!("\r\x1b[K");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
-
-        Ok(result)
+        self.process_recorded_audio(args, audio_file, true).await
     }
 
     async fn process_voice_recording(&self, args: &Args) -> Result<String> {
         // Record audio using voice recorder
         let audio_file = VoiceRecorder::record_with_spacebar().await?;
+        self.process_recorded_audio(args, audio_file, false).await
+    }
 
+    async fn process_recorded_audio(
+        &self,
+        args: &Args,
+        audio_file: std::path::PathBuf,
+        is_watch_mode: bool,
+    ) -> Result<String> {
         // Create temporary args with the recorded file
         let mut temp_args = args.clone();
         temp_args.input = Some(audio_file.clone());
 
         // Show status while waiting for Whisper API
-        print!("\rWaiting for Whisper response...");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+        StatusLineManager::show_status("Waiting for Whisper response...");
 
-        // Transcribe the recorded audio
-        let transcription = self.client.transcribe(&temp_args).await?;
+        // Choose transcription method based on file size and mode
+        let transcription = if is_watch_mode {
+            // Watch mode: check file size and use appropriate processing method
+            let file_size = utils::get_file_size(&audio_file).await?;
+            if file_size <= self.config.max_file_size_bytes() {
+                self.client.transcribe(&temp_args).await?
+            } else {
+                self.process_large_file_transcription(&temp_args).await?
+            }
+        } else {
+            // Voice recording mode: process directly
+            self.client.transcribe(&temp_args).await?
+        };
 
         // Clear the status line
-        print!("\r\x1b[K");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+        StatusLineManager::clear_status();
 
         // Clean up temporary audio file
-        if audio_file.exists() {
-            std::fs::remove_file(&audio_file)?;
-        }
+        FileCleanupHelper::cleanup_file(&audio_file).await?;
 
         // Show status while waiting for OpenAI enhancement
-        print!("\rWaiting for OpenAI response...");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+        StatusLineManager::show_status("Waiting for OpenAI response...");
 
         // Enhance the transcription using OpenAI
         let result = self.enhance_transcription(&transcription).await?;
 
         // Clear the status line
-        print!("\r\x1b[K");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+        StatusLineManager::clear_status();
 
         Ok(result)
     }
@@ -209,55 +190,88 @@ impl MurmurProcessor {
     }
 
     async fn process_large_file(&self, args: &Args) -> Result<String> {
+        self.process_large_file_internal(args, true).await
+    }
+
+    async fn process_large_file_transcription(&self, args: &Args) -> Result<String> {
+        self.process_large_file_internal(args, false).await
+    }
+
+    async fn process_large_file_internal(&self, args: &Args, use_cache: bool) -> Result<String> {
         let file_path = args.input.as_ref().unwrap();
-        let file_size_mb = utils::bytes_to_mb(utils::get_file_size(file_path).await?);
 
-        println!("Processing large file ({:.1} MB)...", file_size_mb);
+        if use_cache {
+            let file_size_mb = utils::bytes_to_mb(utils::get_file_size(file_path).await?);
+            println!("Processing large file ({:.1} MB)...", file_size_mb);
 
-        // Calculate file hash and handle cache validation
-        let file_hash = utils::calculate_file_hash(file_path).await?;
-        self.cache_manager
-            .validate_and_cleanup_if_needed(&file_hash)
-            .await?;
+            // Calculate file hash and handle cache validation
+            let file_hash = utils::calculate_file_hash(file_path).await?;
+            self.cache_manager
+                .validate_and_cleanup_if_needed(&file_hash)
+                .await?;
 
-        // Split the audio file into chunks
-        let chunks = self.chunker.split_audio_file(file_path).await?;
+            // Create metadata file after splitting
+            let chunks = self.chunker.split_audio_file(file_path).await?;
+            self.cache_manager
+                .create_metadata_file(
+                    file_path,
+                    utils::get_file_size(file_path).await?,
+                    &file_hash,
+                    chunks.len(),
+                )
+                .await?;
 
-        // Create metadata file
-        self.cache_manager
-            .create_metadata_file(
-                file_path,
-                utils::get_file_size(file_path).await?,
-                &file_hash,
-                chunks.len(),
-            )
-            .await?;
+            self.process_chunks_with_cache(args, chunks).await
+        } else {
+            // For temporary recordings - no cache, direct processing
+            let chunks = self.chunker.split_audio_file(file_path).await?;
+            self.process_chunks_without_cache(args, chunks).await
+        }
+    }
 
-        // Process each chunk with size info
+    async fn process_chunks_with_cache(&self, args: &Args, chunks: Vec<String>) -> Result<String> {
         let mut transcripts = Vec::new();
         for (i, chunk_path) in chunks.iter().enumerate() {
-            // Get chunk size for display
             let chunk_size = utils::get_file_size(std::path::Path::new(chunk_path)).await?;
             let chunk_size_mb = utils::bytes_to_mb(chunk_size);
 
-            print!(
-                "\r\x1b[KProcessing... {}/{} ({:.1}MB)",
-                i + 1,
-                chunks.len(),
-                chunk_size_mb
-            );
-            std::io::Write::flush(&mut std::io::stdout()).unwrap();
+            ProgressDisplay::show_chunk_progress(i + 1, chunks.len(), chunk_size_mb);
 
             let text = self.process_chunk(args, chunk_path, i).await?;
             transcripts.push(text);
         }
 
-        print!("\r\x1b[K"); // Clear from cursor to end of line
-
-        // Clean up temporary files
+        ProgressDisplay::clear_progress();
         self.cache_manager.cleanup_temp_files().await?;
+        Ok(self.merger.merge_transcripts(transcripts))
+    }
 
-        // Merge transcripts
+    async fn process_chunks_without_cache(
+        &self,
+        args: &Args,
+        chunks: Vec<String>,
+    ) -> Result<String> {
+        let mut transcripts = Vec::new();
+        for (i, chunk_path) in chunks.iter().enumerate() {
+            let chunk_size = utils::get_file_size(std::path::Path::new(chunk_path)).await?;
+            let chunk_size_mb = utils::bytes_to_mb(chunk_size);
+
+            ProgressDisplay::show_chunk_progress(i + 1, chunks.len(), chunk_size_mb);
+
+            // Process chunk directly without caching
+            let mut chunk_args = args.clone();
+            chunk_args.input = Some(std::path::PathBuf::from(chunk_path));
+            let text = self.client.transcribe(&chunk_args).await?;
+            transcripts.push(text);
+        }
+
+        ProgressDisplay::clear_progress();
+
+        // Clean up temporary chunk files
+        let chunk_paths: Vec<std::path::PathBuf> =
+            chunks.into_iter().map(std::path::PathBuf::from).collect();
+        FileCleanupHelper::cleanup_files(&chunk_paths).await?;
+
         Ok(self.merger.merge_transcripts(transcripts))
     }
 
@@ -298,6 +312,32 @@ impl MurmurProcessor {
     ) -> Result<PathBuf> {
         utils::save_transcription(input_path, content).await
     }
+
+    /// Handle output based on the mode and arguments
+    pub async fn handle_output(&self, args: &Args, transcription: &str) -> Result<()> {
+        if args.watch {
+            // Watch mode - transcription is already printed in the loop, just exit gracefully
+            Ok(())
+        } else {
+            match &args.input {
+                Some(input_path) => {
+                    // File mode - save to file
+                    let output_path = self.save_transcription(input_path, transcription).await?;
+                    println!(
+                        "Processing complete: {:?}",
+                        output_path.file_name().unwrap_or_default()
+                    );
+                    Ok(())
+                }
+                None => {
+                    // Voice recording mode - output to stdout
+                    print!("\r");
+                    println!("{}", transcription);
+                    Ok(())
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -312,7 +352,7 @@ mod tests {
             language: None,
             watch: false,
         };
-        
+
         assert_eq!(args.input, None);
         assert_eq!(args.language, None);
         assert_eq!(args.watch, false);
@@ -325,7 +365,7 @@ mod tests {
             language: Some("en".to_string()),
             watch: true,
         };
-        
+
         assert_eq!(args.input, None);
         assert_eq!(args.language, Some("en".to_string()));
         assert_eq!(args.watch, true);
@@ -338,7 +378,7 @@ mod tests {
             language: Some("zh".to_string()),
             watch: false,
         };
-        
+
         assert_eq!(args.input, Some(PathBuf::from("test.mp3")));
         assert_eq!(args.language, Some("zh".to_string()));
         assert_eq!(args.watch, false);
@@ -352,7 +392,7 @@ mod tests {
             language: None,
             watch: true,
         };
-        
+
         // Both input and watch are set - this should work but watch mode will take precedence
         assert_eq!(args.input, Some(PathBuf::from("test.mp3")));
         assert_eq!(args.watch, true);

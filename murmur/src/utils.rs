@@ -82,14 +82,17 @@ pub async fn validate_input_file(file_path: &Path) -> Result<()> {
     if !file_path.exists() {
         anyhow::bail!("Input file {:?} does not exist", file_path);
     }
-    
+
     // Check file extension
     match file_path.extension().and_then(|ext| ext.to_str()) {
-        Some(ext) if ext.to_lowercase() == "mp3" => {},
-        Some(ext) => anyhow::bail!("Unsupported file format: .{}. Only MP3 files are supported.", ext),
+        Some(ext) if ext.to_lowercase() == "mp3" => {}
+        Some(ext) => anyhow::bail!(
+            "Unsupported file format: .{}. Only MP3 files are supported.",
+            ext
+        ),
         None => anyhow::bail!("File has no extension. Only MP3 files are supported."),
     }
-    
+
     Ok(())
 }
 
@@ -119,6 +122,70 @@ pub fn current_timestamp() -> u64 {
         .as_secs()
 }
 
+/// Status line manager for consistent terminal output handling
+pub struct StatusLineManager;
+
+impl StatusLineManager {
+    /// Display a status message with spinner
+    pub fn show_status(message: &str) {
+        print!("{}", message);
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+    }
+
+    /// Clear the current status line
+    pub fn clear_status() {
+        print!("\r\x1b[K");
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+    }
+
+    /// Show status with carriage return prefix (for updates)
+    pub fn update_status(message: &str) {
+        print!("\r{}", message);
+        std::io::Write::flush(&mut std::io::stdout()).unwrap();
+    }
+}
+
+/// File cleanup helper for temporary files
+pub struct FileCleanupHelper;
+
+impl FileCleanupHelper {
+    /// Clean up a single temporary file if it exists
+    pub async fn cleanup_file(file_path: &std::path::Path) -> Result<()> {
+        if file_path.exists() {
+            tokio::fs::remove_file(file_path)
+                .await
+                .with_context(|| format!("Failed to remove temporary file: {:?}", file_path))?;
+        }
+        Ok(())
+    }
+
+    /// Clean up multiple temporary files
+    pub async fn cleanup_files(file_paths: &[std::path::PathBuf]) -> Result<()> {
+        for file_path in file_paths {
+            Self::cleanup_file(file_path).await?;
+        }
+        Ok(())
+    }
+}
+
+/// Progress display helper for chunk processing
+pub struct ProgressDisplay;
+
+impl ProgressDisplay {
+    /// Display processing progress for chunks
+    pub fn show_chunk_progress(current: usize, total: usize, chunk_size_mb: f64) {
+        StatusLineManager::update_status(&format!(
+            "\x1b[KProcessing... {}/{} ({:.1}MB)",
+            current, total, chunk_size_mb
+        ));
+    }
+
+    /// Clear progress display
+    pub fn clear_progress() {
+        StatusLineManager::clear_status();
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -134,7 +201,7 @@ mod tests {
 
         let result = calculate_file_hash(temp_file.path()).await;
         assert!(result.is_ok());
-        
+
         // SHA256 of "Hello, world!" should be consistent
         let expected_hash = "315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3";
         assert_eq!(result.unwrap(), expected_hash);
@@ -170,17 +237,17 @@ mod tests {
     async fn test_save_transcription() {
         let temp_file = NamedTempFile::new().unwrap();
         let path = temp_file.path().to_path_buf();
-        
+
         let content = "Test transcription content";
         let result = save_transcription(&path, content).await;
-        
+
         assert!(result.is_ok());
         let output_path = result.unwrap();
         assert_eq!(output_path.extension().unwrap(), "txt");
-        
+
         let saved_content = tokio::fs::read_to_string(&output_path).await.unwrap();
         assert_eq!(saved_content, content);
-        
+
         tokio::fs::remove_file(output_path).await.ok();
     }
 }

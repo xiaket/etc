@@ -110,24 +110,7 @@ impl WhisperClient {
             .await
             .context("Failed to send request")?;
 
-        // Handle response
-        let status = response.status();
-        if !status.is_success() {
-            let error_text = response.text().await?;
-            let error_message = match status.as_u16() {
-                401 => "Invalid API key. Please check your OPENAI_API_KEY environment variable."
-                    .to_string(),
-                429 => "Rate limit exceeded. Please wait a moment and try again.".to_string(),
-                413 => "File too large for API. This shouldn't happen with proper chunking."
-                    .to_string(),
-                400 => format!("Bad request: {}", error_text),
-                500..=599 => "OpenAI server error. Please try again later.".to_string(),
-                _ => format!("API error ({}): {}", status, error_text),
-            };
-            anyhow::bail!("{}", error_message);
-        }
-
-        response.text().await.context("Failed to read response")
+        Self::handle_api_response(response, "transcription").await
     }
 
     pub async fn enhance_text(&self, prompt: &str) -> Result<String> {
@@ -153,23 +136,12 @@ impl WhisperClient {
             .await
             .context("Failed to send enhancement request")?;
 
-        let status = response.status();
-        if !status.is_success() {
-            let error_text = response.text().await?;
-            let error_message = match status.as_u16() {
-                401 => "Invalid API key for text enhancement.".to_string(),
-                429 => "Rate limit exceeded for text enhancement.".to_string(),
-                400 => format!("Bad request for text enhancement: {}", error_text),
-                500..=599 => "OpenAI server error during text enhancement.".to_string(),
-                _ => format!("Enhancement API error ({}): {}", status, error_text),
-            };
-            anyhow::bail!("{}", error_message);
-        }
+        // Handle API response
+        let response_text = Self::handle_api_response(response, "text enhancement").await?;
 
-        let response_json: serde_json::Value = response
-            .json()
-            .await
-            .context("Failed to parse enhancement response")?;
+        // Parse JSON response for ChatGPT API
+        let response_json: serde_json::Value =
+            serde_json::from_str(&response_text).context("Failed to parse enhancement response")?;
 
         let enhanced_text = response_json["choices"][0]["message"]["content"]
             .as_str()
@@ -178,6 +150,25 @@ impl WhisperClient {
             .to_string();
 
         Ok(enhanced_text)
+    }
+
+    /// Generic API response handler for both transcription and enhancement APIs
+    async fn handle_api_response(response: reqwest::Response, api_type: &str) -> Result<String> {
+        let status = response.status();
+        if !status.is_success() {
+            let error_text = response.text().await.unwrap_or_default();
+            let error_message = match status.as_u16() {
+                401 => format!("Invalid API key for {}. Please check your OPENAI_API_KEY environment variable.", api_type),
+                429 => format!("Rate limit exceeded for {}. Please wait a moment and try again.", api_type),
+                413 => "File too large for API. This shouldn't happen with proper chunking.".to_string(),
+                400 => format!("Bad request for {}: {}", api_type, error_text),
+                500..=599 => format!("OpenAI server error during {}. Please try again later.", api_type),
+                _ => format!("{} API error ({}): {}", api_type, status, error_text),
+            };
+            anyhow::bail!("{}", error_message);
+        }
+
+        response.text().await.context("Failed to read API response")
     }
 }
 

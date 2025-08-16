@@ -21,24 +21,8 @@ async fn main() -> Result<()> {
     // Process the audio file or start voice recording/listening
     let transcription = processor.process(&args).await?;
 
-    if args.watch {
-        // Watch mode - transcription is already printed in the loop
-        // Just exit gracefully
-    } else {
-        match &args.input {
-            Some(input_path) => {
-                // File mode - save to file as before
-                let output_path = processor.save_transcription(input_path, &transcription).await?;
-                println!("Processing complete: {:?}", output_path.file_name().unwrap_or_default());
-            }
-            None => {
-                // Voice recording mode - output to stdout
-                print!("\r");
-                println!("{}", transcription);
-            }
-        }
-    }
+    // Handle output based on mode and arguments
+    processor.handle_output(&args, &transcription).await?;
 
     Ok(())
 }
-

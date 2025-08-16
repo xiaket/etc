@@ -1,4 +1,5 @@
 /// Transcript merging functionality with overlap detection
+#[derive(Default)]
 pub struct TranscriptMerger;
 
 impl TranscriptMerger {
@@ -56,9 +57,12 @@ impl TranscriptMerger {
     }
 
     fn has_overlap_at_size(&self, previous: &str, current: &str, size: usize) -> bool {
-        let previous_suffix = previous.chars().skip(previous.len() - size).collect::<String>();
+        let previous_suffix = previous
+            .chars()
+            .skip(previous.len() - size)
+            .collect::<String>();
         let current_prefix = current.chars().take(size).collect::<String>();
-        
+
         previous_suffix == current_prefix
     }
 }
@@ -155,19 +159,19 @@ mod tests {
     #[test]
     fn test_find_overlap_size() {
         let merger = create_merger();
-        
+
         // Test with exact overlap (longer than minimum)
         let overlap = merger.find_overlap_size("Hello world test", "world test and universe");
         assert_eq!(overlap, 10); // "world test"
-        
+
         // Test with no overlap
         let overlap = merger.find_overlap_size("Hello", "there");
         assert_eq!(overlap, 0);
-        
+
         // Test with short strings (below minimum overlap)
         let overlap = merger.find_overlap_size("Hi", "i there");
         assert_eq!(overlap, 0); // Below minimum overlap threshold
-        
+
         // Test with short overlap (below minimum)
         let overlap = merger.find_overlap_size("Hello world", "world test");
         assert_eq!(overlap, 0); // "world" is only 5 chars, below minimum of 10
@@ -176,13 +180,13 @@ mod tests {
     #[test]
     fn test_has_overlap_at_size() {
         let merger = create_merger();
-        
+
         // Test exact match
         assert!(merger.has_overlap_at_size("Hello world", "world test", 5));
-        
+
         // Test no match
         assert!(!merger.has_overlap_at_size("Hello world", "test world", 5));
-        
+
         // Test different size
         assert!(merger.has_overlap_at_size("Hello world", "orld test", 4));
     }
