@@ -1,7 +1,12 @@
 //! Murmur - Audio transcription using OpenAI Whisper API
 //!
 //! This library provides functionality to transcribe audio files using OpenAI's Whisper API,
-//! with support for large file chunking and caching.
+//! with support for voice recording, large file chunking and caching.
+//! 
+//! # Usage
+//! 
+//! - File transcription: `murmur file.mp3`
+//! - Voice recording: `murmur` (no arguments)
 
 use anyhow::Result;
 use clap::Parser;
@@ -22,27 +27,22 @@ pub use transcription::TranscriptMerger;
 pub use utils::{Config, FileCleanupHelper, FileMetadata, ProgressDisplay, StatusLineManager};
 pub use voice_recorder::VoiceRecorder;
 
-/// Command line arguments
+/// Command line arguments for the Murmur audio transcription tool
 #[derive(Parser, Debug, Clone)]
 #[command(name = "murmur")]
 #[command(
-    about = "Transcribe MP3 audio files using OpenAI Whisper API or enable voice recording mode"
+    about = "Transcribe MP3 audio files using OpenAI Whisper API or record voice for transcription"
 )]
 pub struct Args {
-    /// Input MP3 file path (optional - if not provided, enters voice recording mode)
-    #[arg(short, long)]
+    /// Input MP3 file path. If not provided, enters voice recording mode
     pub input: Option<PathBuf>,
 
-    /// Language code (e.g., 'en' for English, 'es' for Spanish)
+    /// Language code for transcription (e.g., 'en' for English, 'es' for Spanish)
     #[arg(short, long)]
     pub language: Option<String>,
-
-    /// Watch mode - continuously record and transcribe audio
-    #[arg(short = 'w', long)]
-    pub watch: bool,
 }
 
-/// Main transcription orchestrator
+/// Main transcription orchestrator that handles both file processing and voice recording
 pub struct MurmurProcessor {
     config: Config,
     client: WhisperClient,
@@ -69,73 +69,41 @@ impl MurmurProcessor {
     }
 
     pub async fn process(&self, args: &Args) -> Result<String> {
-        if args.watch {
-            // Watch mode - continuous recording
-            self.process_watch_mode(args).await
-        } else {
-            match &args.input {
-                Some(input_path) => {
-                    // File mode - process existing audio file
-                    utils::validate_input_file(input_path).await?;
+        match &args.input {
+            Some(input_path) => {
+                // File mode - process existing audio file
+                utils::validate_input_file(input_path).await?;
 
-                    let file_size = utils::get_file_size(input_path).await?;
+                let file_size = utils::get_file_size(input_path).await?;
 
-                    if file_size <= self.config.max_file_size_bytes() {
-                        // Small file - process directly
-                        self.process_small_file(args).await
-                    } else {
-                        // Large file - use chunking strategy
-                        self.process_large_file(args).await
-                    }
+                if file_size <= self.config.max_file_size_bytes() {
+                    // Small file - process directly
+                    self.process_small_file(args).await
+                } else {
+                    // Large file - use chunking strategy
+                    self.process_large_file(args).await
                 }
-                None => {
-                    // Voice recording mode
-                    self.process_voice_recording(args).await
-                }
+            }
+            None => {
+                // Recording mode - record audio once and transcribe
+                self.process_recording_mode(args).await
             }
         }
     }
 
-    async fn process_watch_mode(&self, args: &Args) -> Result<String> {
-        println!("Watch mode: continuous recording and transcription.");
-        println!("Press 'q' to stop recording and transcribe, Ctrl+C to exit.");
+    async fn process_recording_mode(&self, args: &Args) -> Result<String> {
+        println!("Recording mode: recording audio.");
+        println!("Press 'q' to stop recording and transcribe.");
         println!();
 
-        loop {
-            // Process voice recording directly
-            match self.process_watch_recording(args).await {
-                Ok(transcription) => {
-                    // Print the transcription with a timestamp
-                    let timestamp = chrono::Local::now().format("%H:%M:%S");
-                    println!("[{}] {}", timestamp, transcription);
-                    println!(); // Add blank line for readability
-                }
-                Err(e) => {
-                    eprintln!("Error during transcription: {}", e);
-                    // Continue watching even if one transcription fails
-                }
-            }
-        }
+        // Process voice recording directly - single recording session
+        self.process_recording_session(args).await
     }
 
-    async fn process_watch_recording(&self, args: &Args) -> Result<String> {
+    async fn process_recording_session(&self, args: &Args) -> Result<String> {
         // Record audio using direct recording method
         let audio_file = VoiceRecorder::record_directly().await?;
-        self.process_recorded_audio(args, audio_file, true).await
-    }
-
-    async fn process_voice_recording(&self, args: &Args) -> Result<String> {
-        // Record audio using voice recorder
-        let audio_file = VoiceRecorder::record_with_spacebar().await?;
-        self.process_recorded_audio(args, audio_file, false).await
-    }
-
-    async fn process_recorded_audio(
-        &self,
-        args: &Args,
-        audio_file: std::path::PathBuf,
-        is_watch_mode: bool,
-    ) -> Result<String> {
+        
         // Create temporary args with the recorded file
         let mut temp_args = args.clone();
         temp_args.input = Some(audio_file.clone());
@@ -143,18 +111,14 @@ impl MurmurProcessor {
         // Show status while waiting for Whisper API
         StatusLineManager::show_status("Waiting for Whisper response...");
 
-        // Choose transcription method based on file size and mode
-        let transcription = if is_watch_mode {
-            // Watch mode: check file size and use appropriate processing method
+        // Choose transcription method based on file size
+        let transcription = {
             let file_size = utils::get_file_size(&audio_file).await?;
             if file_size <= self.config.max_file_size_bytes() {
                 self.client.transcribe(&temp_args).await?
             } else {
                 self.process_large_file_transcription(&temp_args).await?
             }
-        } else {
-            // Voice recording mode: process directly
-            self.client.transcribe(&temp_args).await?
         };
 
         // Clear the status line
@@ -315,26 +279,21 @@ impl MurmurProcessor {
 
     /// Handle output based on the mode and arguments
     pub async fn handle_output(&self, args: &Args, transcription: &str) -> Result<()> {
-        if args.watch {
-            // Watch mode - transcription is already printed in the loop, just exit gracefully
-            Ok(())
-        } else {
-            match &args.input {
-                Some(input_path) => {
-                    // File mode - save to file
-                    let output_path = self.save_transcription(input_path, transcription).await?;
-                    println!(
-                        "Processing complete: {:?}",
-                        output_path.file_name().unwrap_or_default()
-                    );
-                    Ok(())
-                }
-                None => {
-                    // Voice recording mode - output to stdout
-                    print!("\r");
-                    println!("{}", transcription);
-                    Ok(())
-                }
+        match &args.input {
+            Some(input_path) => {
+                // File mode - save to file
+                let output_path = self.save_transcription(input_path, transcription).await?;
+                println!(
+                    "Processing complete: {:?}",
+                    output_path.file_name().unwrap_or_default()
+                );
+                Ok(())
+            }
+            None => {
+                // Recording mode - output to stdout
+                print!("\r");
+                println!("{}", transcription);
+                Ok(())
             }
         }
     }
@@ -350,51 +309,35 @@ mod tests {
         let args = Args {
             input: None,
             language: None,
-            watch: false,
         };
 
         assert_eq!(args.input, None);
         assert_eq!(args.language, None);
-        assert_eq!(args.watch, false);
     }
 
     #[test]
-    fn test_args_with_watch_mode() {
+    fn test_args_recording_mode_when_no_input() {
         let args = Args {
             input: None,
             language: Some("en".to_string()),
-            watch: true,
         };
 
         assert_eq!(args.input, None);
         assert_eq!(args.language, Some("en".to_string()));
-        assert_eq!(args.watch, true);
+        // Recording mode is determined by input being None
+        assert!(args.input.is_none());
     }
 
     #[test]
-    fn test_args_with_input_file() {
+    fn test_args_file_mode_when_input_provided() {
         let args = Args {
             input: Some(PathBuf::from("test.mp3")),
             language: Some("zh".to_string()),
-            watch: false,
         };
 
         assert_eq!(args.input, Some(PathBuf::from("test.mp3")));
         assert_eq!(args.language, Some("zh".to_string()));
-        assert_eq!(args.watch, false);
-    }
-
-    #[test]
-    fn test_watch_mode_conflicts_with_input() {
-        // This is a logical test - watch mode should typically be used without input file
-        let args = Args {
-            input: Some(PathBuf::from("test.mp3")),
-            language: None,
-            watch: true,
-        };
-
-        // Both input and watch are set - this should work but watch mode will take precedence
-        assert_eq!(args.input, Some(PathBuf::from("test.mp3")));
-        assert_eq!(args.watch, true);
+        // File mode is determined by input being Some
+        assert!(args.input.is_some());
     }
 }

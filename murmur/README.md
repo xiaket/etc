@@ -1,11 +1,11 @@
 # Murmur
 
-A command-line tool to transcribe audio files using the OpenAI Whisper API, with support for both file transcription and real-time voice recording.
+A command-line tool to transcribe audio files using the OpenAI Whisper API, with support for both file transcription and voice recording.
 
 ## Features
 
 - **File Transcription**: Transcribe audio files using OpenAI's Whisper API
-- **Voice Recording**: Real-time voice recording and transcription with spacebar control
+- **Voice Recording**: Voice recording and transcription with 'q' key control
 - **Text Enhancement**: Automatically improve transcribed text grammar and formatting using OpenAI
 - Support for language specification
 - Automatically handles large audio files by splitting them into chunks
@@ -47,7 +47,7 @@ A command-line tool to transcribe audio files using the OpenAI Whisper API, with
 
 ### File Transcription Mode
 ```bash
-murmur --input <FILE_PATH> [--language <LANGUAGE_CODE>]
+murmur <FILE_PATH> [--language <LANGUAGE_CODE>]
 ```
 
 ### Voice Recording Mode
@@ -57,14 +57,14 @@ murmur [--language <LANGUAGE_CODE>]
 
 ### Arguments:
 
-- `--input`, `-i` (optional): Path to the audio file (MP3 format). If not provided, enters voice recording mode
+- `<FILE_PATH>` (optional): Path to the audio file (MP3 format). If not provided, enters voice recording mode
 - `--language`, `-l` (optional): Language code (e.g., "en" for English, "es" for Spanish)
 
 ### Examples:
 
 **File transcription:**
 ```bash
-murmur --input recording.mp3 --language en
+murmur recording.mp3 --language en
 ```
 
 **Voice recording (no input file specified):**
@@ -85,19 +85,19 @@ murmur --language en
 The transcription will be saved as a text file in the same directory as the input file, with the same name but a `.txt` extension.
 
 ### Voice Recording Mode
-- Press and hold the **spacebar** to start recording
-- Release the **spacebar** to stop recording and begin transcription
+- The program will start recording automatically when no input file is provided
+- Press **'q'** to stop recording and begin transcription
 - Status messages will show processing progress:
   - "Waiting for Whisper response..." during transcription
   - "Waiting for OpenAI response..." during text enhancement
-- The enhanced transcription will be displayed in the terminal and the program will exit normally
+- The enhanced transcription will be displayed in the terminal and the program will exit
 
 ## Debugging
 
 For detailed logging, set the `RUST_LOG` environment variable:
 
 ```bash
-RUST_LOG=debug murmur --input recording.mp3
+RUST_LOG=debug murmur recording.mp3
 ```
 
 ## Caching

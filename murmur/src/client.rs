@@ -205,7 +205,6 @@ mod tests {
         let args = Args {
             input: Some(temp_file.path().to_path_buf()),
             language: Some("en".to_string()),
-            watch: false,
         };
 
         let result = client.transcribe(&args).await;
