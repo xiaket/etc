@@ -11,6 +11,7 @@ w3m/w3mcache*
 ptpython/history
 
 aws/credentials
+bash_secrets
 
 vagrant/*/.vagrant/
 vagrant/*.log

@@ -57,6 +57,11 @@ if [ -f "$etcdir"/bash_functions ]; then
   . "$etcdir"/bash_functions
 fi
 
+# secrets.
+if [ -f "$etcdir/bash_secrets" ]; then
+  source "$etcdir/bash_secrets"
+fi
+
 # For Alternative settings
 if [ -f "$altdir/etc/bashrc" ]; then
   . "$altdir/etc/bashrc"
