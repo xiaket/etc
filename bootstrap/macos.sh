@@ -71,7 +71,7 @@ homebrew-packages() {
 python-packages() {
   check-done || return 0
   brew install pipx
-  pipx install black icdiff neovim poetry ptpython pyflakes pygments Snape termcolor
+  pipx install black icdiff poetry ptpython pyflakes pygments Snape
   touch-done
 }
 
@@ -80,15 +80,15 @@ write-defaults() {
 
   # disable the dashboard
   defaults write com.apple.dashboard mcx-disabled -bool TRUE
-  killall Dock
+  sudo killall Dock
 
   # be quiet please finder
   defaults write com.apple.finder FinderSounds -bool FALSE
-  killall Finder
+  sudo killall Finder
 
   # disable delay when
   defaults write com.apple.dock autohide-fullscreen-delayed -bool FALSE
-  killall Dock
+  sudo killall Dock
 
   # minimize key repeat
   defaults write -g InitialKeyRepeat -int 10
@@ -102,15 +102,16 @@ write-defaults() {
   touch-done
 
   # Switch to previous tab using alt-a and next tab alt-s.
-  defaults write com.apple.Safari NSUserKeyEquivalents '{
-      "Show Previous Tab"="~a";
-      "Show Next Tab"="~s";
-      "Close Tab"="~q";
-    }'
+  #defaults write com.apple.Safari NSUserKeyEquivalents '{
+  #    "Show Previous Tab"="~a";
+  #    "Show Next Tab"="~s";
+  #    "Close Tab"="~q";
+  #  }'
 }
 
 build-ps1() {
   check-done || return 0
+  cd "$BASE_DIR/share/github/etc/ps1"
   $brewdir/bin/cargo build --release
   strip target/release/ps1
   mv target/release/ps1 ../bin
