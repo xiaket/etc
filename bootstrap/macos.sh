@@ -62,7 +62,7 @@ homebrew-packages() {
   homebrew
 
   brew update &&
-    brew bundle install --cleanup --file="$BASE_DIR/etc/Brewfile" --no-lock &&
+    brew bundle install --cleanup --file="$BASE_DIR/etc/Brewfile" &&
     brew upgrade
 
   touch-done
