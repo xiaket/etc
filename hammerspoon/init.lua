@@ -2,7 +2,11 @@ local hiper = require("hiper").new("rightcmd")
 local magnet = require("magnet")
 local is_switch = require("is_switch")
 
-local features = {
+-- Get hostname for host-specific configurations
+local hostname = hs.host.localizedName():gsub("%.local$", "")
+
+-- Base features available on all hosts
+local baseFeatures = {
   -- Simple app maps
   a = "Safari",
   b = "Books",
@@ -13,9 +17,8 @@ local features = {
   l = "Slack",
   m = "Mail",
   n = "Notes",
+  o = "Bitwarden",
   s = "Superlist",
-  w = "WeChat",
-  z = "zoom.us",
 
   -- uppercase as we are running low on characters
   C = "Calendar",
@@ -37,6 +40,29 @@ local features = {
     require("hs.eventtap").event.newSystemKeyEvent("PLAY", true):post()
   end,
 }
+
+-- Host-specific features
+local hostFeatures = {}
+
+-- Configure features based on hostname
+if hostname == "Bragg" then
+  hostFeatures = {
+    z = "zoom.us",
+  }
+elseif hostname == "Feynman" then
+  hostFeatures = {
+    w = "WeChat",
+  }
+end
+
+-- Merge base features with host-specific features
+local features = {}
+for k, v in pairs(baseFeatures) do
+  features[k] = v
+end
+for k, v in pairs(hostFeatures) do
+  features[k] = v
+end
 
 -- Windows management features
 magnetCommands = { "0", "1", "2", "3", "4", ",", "." }
