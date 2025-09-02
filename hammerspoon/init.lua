@@ -52,6 +52,7 @@ if hostname == "Bragg" then
 elseif hostname == "Feynman" then
   hostFeatures = {
     w = "WeChat",
+    x = "Xcode-beta",
   }
 end
 

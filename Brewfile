@@ -72,7 +72,9 @@ end
 
 if `hostname -s`.strip == "Feynman"
   brew "node"
+  cask "blender"
   cask "google-chrome"
+  cask "roblox"
   cask "robloxstudio"
   cask "steam"
 end

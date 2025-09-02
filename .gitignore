@@ -16,6 +16,7 @@ bash_secrets
 vagrant/*/.vagrant/
 vagrant/*.log
 vagrant/freebsd/*/*.box
+github-copilot/*
 
 ps1/target
 murmur/target
