@@ -72,6 +72,8 @@ if `hostname -s`.strip == "Bragg"
 end
 
 if `hostname -s`.strip == "Feynman"
+  brew "deno"
+  brew "libpq"
   brew "node"
   brew "supabase/tap/supabase"
   cask "docker-desktop"
