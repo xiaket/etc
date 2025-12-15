@@ -19,6 +19,7 @@ local baseFeatures = {
   n = "Notes",
   o = "Bitwarden",
   s = "Superlist",
+  w = "WeChat",
 
   -- uppercase as we are running low on characters
   C = "Calendar",
@@ -51,7 +52,6 @@ if hostname == "Bragg" then
   }
 elseif hostname == "Feynman" then
   hostFeatures = {
-    w = "WeChat",
     x = "Xcode-beta",
   }
 end

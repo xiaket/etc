@@ -60,25 +60,21 @@ cask "kitty"
 cask "only-switch"
 cask "raycast"
 cask "superlist"
+cask "wechat"
 
 # Per host setup
 if `hostname -s`.strip == "Bragg"
-  brew "aliyun-cli"
   brew "helm"
   brew "fluent-bit"
-  brew "mongosh"
   brew "terraform"
+  cask "session-manager-plugin"
   cask "zulu@17"
 end
 
 if `hostname -s`.strip == "Feynman"
   brew "node"
   brew "supabase/tap/supabase"
-  cask "blender"
   cask "docker-desktop"
-  cask "google-chrome"
-  cask "roblox"
-  cask "robloxstudio"
   cask "steam"
   cask "zoom"
 end
