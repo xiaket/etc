@@ -10,19 +10,34 @@ async fn main() -> Result<()> {
     // Initialize logging with default settings
     env_logger::init();
 
-    // Load API key from environment
-    dotenvy::dotenv().ok();
-    let api_key = std::env::var("OPENAI_API_KEY")
-        .context("OPENAI_API_KEY not found. Set it as an environment variable or in .env file")?;
+    // Create processor (starts Docker container for GLM ASR)
+    let mut processor = MurmurProcessor::new()
+        .await
+        .context("Failed to initialize murmur. Is Docker installed and running?")?;
 
-    // Create processor
-    let processor = MurmurProcessor::new(api_key)?;
+    // Set up Ctrl+C handler for graceful shutdown
+    let result = tokio::select! {
+        result = processor.process(&args) => result,
+        _ = tokio::signal::ctrl_c() => {
+            println!("\nShutting down...");
+            processor.shutdown()?;
+            return Ok(());
+        }
+    };
 
-    // Process the audio file or start voice recording/listening
-    let transcription = processor.process(&args).await?;
+    // Handle result
+    match result {
+        Ok(transcription) => {
+            processor.handle_output(&args, &transcription).await?;
+        }
+        Err(e) => {
+            processor.shutdown()?;
+            return Err(e);
+        }
+    }
 
-    // Handle output based on mode and arguments
-    processor.handle_output(&args, &transcription).await?;
+    // Graceful shutdown
+    processor.shutdown()?;
 
     Ok(())
 }

@@ -4,33 +4,45 @@ use std::path::{Path, PathBuf};
 use tokio::fs;
 
 // Constants
-pub const WHISPER_TIMEOUT_SECONDS: u64 = 600;
+pub const ASR_TIMEOUT_SECONDS: u64 = 600;
 pub const MAX_FILE_SIZE_MB: u64 = 25;
 pub const CHUNK_SIZE_MB: u64 = 23;
 pub const GRACE_PERIOD_SECONDS: u64 = 10;
-pub const TEMP_DIR_NAME: &str = "murmur_audio_chunks";
+pub const SHARED_AUDIO_DIR: &str = "/tmp/murmur_audio";
+pub const TEMP_DIR_NAME: &str = "chunks"; // Relative to shared_audio_dir
 pub const METADATA_FILE: &str = "metadata.json";
+pub const CONTAINER_STARTUP_TIMEOUT_SECONDS: u64 = 300; // 5 minutes for first run with model download
+pub const CONTAINER_PORT: u16 = 8000;
+
+// Supported audio formats
+pub const SUPPORTED_AUDIO_EXTENSIONS: &[&str] = &["mp3", "wav", "m4a", "flac", "ogg"];
 
 /// Configuration structure to centralize all constants and settings
 #[derive(Debug, Clone)]
 pub struct Config {
-    pub whisper_timeout_seconds: u64,
+    pub asr_timeout_seconds: u64,
     pub max_file_size_mb: u64,
     pub chunk_size_mb: u64,
     pub grace_period_seconds: u64,
+    pub shared_audio_dir: String,
     pub temp_dir_name: String,
     pub metadata_file: String,
+    pub container_startup_timeout_seconds: u64,
+    pub container_port: u16,
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
-            whisper_timeout_seconds: WHISPER_TIMEOUT_SECONDS,
+            asr_timeout_seconds: ASR_TIMEOUT_SECONDS,
             max_file_size_mb: MAX_FILE_SIZE_MB,
             chunk_size_mb: CHUNK_SIZE_MB,
             grace_period_seconds: GRACE_PERIOD_SECONDS,
+            shared_audio_dir: SHARED_AUDIO_DIR.to_string(),
             temp_dir_name: TEMP_DIR_NAME.to_string(),
             metadata_file: METADATA_FILE.to_string(),
+            container_startup_timeout_seconds: CONTAINER_STARTUP_TIMEOUT_SECONDS,
+            container_port: CONTAINER_PORT,
         }
     }
 }
@@ -44,8 +56,14 @@ impl Config {
         self.chunk_size_mb * 1024 * 1024
     }
 
+    /// Returns the path for storing audio chunks (inside the shared audio directory)
     pub fn temp_dir_path(&self) -> PathBuf {
-        std::env::temp_dir().join(&self.temp_dir_name)
+        PathBuf::from(&self.shared_audio_dir).join(&self.temp_dir_name)
+    }
+
+    /// Returns the shared audio directory path
+    pub fn shared_audio_path(&self) -> PathBuf {
+        PathBuf::from(&self.shared_audio_dir)
     }
 }
 
@@ -77,7 +95,7 @@ pub fn bytes_to_mb(bytes: u64) -> f64 {
     bytes as f64 / (1024.0 * 1024.0)
 }
 
-/// Validate that input file exists, is readable, and is an MP3 file
+/// Validate that input file exists, is readable, and is a supported audio format
 pub async fn validate_input_file(file_path: &Path) -> Result<()> {
     if !file_path.exists() {
         anyhow::bail!("Input file {:?} does not exist", file_path);
@@ -85,12 +103,16 @@ pub async fn validate_input_file(file_path: &Path) -> Result<()> {
 
     // Check file extension
     match file_path.extension().and_then(|ext| ext.to_str()) {
-        Some(ext) if ext.to_lowercase() == "mp3" => {}
+        Some(ext) if SUPPORTED_AUDIO_EXTENSIONS.contains(&ext.to_lowercase().as_str()) => {}
         Some(ext) => anyhow::bail!(
-            "Unsupported file format: .{}. Only MP3 files are supported.",
-            ext
+            "Unsupported file format: .{}. Supported formats: {}",
+            ext,
+            SUPPORTED_AUDIO_EXTENSIONS.join(", ")
         ),
-        None => anyhow::bail!("File has no extension. Only MP3 files are supported."),
+        None => anyhow::bail!(
+            "File has no extension. Supported formats: {}",
+            SUPPORTED_AUDIO_EXTENSIONS.join(", ")
+        ),
     }
 
     Ok(())

@@ -58,6 +58,8 @@ impl VoiceRecorder {
                 {
                     match code {
                         KeyCode::Char('q') => {
+                            print!("\rTranscribing...");
+                            std::io::stdout().flush().unwrap();
                             break;
                         }
                         KeyCode::Char('c') if modifiers.contains(KeyModifiers::CONTROL) => {

@@ -1,20 +1,23 @@
-//! Murmur - Audio transcription using OpenAI Whisper API
+//! Murmur - Audio transcription using GLM ASR
 //!
-//! This library provides functionality to transcribe audio files using OpenAI's Whisper API,
+//! This library provides functionality to transcribe audio files using GLM ASR via SGLang,
 //! with support for voice recording, large file chunking and caching.
-//! 
+//!
 //! # Usage
-//! 
+//!
 //! - File transcription: `murmur file.mp3`
 //! - Voice recording: `murmur` (no arguments)
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 use clap::Parser;
 use std::path::PathBuf;
+use std::time::Duration;
 
 pub mod cache;
 pub mod chunking;
 pub mod client;
+pub mod docker;
+pub mod python_server;
 pub mod transcription;
 pub mod utils;
 pub mod voice_recorder;
@@ -22,7 +25,9 @@ pub mod voice_recorder;
 // Re-export commonly used items
 pub use cache::CacheManager;
 pub use chunking::AudioChunker;
-pub use client::WhisperClient;
+pub use client::GlmAsrClient;
+pub use docker::GlmAsrContainer;
+pub use python_server::PythonServer;
 pub use transcription::TranscriptMerger;
 pub use utils::{Config, FileCleanupHelper, FileMetadata, ProgressDisplay, StatusLineManager};
 pub use voice_recorder::VoiceRecorder;
@@ -31,10 +36,10 @@ pub use voice_recorder::VoiceRecorder;
 #[derive(Parser, Debug, Clone)]
 #[command(name = "murmur")]
 #[command(
-    about = "Transcribe MP3 audio files using OpenAI Whisper API or record voice for transcription"
+    about = "Transcribe audio files using GLM ASR or record voice for transcription"
 )]
 pub struct Args {
-    /// Input MP3 file path. If not provided, enters voice recording mode
+    /// Input audio file path (mp3, wav, m4a, flac, ogg). If not provided, enters voice recording mode
     pub input: Option<PathBuf>,
 
     /// Language code for transcription (e.g., 'en' for English, 'es' for Spanish)
@@ -45,16 +50,48 @@ pub struct Args {
 /// Main transcription orchestrator that handles both file processing and voice recording
 pub struct MurmurProcessor {
     config: Config,
-    client: WhisperClient,
+    client: GlmAsrClient,
     cache_manager: CacheManager,
     chunker: AudioChunker,
     merger: TranscriptMerger,
+    python_server: Option<PythonServer>,
 }
 
 impl MurmurProcessor {
-    pub fn new(api_key: String) -> Result<Self> {
+    /// Create a new MurmurProcessor
+    /// If GLM_ASR_URL is set, connects to external server
+    /// Otherwise, starts local Python server
+    pub async fn new() -> Result<Self> {
         let config = Config::default();
-        let client = WhisperClient::new(api_key, &config)?;
+
+        // Check for external server URL
+        let (client, python_server) = if let Ok(url) = std::env::var("GLM_ASR_URL") {
+            // Wait for external server to be ready
+            let client = GlmAsrClient::new(url.clone(), &config)?;
+            Self::wait_for_server(&url, Duration::from_secs(30)).await?;
+
+            (client, None)
+        } else {
+            // Start local Python server
+            let mut server = PythonServer::new(config.container_port)?;
+
+            server
+                .start()
+                .context("Failed to start GLM ASR Python server")?;
+
+            // Wait for server to be ready (longer timeout for first run with model download)
+            let timeout = Duration::from_secs(config.container_startup_timeout_seconds);
+            server
+                .wait_until_ready(timeout)
+                .await
+                .context("GLM ASR Python server failed to start")?;
+
+            // Create client pointing to server
+            let client = GlmAsrClient::new(server.get_api_url(), &config)?;
+
+            (client, Some(server))
+        };
+
         let cache_manager = CacheManager::new(&config);
         let chunker = AudioChunker::new(&config);
         let merger = TranscriptMerger::new();
@@ -65,7 +102,42 @@ impl MurmurProcessor {
             cache_manager,
             chunker,
             merger,
+            python_server,
         })
+    }
+
+    /// Wait for external server to be ready
+    async fn wait_for_server(url: &str, timeout: Duration) -> Result<()> {
+        let client = reqwest::Client::new();
+        let health_url = format!("{}/v1/models", url);
+        let start = std::time::Instant::now();
+
+        loop {
+            if start.elapsed() > timeout {
+                anyhow::bail!(
+                    "GLM ASR server at {} not responding after {} seconds",
+                    url,
+                    timeout.as_secs()
+                );
+            }
+
+            match client.get(&health_url).send().await {
+                Ok(response) if response.status().is_success() => {
+                    return Ok(());
+                }
+                _ => {
+                    tokio::time::sleep(Duration::from_secs(1)).await;
+                }
+            }
+        }
+    }
+
+    /// Stop the server gracefully
+    pub fn shutdown(&mut self) -> Result<()> {
+        if let Some(ref mut server) = self.python_server {
+            server.stop()?;
+        }
+        Ok(())
     }
 
     pub async fn process(&self, args: &Args) -> Result<String> {
@@ -76,12 +148,11 @@ impl MurmurProcessor {
 
                 let file_size = utils::get_file_size(input_path).await?;
 
+                // Python server can access local files directly
                 if file_size <= self.config.max_file_size_bytes() {
-                    // Small file - process directly
-                    self.process_small_file(args).await
+                    self.process_small_file_direct(args, input_path).await
                 } else {
-                    // Large file - use chunking strategy
-                    self.process_large_file(args).await
+                    self.process_large_file_direct(args, input_path).await
                 }
             }
             None => {
@@ -103,97 +174,80 @@ impl MurmurProcessor {
     async fn process_recording_session(&self, args: &Args) -> Result<String> {
         // Record audio using direct recording method
         let audio_file = VoiceRecorder::record_directly().await?;
-        
-        // Create temporary args with the recorded file
+
+
+        // Python server can access local files directly
         let mut temp_args = args.clone();
         temp_args.input = Some(audio_file.clone());
 
-        // Show status while waiting for Whisper API
-        StatusLineManager::show_status("Waiting for Whisper response...");
+        let audio_path = audio_file
+            .canonicalize()
+            .unwrap_or(audio_file.clone())
+            .to_string_lossy()
+            .to_string();
+        let file_size = utils::get_file_size(&audio_file).await?;
 
-        // Choose transcription method based on file size
-        let transcription = {
-            let file_size = utils::get_file_size(&audio_file).await?;
-            if file_size <= self.config.max_file_size_bytes() {
-                self.client.transcribe(&temp_args).await?
-            } else {
-                self.process_large_file_transcription(&temp_args).await?
-            }
+        let transcription = if file_size <= self.config.max_file_size_bytes() {
+            self.client.transcribe(&temp_args, &audio_path).await?
+        } else {
+            self.process_large_file_direct(&temp_args, &audio_file)
+                .await?
         };
-
-        // Clear the status line
-        StatusLineManager::clear_status();
 
         // Clean up temporary audio file
         FileCleanupHelper::cleanup_file(&audio_file).await?;
 
-        // Show status while waiting for OpenAI enhancement
-        StatusLineManager::show_status("Waiting for OpenAI response...");
-
-        // Enhance the transcription using OpenAI
-        let result = self.enhance_transcription(&transcription).await?;
-
-        // Clear the status line
-        StatusLineManager::clear_status();
-
-        Ok(result)
+        Ok(transcription)
     }
 
-    async fn enhance_transcription(&self, text: &str) -> Result<String> {
-        let prompt = format!(
-            "Please improve and format the following transcribed text. Fix any grammar issues, make it coherent, add proper punctuation, and make it more readable while preserving the original meaning. Output only the improved text without any explanations:\n\n{}",
-            text
-        );
-
-        let enhanced_text = self.client.enhance_text(&prompt).await?;
-        Ok(enhanced_text)
+    /// Process small file (direct path)
+    async fn process_small_file_direct(
+        &self,
+        args: &Args,
+        file_path: &std::path::Path,
+    ) -> Result<String> {
+        let path_str = file_path
+            .canonicalize()
+            .context("Failed to get absolute path")?
+            .to_string_lossy()
+            .to_string();
+        self.client.transcribe(args, &path_str).await
     }
 
-    async fn process_small_file(&self, args: &Args) -> Result<String> {
-        self.client.transcribe(args).await
+    /// Process large file
+    async fn process_large_file_direct(
+        &self,
+        args: &Args,
+        file_path: &std::path::Path,
+    ) -> Result<String> {
+        let file_size_mb = utils::bytes_to_mb(utils::get_file_size(file_path).await?);
+        println!("Processing large file ({:.1} MB)...", file_size_mb);
+
+        // Calculate file hash and handle cache validation
+        let file_hash = utils::calculate_file_hash(file_path).await?;
+        self.cache_manager
+            .validate_and_cleanup_if_needed(&file_hash)
+            .await?;
+
+        // Create metadata file after splitting
+        let chunks = self.chunker.split_audio_file(file_path).await?;
+        self.cache_manager
+            .create_metadata_file(
+                file_path,
+                utils::get_file_size(file_path).await?,
+                &file_hash,
+                chunks.len(),
+            )
+            .await?;
+
+        self.process_chunks_with_cache(args, chunks).await
     }
 
-    async fn process_large_file(&self, args: &Args) -> Result<String> {
-        self.process_large_file_internal(args, true).await
-    }
-
-    async fn process_large_file_transcription(&self, args: &Args) -> Result<String> {
-        self.process_large_file_internal(args, false).await
-    }
-
-    async fn process_large_file_internal(&self, args: &Args, use_cache: bool) -> Result<String> {
-        let file_path = args.input.as_ref().unwrap();
-
-        if use_cache {
-            let file_size_mb = utils::bytes_to_mb(utils::get_file_size(file_path).await?);
-            println!("Processing large file ({:.1} MB)...", file_size_mb);
-
-            // Calculate file hash and handle cache validation
-            let file_hash = utils::calculate_file_hash(file_path).await?;
-            self.cache_manager
-                .validate_and_cleanup_if_needed(&file_hash)
-                .await?;
-
-            // Create metadata file after splitting
-            let chunks = self.chunker.split_audio_file(file_path).await?;
-            self.cache_manager
-                .create_metadata_file(
-                    file_path,
-                    utils::get_file_size(file_path).await?,
-                    &file_hash,
-                    chunks.len(),
-                )
-                .await?;
-
-            self.process_chunks_with_cache(args, chunks).await
-        } else {
-            // For temporary recordings - no cache, direct processing
-            let chunks = self.chunker.split_audio_file(file_path).await?;
-            self.process_chunks_without_cache(args, chunks).await
-        }
-    }
-
-    async fn process_chunks_with_cache(&self, args: &Args, chunks: Vec<String>) -> Result<String> {
+    async fn process_chunks_with_cache(
+        &self,
+        args: &Args,
+        chunks: Vec<String>,
+    ) -> Result<String> {
         let mut transcripts = Vec::new();
         for (i, chunk_path) in chunks.iter().enumerate() {
             let chunk_size = utils::get_file_size(std::path::Path::new(chunk_path)).await?;
@@ -207,35 +261,6 @@ impl MurmurProcessor {
 
         ProgressDisplay::clear_progress();
         self.cache_manager.cleanup_temp_files().await?;
-        Ok(self.merger.merge_transcripts(transcripts))
-    }
-
-    async fn process_chunks_without_cache(
-        &self,
-        args: &Args,
-        chunks: Vec<String>,
-    ) -> Result<String> {
-        let mut transcripts = Vec::new();
-        for (i, chunk_path) in chunks.iter().enumerate() {
-            let chunk_size = utils::get_file_size(std::path::Path::new(chunk_path)).await?;
-            let chunk_size_mb = utils::bytes_to_mb(chunk_size);
-
-            ProgressDisplay::show_chunk_progress(i + 1, chunks.len(), chunk_size_mb);
-
-            // Process chunk directly without caching
-            let mut chunk_args = args.clone();
-            chunk_args.input = Some(std::path::PathBuf::from(chunk_path));
-            let text = self.client.transcribe(&chunk_args).await?;
-            transcripts.push(text);
-        }
-
-        ProgressDisplay::clear_progress();
-
-        // Clean up temporary chunk files
-        let chunk_paths: Vec<std::path::PathBuf> =
-            chunks.into_iter().map(std::path::PathBuf::from).collect();
-        FileCleanupHelper::cleanup_files(&chunk_paths).await?;
-
         Ok(self.merger.merge_transcripts(transcripts))
     }
 
@@ -254,7 +279,7 @@ impl MurmurProcessor {
         let mut chunk_args = args.clone();
         chunk_args.input = Some(PathBuf::from(chunk_path));
 
-        match self.client.transcribe(&chunk_args).await {
+        match self.client.transcribe(&chunk_args, chunk_path).await {
             Ok(text) => {
                 // Cache the result
                 self.cache_manager
@@ -290,8 +315,8 @@ impl MurmurProcessor {
                 Ok(())
             }
             None => {
-                // Recording mode - output to stdout
-                print!("\r");
+                // Recording mode - output to stdout (clear the "Transcribing..." line first)
+                print!("\r\x1b[2K");
                 println!("{}", transcription);
                 Ok(())
             }
