@@ -1,47 +1,55 @@
 # Murmur
 
-A command-line tool to transcribe audio files using the OpenAI Whisper API, with support for both file transcription and voice recording.
+A command-line tool to transcribe audio files using GLM-ASR, with support for both file transcription and voice recording.
 
 ## Features
 
-- **File Transcription**: Transcribe audio files using OpenAI's Whisper API
+- **File Transcription**: Transcribe audio files using GLM-ASR model locally
 - **Voice Recording**: Voice recording and transcription with 'q' key control
-- **Text Enhancement**: Automatically improve transcribed text grammar and formatting using OpenAI
+- Support for multiple audio formats: MP3, WAV, M4A, FLAC, OGG
 - Support for language specification
 - Automatically handles large audio files by splitting them into chunks
 - Intelligently merges transcripts from multiple chunks with overlap detection
-- **Caching System**: Automatically caches chunk transcriptions as `.transcript.txt` files to avoid repeating API calls on network failures or retries
+- **Caching System**: Automatically caches chunk transcriptions to avoid repeating processing on retries
+- **Auto-managed Python environment**: Uses `uv` to automatically set up and manage Python dependencies
 - Uses system temporary directory for audio chunks with automatic cleanup
-- Includes logging support for debugging (set `RUST_LOG=debug` for detailed output)
 
 ## Requirements
 
 - Rust (latest stable version)
 - FFmpeg (for processing large audio files)
-- OpenAI API key
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
 - Audio system support (for voice recording mode)
 
 ## Installation
 
-1. Make sure you have Rust installed. If not, visit [rustup.rs](https://rustup.rs) to install.
+1. Install uv (if not already installed):
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+
 2. Clone this repository
+
 3. Build the project:
    ```bash
    cargo build --release
    ```
+
 4. The executable will be available at `target/release/murmur`
 
-## Setup
-
-1. Set up your OpenAI API key as an environment variable:
+5. Copy to your PATH (optional):
    ```bash
-   export OPENAI_API_KEY=your_api_key_here
+   cp target/release/murmur /usr/local/bin/
    ```
-   
-   Alternatively, create a `.env` file in the same directory as the executable with:
-   ```
-   OPENAI_API_KEY=your_api_key_here
-   ```
+
+## First Run
+
+On the first run, murmur will automatically:
+1. Create a Python virtual environment at `~/.cache/murmur/venv`
+2. Install required dependencies (torch, transformers, fastapi, uvicorn, etc.)
+3. Download the GLM-ASR model (~3GB)
+
+This may take several minutes. Subsequent runs will be much faster.
 
 ## Usage
 
@@ -57,24 +65,25 @@ murmur [--language <LANGUAGE_CODE>]
 
 ### Arguments:
 
-- `<FILE_PATH>` (optional): Path to the audio file (MP3 format). If not provided, enters voice recording mode
-- `--language`, `-l` (optional): Language code (e.g., "en" for English, "es" for Spanish)
+- `<FILE_PATH>` (optional): Path to the audio file. If not provided, enters voice recording mode
+- `--language`, `-l` (optional): Language code (e.g., "en" for English, "zh" for Chinese)
 
 ### Examples:
 
 **File transcription:**
 ```bash
-murmur recording.mp3 --language en
+murmur recording.mp3
+murmur audio.m4a --language zh
 ```
 
 **Voice recording (no input file specified):**
 ```bash
-murmur --language en
+murmur
 ```
 
 ## Size Limitations
 
-- Files up to 25MB (OpenAI's API limit) are processed directly
+- Files up to 25MB are processed directly
 - Larger files are automatically split into chunks of approximately 23MB each
 - **Smart Overlap**: Each chunk includes 10 seconds of overlap with adjacent chunks to prevent word/sentence cutoff issues
 - Transcripts from multiple chunks are intelligently merged with automatic duplicate removal
@@ -87,10 +96,15 @@ The transcription will be saved as a text file in the same directory as the inpu
 ### Voice Recording Mode
 - The program will start recording automatically when no input file is provided
 - Press **'q'** to stop recording and begin transcription
-- Status messages will show processing progress:
-  - "Waiting for Whisper response..." during transcription
-  - "Waiting for OpenAI response..." during text enhancement
-- The enhanced transcription will be displayed in the terminal and the program will exit
+- The transcription will be displayed in the terminal
+
+## External Server Mode
+
+You can connect to an external GLM-ASR server instead of running one locally:
+
+```bash
+GLM_ASR_URL=http://your-server:8000 murmur recording.mp3
+```
 
 ## Debugging
 
@@ -101,10 +115,10 @@ RUST_LOG=debug murmur recording.mp3
 ```
 
 ## Caching
-- When processing large files, each chunk's transcription is automatically cached as `chunk_XXX.mp3.transcript.txt`
-- If processing is interrupted and restarted, cached transcripts will be reused instead of making new API calls
-- This saves time and API costs when dealing with network issues or interruptions
 
+- When processing large files, each chunk's transcription is automatically cached
+- If processing is interrupted and restarted, cached transcripts will be reused
+- This saves time when dealing with interruptions
 
 ## Testing
 
@@ -113,8 +127,6 @@ Run the test suite with:
 ```bash
 cargo test
 ```
-
-Note: Tests include mock HTTP server tests that require the `wiremock` crate.
 
 ## License
 
