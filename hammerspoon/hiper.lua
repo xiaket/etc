@@ -13,30 +13,41 @@ Hiper = {}
 Hiper.new = function(key_name)
   local self = {
     features = {},
+    stopTimer = nil,
   }
   self.key = hs.keycodes.map[key_name]
 
   local modifierHandler = function(event)
     local keyCode = event:getKeyCode()
+    local realFlags = event:getRawEventData().CGEventData.flags
+
     if keyCode ~= self.key then
       return false
     end
 
-    local realFlags = event:getRawEventData().CGEventData.flags
     local mask = realFlagMask[self.key]
     if mask == nil then
       return false
     end
 
     if (realFlags & mask) == mask then
+      -- Cancel any pending stop operation
+      if self.stopTimer then
+        self.stopTimer:stop()
+        self.stopTimer = nil
+      end
       if not self.featureTap:isEnabled() then
         self.featureTap:start()
       end
     else
-      if self.featureTap:isEnabled() then
-        self.featureTap:stop()
-        -- self.modifierTap:stop()
-        -- self.modifierTap:start()
+      -- Debounce: delay stop to avoid spurious release events
+      if self.featureTap:isEnabled() and not self.stopTimer then
+        self.stopTimer = hs.timer.doAfter(0.05, function()
+          if self.featureTap:isEnabled() then
+            self.featureTap:stop()
+          end
+          self.stopTimer = nil
+        end)
       end
     end
     return false
@@ -45,7 +56,20 @@ Hiper.new = function(key_name)
   local featureHandler = function(event)
     local keyCode = event:getKeyCode()
     local isKeyUp = event:getType() ~= hs.eventtap.event.types.keyDown
-    local isRepeat = not isKeyUp and event:getProperty(hs.eventtap.event.properties["keyboardEventAutorepeat"]) ~= 0
+    local isRepeat = not isKeyUp
+      and event:getProperty(hs.eventtap.event.properties["keyboardEventAutorepeat"]) ~= 0
+    local realFlags = event:getRawEventData().CGEventData.flags
+
+    -- Verify hyper key is still pressed (fixes stale state after screen unlock)
+    local mask = realFlagMask[self.key]
+    if mask and (realFlags & mask) ~= mask then
+      self.featureTap:stop()
+      if self.stopTimer then
+        self.stopTimer:stop()
+        self.stopTimer = nil
+      end
+      return false
+    end
 
     -- Handle hyper key itself
     if keyCode == self.key then
