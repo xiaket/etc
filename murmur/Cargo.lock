@@ -1280,6 +1280,7 @@ dependencies = [
  "crossterm",
  "dotenvy",
  "env_logger",
+ "futures",
  "hound",
  "reqwest",
  "serde",

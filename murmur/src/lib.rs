@@ -10,7 +10,9 @@
 
 use anyhow::Result;
 use clap::Parser;
+use futures::stream::{self, StreamExt};
 use std::path::PathBuf;
+use std::sync::Arc;
 
 pub mod cache;
 pub mod chunking;
@@ -194,18 +196,34 @@ impl MurmurProcessor {
     }
 
     async fn process_chunks_with_cache(&self, args: &Args, chunks: Vec<String>) -> Result<String> {
-        let mut transcripts = Vec::new();
-        for (i, chunk_path) in chunks.iter().enumerate() {
-            let chunk_size = utils::get_file_size(std::path::Path::new(chunk_path)).await?;
-            let chunk_size_mb = utils::bytes_to_mb(chunk_size);
+        let total_chunks = chunks.len();
+        let completed = Arc::new(std::sync::atomic::AtomicUsize::new(0));
 
-            ProgressDisplay::show_chunk_progress(i + 1, chunks.len(), chunk_size_mb);
-
-            let text = self.process_chunk(args, chunk_path, i).await?;
-            transcripts.push(text);
-        }
+        // Process chunks in parallel with concurrency limit
+        let results: Vec<Result<(usize, String)>> = stream::iter(chunks.into_iter().enumerate())
+            .map(|(i, chunk_path)| {
+                let args = args.clone();
+                let completed = Arc::clone(&completed);
+                async move {
+                    let text = self.process_chunk(&args, &chunk_path, i).await?;
+                    let done = completed.fetch_add(1, std::sync::atomic::Ordering::SeqCst) + 1;
+                    ProgressDisplay::show_parallel_progress(done, total_chunks);
+                    Ok((i, text))
+                }
+            })
+            .buffer_unordered(4) // Process up to 4 chunks concurrently
+            .collect()
+            .await;
 
         ProgressDisplay::clear_progress();
+
+        // Sort results by chunk index and collect transcripts
+        let mut indexed_transcripts: Vec<(usize, String)> = results
+            .into_iter()
+            .collect::<Result<Vec<_>>>()?;
+        indexed_transcripts.sort_by_key(|(i, _)| *i);
+        let transcripts: Vec<String> = indexed_transcripts.into_iter().map(|(_, t)| t).collect();
+
         self.cache_manager.cleanup_temp_files().await?;
         Ok(self.merger.merge_transcripts(transcripts))
     }
@@ -215,26 +233,40 @@ impl MurmurProcessor {
         args: &Args,
         chunks: Vec<String>,
     ) -> Result<String> {
-        let mut transcripts = Vec::new();
-        for (i, chunk_path) in chunks.iter().enumerate() {
-            let chunk_size = utils::get_file_size(std::path::Path::new(chunk_path)).await?;
-            let chunk_size_mb = utils::bytes_to_mb(chunk_size);
+        let total_chunks = chunks.len();
+        let completed = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let chunk_paths_for_cleanup: Vec<std::path::PathBuf> =
+            chunks.iter().map(std::path::PathBuf::from).collect();
 
-            ProgressDisplay::show_chunk_progress(i + 1, chunks.len(), chunk_size_mb);
-
-            // Process chunk directly without caching
-            let mut chunk_args = args.clone();
-            chunk_args.input = Some(std::path::PathBuf::from(chunk_path));
-            let text = self.client.transcribe(&chunk_args).await?;
-            transcripts.push(text);
-        }
+        // Process chunks in parallel with concurrency limit
+        let results: Vec<Result<(usize, String)>> = stream::iter(chunks.into_iter().enumerate())
+            .map(|(i, chunk_path)| {
+                let args = args.clone();
+                let completed = Arc::clone(&completed);
+                async move {
+                    let mut chunk_args = args.clone();
+                    chunk_args.input = Some(std::path::PathBuf::from(&chunk_path));
+                    let text = self.client.transcribe(&chunk_args).await?;
+                    let done = completed.fetch_add(1, std::sync::atomic::Ordering::SeqCst) + 1;
+                    ProgressDisplay::show_parallel_progress(done, total_chunks);
+                    Ok((i, text))
+                }
+            })
+            .buffer_unordered(4) // Process up to 4 chunks concurrently
+            .collect()
+            .await;
 
         ProgressDisplay::clear_progress();
 
+        // Sort results by chunk index and collect transcripts
+        let mut indexed_transcripts: Vec<(usize, String)> = results
+            .into_iter()
+            .collect::<Result<Vec<_>>>()?;
+        indexed_transcripts.sort_by_key(|(i, _)| *i);
+        let transcripts: Vec<String> = indexed_transcripts.into_iter().map(|(_, t)| t).collect();
+
         // Clean up temporary chunk files
-        let chunk_paths: Vec<std::path::PathBuf> =
-            chunks.into_iter().map(std::path::PathBuf::from).collect();
-        FileCleanupHelper::cleanup_files(&chunk_paths).await?;
+        FileCleanupHelper::cleanup_files(&chunk_paths_for_cleanup).await?;
 
         Ok(self.merger.merge_transcripts(transcripts))
     }

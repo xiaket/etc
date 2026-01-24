@@ -6,7 +6,7 @@ use tokio::fs;
 // Constants
 pub const WHISPER_TIMEOUT_SECONDS: u64 = 600;
 pub const MAX_FILE_SIZE_MB: u64 = 25;
-pub const CHUNK_SIZE_MB: u64 = 23;
+pub const CHUNK_SIZE_MB: u64 = 20;
 pub const GRACE_PERIOD_SECONDS: u64 = 10;
 pub const TEMP_DIR_NAME: &str = "murmur_audio_chunks";
 pub const METADATA_FILE: &str = "metadata.json";
@@ -180,6 +180,14 @@ impl ProgressDisplay {
         ));
     }
 
+    /// Display progress for parallel chunk processing
+    pub fn show_parallel_progress(completed: usize, total: usize) {
+        StatusLineManager::update_status(&format!(
+            "\x1b[KProcessing... {}/{}",
+            completed, total
+        ));
+    }
+
     /// Clear progress display
     pub fn clear_progress() {
         StatusLineManager::clear_status();
@@ -230,7 +238,7 @@ mod tests {
     fn test_config_default() {
         let config = Config::default();
         assert_eq!(config.max_file_size_bytes(), 25 * 1024 * 1024);
-        assert_eq!(config.chunk_size_bytes(), 23 * 1024 * 1024);
+        assert_eq!(config.chunk_size_bytes(), 20 * 1024 * 1024);
     }
 
     #[tokio::test]
