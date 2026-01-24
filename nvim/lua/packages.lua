@@ -349,7 +349,7 @@ return {
             module = "blink.cmp.sources.buffer",
             score_offset = -3,
           },
-          buffer = {
+          snippets = {
             name = "snippets",
             module = "blink.cmp.sources.snippets",
             score_offset = 6,
