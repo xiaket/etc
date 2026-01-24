@@ -200,7 +200,6 @@ return {
       "williamboman/mason-lspconfig.nvim",
     },
     config = function()
-      local lspconfig = require("lspconfig")
       local capabilities = require("blink.cmp").get_lsp_capabilities()
 
       -- Auto-configured servers with default settings
@@ -214,17 +213,19 @@ return {
       }
 
       for _, server in ipairs(auto_servers) do
-        lspconfig[server].setup({ capabilities = capabilities })
+        vim.lsp.config(server, { capabilities = capabilities })
+        vim.lsp.enable(server)
       end
 
       -- starpls for Bazel/Starlark
-      lspconfig.starpls.setup({
+      vim.lsp.config("starpls", {
         capabilities = capabilities,
         filetypes = { "bzl", "BUILD", "bazel" },
       })
+      vim.lsp.enable("starpls")
 
       -- lua_ls custom config
-      lspconfig.lua_ls.setup({
+      vim.lsp.config("lua_ls", {
         capabilities = capabilities,
         settings = {
           Lua = {
@@ -233,6 +234,7 @@ return {
           },
         },
       })
+      vim.lsp.enable("lua_ls")
 
       -- pyright custom config with virtual environment detection
       local get_python_venv = function()
@@ -262,7 +264,7 @@ return {
       local venv = get_python_venv()
       local python_path = venv and (venv .. "/bin/python3") or nil
 
-      lspconfig.pyright.setup({
+      vim.lsp.config("pyright", {
         capabilities = capabilities,
         settings = {
           pyright = { autoImportCompletion = true },
@@ -277,6 +279,7 @@ return {
           },
         },
       })
+      vim.lsp.enable("pyright")
     end,
   },
 
