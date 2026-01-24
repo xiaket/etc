@@ -173,58 +173,42 @@ return {
     end,
   },
 
-  -- Copilot Chat
-  {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    opts = {
-      question_header = "## User ",
-      answer_header = "## Copilot ",
-      error_header = "## Error ",
-      model = "claude-3.7-sonnet",
-      auto_follow_cursor = false, -- Don't follow the cursor after getting response
-    },
-    event = "VeryLazy",
-  },
-
   -- LSP
   {
     "williamboman/mason.nvim",
-    dependencies = {
-      "williamboman/mason-lspconfig.nvim",
-    },
+    dependencies = { "williamboman/mason-lspconfig.nvim" },
     event = "VeryLazy",
-    opts = {},
-  },
-  {
-    "neovim/nvim-lspconfig",
-    commit = "c646154d6e4db9b2979eeb517d0b817ad00c9c47",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "saghen/blink.cmp" },
-    config = function(_, opts)
-      local lspconfig = require("lspconfig")
-      local mason = require("mason-lspconfig")
-
-      for server, config in pairs(opts.servers or {}) do
-        config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
-        lspconfig[server].setup(config)
-      end
-
-      mason.setup({
+    config = function()
+      require("mason").setup()
+      require("mason-lspconfig").setup({
         ensure_installed = {
           "bashls",
-          "bzl",
           "docker_compose_language_service",
           "dockerls",
           "gopls",
           "lua_ls",
           "pyright",
-          "taplo", -- toml
+          "taplo",
           "terraformls",
         },
         automatic_installation = true,
       })
+    end,
+  },
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "saghen/blink.cmp",
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    },
+    config = function()
+      local lspconfig = require("lspconfig")
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-      local auto_configure_servers = {
+      -- Auto-configured servers with default settings
+      local auto_servers = {
         "bashls",
         "docker_compose_language_service",
         "dockerls",
@@ -233,78 +217,69 @@ return {
         "terraformls",
       }
 
-      mason.setup_handlers({
-        -- default handler for installed servers
-        function(server_name)
-          if vim.tbl_contains(auto_configure_servers, server_name) then
-            lspconfig[server_name].setup({})
-          end
-        end,
-        ["bzl"] = function()
-          lspconfig["bzl"].setup({
-            filetypes = { "bzl", "BUILD", "bazel" },
-          })
-        end,
-        ["pyright"] = function()
-          local get_python_venv = function()
-            if vim.env.VIRTUAL_ENV then
-              return vim.env.VIRTUAL_ENV
-            end
+      for _, server in ipairs(auto_servers) do
+        lspconfig[server].setup({ capabilities = capabilities })
+      end
 
-            local cwd = vim.fn.getcwd()
-            while true do
-              if cwd == "/" then
-                break
-              end
+      -- starpls for Bazel/Starlark
+      lspconfig.starpls.setup({
+        capabilities = capabilities,
+        filetypes = { "bzl", "BUILD", "bazel" },
+      })
 
-              local match = vim.fn.glob(cwd, "Venv")
-              if match ~= "" then
-                return cwd .. "/Venv"
-              end
-              local rev = string.reverse(cwd)
-              local index = string.find(rev, "/")
-              if index == nil then
-                break
-              end
-              cwd = string.reverse(string.sub(rev, index + 1))
-            end
+      -- lua_ls custom config
+      lspconfig.lua_ls.setup({
+        capabilities = capabilities,
+        settings = {
+          Lua = {
+            diagnostics = { globals = { "vim" } },
+            completion = { callSnippet = "Replace" },
+          },
+        },
+      })
+
+      -- pyright custom config with virtual environment detection
+      local get_python_venv = function()
+        if vim.env.VIRTUAL_ENV then
+          return vim.env.VIRTUAL_ENV
+        end
+
+        local cwd = vim.fn.getcwd()
+        while true do
+          if cwd == "/" then
+            break
           end
 
-          local venv = get_python_venv()
+          local match = vim.fn.glob(cwd, "Venv")
+          if match ~= "" then
+            return cwd .. "/Venv"
+          end
+          local rev = string.reverse(cwd)
+          local index = string.find(rev, "/")
+          if index == nil then
+            break
+          end
+          cwd = string.reverse(string.sub(rev, index + 1))
+        end
+      end
 
-          lspconfig["pyright"].setup({
-            settings = {
-              pyright = {
-                autoImportCompletion = true,
-              },
-              python = {
-                pythonPath = venv .. "/bin/python3",
-                analysis = {
-                  autoSearchPaths = true,
-                  diagnosticMode = "openFilesOnly",
-                  useLibraryCodeForTypes = true,
-                  typeCheckingMode = "off",
-                },
-              },
+      local venv = get_python_venv()
+      local python_path = venv and (venv .. "/bin/python3") or nil
+
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
+        settings = {
+          pyright = { autoImportCompletion = true },
+          python = {
+            pythonPath = python_path,
+            analysis = {
+              autoSearchPaths = true,
+              diagnosticMode = "openFilesOnly",
+              useLibraryCodeForTypes = true,
+              typeCheckingMode = "off",
             },
-          })
-        end,
-        ["lua_ls"] = function()
-          -- configure lua server (with special settings)
-          lspconfig["lua_ls"].setup({
-            settings = {
-              Lua = {
-                -- make the language server recognize "vim" global
-                diagnostics = {
-                  globals = { "vim" },
-                },
-                completion = {
-                  callSnippet = "Replace",
-                },
-              },
-            },
-          })
-        end,
+          },
+        },
       })
     end,
   },
