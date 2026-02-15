@@ -42,8 +42,3 @@
     prompt = false
 [difftool "icdiff"]
     cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
-
-[includeIf "gitdir:~/.Bitbucket/"]
-   path = .xiaket/alt/etc/gitconfig
-[includeIf "gitdir:~/.xiaket/share/bitbucket/"]
-   path = .xiaket/alt/etc/gitconfig
