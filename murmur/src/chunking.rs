@@ -139,7 +139,9 @@ impl AudioChunker {
                 "-t",
                 &chunk_duration.to_string(),
                 "-c:a",
-                "copy", // Just copy audio stream, no re-encoding
+                "libmp3lame", // Encode to MP3 (handles WAV and other input formats)
+                "-q:a",
+                "2", // High quality VBR encoding
                 "-loglevel",
                 "error",
                 chunk_path,
