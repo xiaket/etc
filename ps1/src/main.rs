@@ -94,7 +94,15 @@ fn cwd_prompt() -> String {
         if path.starts_with(".") {
             truncate += 1;
         }
-        path.truncate(truncate.into());
+        // Truncate at valid character boundary for UTF-8 strings
+        let truncate_len = truncate.into();
+        if path.len() > truncate_len {
+            let new_len = path.char_indices()
+                .find(|(i, _)| i >= &truncate_len)
+                .map(|(i, _)| i)
+                .unwrap_or(path.len());
+            path.truncate(new_len);
+        }
     }
     return if paths.len() == 1 {
         paths[0].to_string()
