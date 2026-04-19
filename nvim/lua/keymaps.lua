@@ -42,6 +42,7 @@ local leader_config = {
     },
   },
   ["v"] = { cmd = ":CopilotChatToggle<cr>", desc = "Toggle Copilot Chat" },
+  ["x"] = { cmd = ":bd<cr>", desc = "close buffer" },
   ["z"] = { cmd = "za", desc = "toggle fold" },
 }
 
