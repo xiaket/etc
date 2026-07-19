@@ -25,11 +25,6 @@ return {
     "rhysd/vim-gfm-syntax",
     ft = "markdown",
   },
-  {
-    "Vimjas/vim-python-pep8-indent",
-    ft = "python",
-  },
-
   -- Load by cmd
   {
     "xiaket/w.nvim",
@@ -160,11 +155,19 @@ return {
   -- treesitter
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
+    build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter").setup({
-        ensure_installed = { "python", "bash", "go", "json", "lua", "rust", "yaml" },
-        highlight = { enable = true, additional_vim_regex_highlighting = false },
-        indent = { enable = true, disable = { "python" } },
+      require("nvim-treesitter").install({ "python", "bash", "go", "json", "lua", "rust", "yaml" })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "python", "sh", "go", "json", "lua", "rust", "yaml" },
+        callback = function(ev)
+          if not pcall(vim.treesitter.start, ev.buf) then
+            return
+          end
+          vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
       })
     end,
   },
