@@ -15,8 +15,8 @@ async fn main() -> Result<()> {
     let api_key = std::env::var("OPENAI_API_KEY")
         .context("OPENAI_API_KEY not found. Set it as an environment variable or in .env file")?;
 
-    // Create processor
-    let processor = MurmurProcessor::new(api_key)?;
+    // Create processor with optional chunk size
+    let processor = MurmurProcessor::new(api_key, args.chunk_size)?;
 
     // Process the audio file or start voice recording/listening
     let transcription = processor.process(&args).await?;

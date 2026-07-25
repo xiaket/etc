@@ -3,7 +3,7 @@ use reqwest::multipart::{Form, Part};
 use std::path::Path;
 use tokio::fs;
 
-use crate::utils::{self, Config};
+use crate::utils;
 use crate::Args;
 
 /// OpenAI Whisper API client
@@ -14,10 +14,10 @@ pub struct WhisperClient {
 }
 
 impl WhisperClient {
-    pub fn new(api_key: String, config: &Config) -> Result<Self> {
+    pub fn new(api_key: String) -> Result<Self> {
         let client = reqwest::Client::builder()
             .timeout(std::time::Duration::from_secs(
-                config.whisper_timeout_seconds,
+                utils::WHISPER_TIMEOUT_SECONDS,
             ))
             .build()?;
 
@@ -205,6 +205,7 @@ mod tests {
         let args = Args {
             input: Some(temp_file.path().to_path_buf()),
             language: Some("en".to_string()),
+            chunk_size: None,
         };
 
         let result = client.transcribe(&args).await;
@@ -214,7 +215,6 @@ mod tests {
 
     #[test]
     fn test_is_chunk_file() {
-        let _config = Config::default();
         let client = WhisperClient {
             client: reqwest::Client::new(),
             api_key: "test".to_string(),

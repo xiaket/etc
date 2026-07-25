@@ -1,39 +1,30 @@
 use anyhow::{Context, Result};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use tokio::fs;
 
-use crate::utils::{self, Config, FileMetadata};
+use crate::utils::{self, Config, FileMetadata, METADATA_FILE};
 
 /// Cache management for audio chunks and transcripts
 pub struct CacheManager {
-    config: Config,
+    temp_dir: PathBuf,
 }
 
 impl CacheManager {
     pub fn new(config: &Config) -> Self {
         Self {
-            config: config.clone(),
+            temp_dir: config.temp_dir.clone(),
         }
     }
 
     /// Validate existing cache and cleanup if hash doesn't match
-    pub async fn validate_and_cleanup_if_needed(&self, current_hash: &str) -> Result<()> {
-        let metadata_path = self.get_metadata_path();
-
-        if Path::new(&metadata_path).exists() {
-            match self.read_existing_metadata(&metadata_path).await {
-                Ok(existing_metadata) => {
-                    if existing_metadata.original_hash != current_hash {
-                        self.cleanup_all_cached_files().await?;
-                    }
-                }
-                Err(_) => {
-                    self.cleanup_all_cached_files().await?;
-                }
+    pub async fn validate_and_cleanup_if_needed(&self, current_hash: &str) {
+        let metadata_path = self.metadata_path();
+        if metadata_path.exists() {
+            match read_metadata(&metadata_path).await {
+                Ok(metadata) if metadata.original_hash == current_hash => {}
+                _ => self.cleanup().await,
             }
         }
-
-        Ok(())
     }
 
     /// Create metadata file for current processing session
@@ -44,38 +35,27 @@ impl CacheManager {
         file_hash: &str,
         chunk_count: usize,
     ) -> Result<()> {
-        let filename = utils::get_filename_or_default(file_path, "unknown_file");
-
         let metadata = FileMetadata {
-            original_filename: filename,
+            original_filename: utils::get_filename_or_default(file_path, "unknown_file"),
             original_size: file_size,
             original_hash: file_hash.to_string(),
             chunk_count,
             creation_time: utils::current_timestamp(),
         };
 
-        let metadata_path = self.get_metadata_path();
-        let metadata_json = serde_json::to_string_pretty(&metadata)?;
-
-        // Ensure directory exists
-        if let Some(parent) = Path::new(&metadata_path).parent() {
-            fs::create_dir_all(parent).await?;
-        }
-
-        fs::write(&metadata_path, metadata_json).await?;
+        fs::create_dir_all(&self.temp_dir).await?;
+        fs::write(
+            self.metadata_path(),
+            serde_json::to_string_pretty(&metadata)?,
+        )
+        .await?;
 
         Ok(())
     }
 
     /// Get cached transcript for a chunk if it exists
     pub async fn get_cached_transcript(&self, chunk_path: &str) -> Result<Option<String>> {
-        let cache_path = format!("{}.transcript.txt", chunk_path);
-
-        if !Path::new(&cache_path).exists() {
-            return Ok(None);
-        }
-
-        match fs::read_to_string(&cache_path).await {
+        match fs::read_to_string(transcript_cache_path(chunk_path)).await {
             Ok(cached_text) if !cached_text.trim().is_empty() => Ok(Some(cached_text)),
             _ => Ok(None),
         }
@@ -83,72 +63,35 @@ impl CacheManager {
 
     /// Save transcript to cache file
     pub async fn save_transcript_cache(&self, chunk_path: &str, text: &str) -> Result<()> {
-        let cache_path = format!("{}.transcript.txt", chunk_path);
-
+        let cache_path = transcript_cache_path(chunk_path);
         fs::write(&cache_path, text)
             .await
-            .with_context(|| format!("Failed to save transcript cache to {}", cache_path))?;
-
-        Ok(())
+            .with_context(|| format!("Failed to save transcript cache to {}", cache_path))
     }
 
-    /// Clean up all temporary files after successful processing
-    pub async fn cleanup_temp_files(&self) -> Result<()> {
-        let segment_dir = self.config.temp_dir_path().to_string_lossy().to_string();
-
-        if let Ok(mut dir) = fs::read_dir(&segment_dir).await {
+    /// Remove all cached files and the cache directory itself.
+    /// Errors are ignored — files may already be gone.
+    pub async fn cleanup(&self) {
+        if let Ok(mut dir) = fs::read_dir(&self.temp_dir).await {
             while let Ok(Some(entry)) = dir.next_entry().await {
                 fs::remove_file(entry.path()).await.ok();
             }
         }
-
-        // Try to remove the directory itself
-        fs::remove_dir(&segment_dir).await.ok();
-
-        Ok(())
+        fs::remove_dir(&self.temp_dir).await.ok();
     }
 
-    /// Clean up all cached files (used when hash mismatch is detected)
-    async fn cleanup_all_cached_files(&self) -> Result<()> {
-        let segment_dir = self.config.temp_dir_path().to_string_lossy().to_string();
-
-        if !Path::new(&segment_dir).exists() {
-            return Ok(());
-        }
-
-        match fs::read_dir(&segment_dir).await {
-            Ok(mut dir) => {
-                while let Ok(Some(entry)) = dir.next_entry().await {
-                    if let Err(_e) = fs::remove_file(entry.path()).await {
-                        // Ignore error - file might already be removed
-                    }
-                }
-
-                // Try to remove the directory itself
-                if let Err(_e) = fs::remove_dir(&segment_dir).await {
-                    // Ignore error - directory might not be empty or already removed
-                }
-            }
-            Err(_e) => {
-                // Ignore error - directory might not exist
-            }
-        }
-
-        Ok(())
+    fn metadata_path(&self) -> PathBuf {
+        self.temp_dir.join(METADATA_FILE)
     }
+}
 
-    fn get_metadata_path(&self) -> String {
-        format!(
-            "{}/{}",
-            self.config.temp_dir_path().to_string_lossy(),
-            self.config.metadata_file
-        )
-    }
+fn transcript_cache_path(chunk_path: &str) -> String {
+    format!("{}.transcript.txt", chunk_path)
+}
 
-    async fn read_existing_metadata(&self, metadata_path: &str) -> Result<FileMetadata> {
-        let metadata_json = fs::read_to_string(metadata_path).await?;
-        serde_json::from_str(&metadata_json).map_err(Into::into)
-    }
+async fn read_metadata(metadata_path: &Path) -> Result<FileMetadata> {
+    let metadata_json = fs::read_to_string(metadata_path).await?;
+    serde_json::from_str(&metadata_json).map_err(Into::into)
 }
 
 #[cfg(test)]
@@ -157,18 +100,8 @@ mod tests {
     use tempfile::TempDir;
 
     #[tokio::test]
-    async fn test_cache_manager_creation() {
-        let config = Config::default();
-        let cache_manager = CacheManager::new(&config);
-
-        assert_eq!(cache_manager.config.temp_dir_name, config.temp_dir_name);
-        assert_eq!(cache_manager.config.metadata_file, config.metadata_file);
-    }
-
-    #[tokio::test]
     async fn test_get_cached_transcript_nonexistent() {
-        let config = Config::default();
-        let cache_manager = CacheManager::new(&config);
+        let cache_manager = CacheManager::new(&Config::default());
 
         let result = cache_manager
             .get_cached_transcript("/nonexistent/chunk.mp3")
@@ -186,8 +119,7 @@ mod tests {
             .to_string_lossy()
             .to_string();
 
-        let config = Config::default();
-        let cache_manager = CacheManager::new(&config);
+        let cache_manager = CacheManager::new(&Config::default());
 
         let test_content = "Test transcript content";
 
@@ -208,10 +140,11 @@ mod tests {
         let temp_dir = TempDir::new().unwrap();
         let file_path = temp_dir.path().join("test.mp3");
 
-        // Create a custom config with temp directory in our test directory
-        let mut config = Config::default();
-        config.temp_dir_name = temp_dir.path().join("cache").to_string_lossy().to_string();
-
+        // Use a cache directory inside our test directory
+        let config = Config {
+            temp_dir: temp_dir.path().join("cache"),
+            ..Config::default()
+        };
         let cache_manager = CacheManager::new(&config);
 
         let result = cache_manager
@@ -220,11 +153,10 @@ mod tests {
 
         assert!(result.is_ok());
 
-        // Verify metadata file was created
-        let metadata_path = cache_manager.get_metadata_path();
-        assert!(Path::new(&metadata_path).exists());
+        // Verify metadata file was created with the right content
+        let metadata_path = cache_manager.metadata_path();
+        assert!(metadata_path.exists());
 
-        // Verify content
         let metadata_content = fs::read_to_string(&metadata_path).await.unwrap();
         let metadata: FileMetadata = serde_json::from_str(&metadata_content).unwrap();
 
@@ -235,7 +167,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_cleanup_all_cached_files() {
+    async fn test_cleanup() {
         let temp_dir = TempDir::new().unwrap();
         let cache_dir = temp_dir.path().join("test_cache");
         fs::create_dir_all(&cache_dir).await.unwrap();
@@ -253,17 +185,14 @@ mod tests {
             assert!(file_path.exists());
         }
 
-        // Create custom config
-        let mut config = Config::default();
-        config.temp_dir_name = cache_dir.to_string_lossy().to_string();
-
+        let config = Config {
+            temp_dir: cache_dir.clone(),
+            ..Config::default()
+        };
         let cache_manager = CacheManager::new(&config);
+        cache_manager.cleanup().await;
 
-        // Call cleanup function
-        let result = cache_manager.cleanup_all_cached_files().await;
-        assert!(result.is_ok());
-
-        // Verify files are deleted
+        // Verify files and directory are deleted
         for file_name in &test_files {
             let file_path = cache_dir.join(file_name);
             assert!(
@@ -272,8 +201,6 @@ mod tests {
                 file_path.display()
             );
         }
-
-        // Verify directory is also deleted
         assert!(!cache_dir.exists(), "Directory should be deleted");
     }
 }

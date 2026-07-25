@@ -11,26 +11,20 @@ pub const GRACE_PERIOD_SECONDS: u64 = 10;
 pub const TEMP_DIR_NAME: &str = "murmur_audio_chunks";
 pub const METADATA_FILE: &str = "metadata.json";
 
-/// Configuration structure to centralize all constants and settings
+/// Runtime-adjustable settings; sizes are configurable via CLI, the temp dir via tests
 #[derive(Debug, Clone)]
 pub struct Config {
-    pub whisper_timeout_seconds: u64,
     pub max_file_size_mb: u64,
     pub chunk_size_mb: u64,
-    pub grace_period_seconds: u64,
-    pub temp_dir_name: String,
-    pub metadata_file: String,
+    pub temp_dir: PathBuf,
 }
 
 impl Default for Config {
     fn default() -> Self {
         Self {
-            whisper_timeout_seconds: WHISPER_TIMEOUT_SECONDS,
             max_file_size_mb: MAX_FILE_SIZE_MB,
             chunk_size_mb: CHUNK_SIZE_MB,
-            grace_period_seconds: GRACE_PERIOD_SECONDS,
-            temp_dir_name: TEMP_DIR_NAME.to_string(),
-            metadata_file: METADATA_FILE.to_string(),
+            temp_dir: std::env::temp_dir().join(TEMP_DIR_NAME),
         }
     }
 }
@@ -42,10 +36,6 @@ impl Config {
 
     pub fn chunk_size_bytes(&self) -> u64 {
         self.chunk_size_mb * 1024 * 1024
-    }
-
-    pub fn temp_dir_path(&self) -> PathBuf {
-        std::env::temp_dir().join(&self.temp_dir_name)
     }
 }
 
@@ -99,7 +89,7 @@ pub async fn validate_input_file(file_path: &Path) -> Result<()> {
 /// Save transcription to file
 pub async fn save_transcription(input_path: &Path, content: &str) -> Result<PathBuf> {
     let output_path = input_path.with_extension("txt");
-    tokio::fs::write(&output_path, content)
+    fs::write(&output_path, content)
         .await
         .context("Failed to write output file")?;
     Ok(output_path)
@@ -122,76 +112,40 @@ pub fn current_timestamp() -> u64 {
         .as_secs()
 }
 
-/// Status line manager for consistent terminal output handling
-pub struct StatusLineManager;
-
-impl StatusLineManager {
-    /// Display a status message with spinner
-    pub fn show_status(message: &str) {
-        print!("{}", message);
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
-    }
-
-    /// Clear the current status line
-    pub fn clear_status() {
-        print!("\r\x1b[K");
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
-    }
-
-    /// Show status with carriage return prefix (for updates)
-    pub fn update_status(message: &str) {
-        print!("\r{}", message);
-        std::io::Write::flush(&mut std::io::stdout()).unwrap();
-    }
+/// Display a status message on the current line
+pub fn show_status(message: &str) {
+    print!("{}", message);
+    std::io::Write::flush(&mut std::io::stdout()).unwrap();
 }
 
-/// File cleanup helper for temporary files
-pub struct FileCleanupHelper;
-
-impl FileCleanupHelper {
-    /// Clean up a single temporary file if it exists
-    pub async fn cleanup_file(file_path: &std::path::Path) -> Result<()> {
-        if file_path.exists() {
-            tokio::fs::remove_file(file_path)
-                .await
-                .with_context(|| format!("Failed to remove temporary file: {:?}", file_path))?;
-        }
-        Ok(())
-    }
-
-    /// Clean up multiple temporary files
-    pub async fn cleanup_files(file_paths: &[std::path::PathBuf]) -> Result<()> {
-        for file_path in file_paths {
-            Self::cleanup_file(file_path).await?;
-        }
-        Ok(())
-    }
+/// Clear the current status line
+pub fn clear_status() {
+    print!("\r\x1b[K");
+    std::io::Write::flush(&mut std::io::stdout()).unwrap();
 }
 
-/// Progress display helper for chunk processing
-pub struct ProgressDisplay;
+/// Display progress for parallel chunk processing
+pub fn show_progress(completed: usize, total: usize) {
+    print!("\r\x1b[KProcessing... {}/{}", completed, total);
+    std::io::Write::flush(&mut std::io::stdout()).unwrap();
+}
 
-impl ProgressDisplay {
-    /// Display processing progress for chunks
-    pub fn show_chunk_progress(current: usize, total: usize, chunk_size_mb: f64) {
-        StatusLineManager::update_status(&format!(
-            "\x1b[KProcessing... {}/{} ({:.1}MB)",
-            current, total, chunk_size_mb
-        ));
+/// Clean up a single temporary file if it exists
+pub async fn cleanup_file(file_path: &Path) -> Result<()> {
+    if file_path.exists() {
+        fs::remove_file(file_path)
+            .await
+            .with_context(|| format!("Failed to remove temporary file: {:?}", file_path))?;
     }
+    Ok(())
+}
 
-    /// Display progress for parallel chunk processing
-    pub fn show_parallel_progress(completed: usize, total: usize) {
-        StatusLineManager::update_status(&format!(
-            "\x1b[KProcessing... {}/{}",
-            completed, total
-        ));
+/// Clean up multiple temporary files
+pub async fn cleanup_files(file_paths: &[PathBuf]) -> Result<()> {
+    for file_path in file_paths {
+        cleanup_file(file_path).await?;
     }
-
-    /// Clear progress display
-    pub fn clear_progress() {
-        StatusLineManager::clear_status();
-    }
+    Ok(())
 }
 
 #[cfg(test)]

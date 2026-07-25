@@ -7,7 +7,7 @@ use crossterm::{
 };
 use hound::{WavSpec, WavWriter};
 use std::fs::File;
-use std::io::{BufWriter, Write};
+use std::io::BufWriter;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -87,87 +87,6 @@ impl VoiceRecorder {
         // Always cleanup terminal state
         disable_raw_mode()?;
         result
-    }
-
-    pub async fn record_with_spacebar() -> Result<PathBuf> {
-        println!("Press and hold SPACE to record...");
-
-        let recorder = Self::new()?;
-        let temp_dir = std::env::temp_dir();
-        let audio_file = temp_dir.join("murmur_recording.wav");
-
-        enable_raw_mode()?;
-
-        let mut recording = false;
-        let mut stream: Option<Stream> = None;
-        let audio_data: Arc<Mutex<Vec<f32>>> = Arc::new(Mutex::new(Vec::new()));
-
-        loop {
-            if event::poll(Duration::from_millis(50))? {
-                if let Event::Key(KeyEvent {
-                    code, modifiers, ..
-                }) = event::read()?
-                {
-                    match code {
-                        KeyCode::Char('c') if modifiers.contains(KeyModifiers::CONTROL) => {
-                            // Ctrl+C pressed - exit the entire program
-                            disable_raw_mode()?;
-                            std::process::exit(0);
-                        }
-                        KeyCode::Char(' ') if !recording => {
-                            print!("\r\x1b[2K\x1b[1G\x1b[0mRecording...");
-                            std::io::stdout().flush().unwrap();
-                            recording = true;
-
-                            let data_clone = Arc::clone(&audio_data);
-                            data_clone.lock().unwrap().clear();
-
-                            let stream_result = recorder.start_recording(data_clone)?;
-                            stream = Some(stream_result);
-
-                            while event::poll(Duration::from_millis(1))? {
-                                if let Event::Key(KeyEvent {
-                                    code: KeyCode::Char(' '),
-                                    ..
-                                }) = event::read()?
-                                {
-                                } else {
-                                    break;
-                                }
-                            }
-                        }
-                        _ => {}
-                    }
-                }
-            } else if recording {
-                thread::sleep(Duration::from_millis(100));
-
-                // Double-check that space key is actually released
-                if !event::poll(Duration::from_millis(10))? {
-                    print!("\r\x1b[2K\x1b[0G");
-                    std::io::stdout().flush().unwrap();
-
-                    if let Some(s) = stream.take() {
-                        drop(s);
-                    }
-
-                    let data = audio_data.lock().unwrap();
-                    let result = if !data.is_empty() {
-                        Self::save_audio_data(&data, &audio_file, &recorder.config)
-                            .context("Failed to save audio data")
-                            .map(|_| audio_file)
-                    } else {
-                        Err(anyhow::anyhow!("No audio data recorded"))
-                    };
-
-                    // Always cleanup terminal state
-                    disable_raw_mode()?;
-                    return result;
-                }
-            }
-
-            thread::sleep(Duration::from_millis(10));
-        }
     }
 
     fn start_recording(&self, audio_data: Arc<Mutex<Vec<f32>>>) -> Result<Stream> {
