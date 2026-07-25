@@ -67,7 +67,7 @@ cask "wechat"
 if `hostname -s`.strip == "Bragg"
   brew "helm"
   brew "fluent-bit"
-  brew "terraform"
+  cask "claude"
   cask "session-manager-plugin"
   cask "zulu@17"
 end
