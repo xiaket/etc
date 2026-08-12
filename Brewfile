@@ -61,7 +61,6 @@ cask "kitty"
 cask "only-switch"
 cask "raycast"
 cask "superlist"
-cask "wechat"
 
 # Per host setup
 if `hostname -s`.strip == "Bragg"
