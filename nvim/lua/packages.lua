@@ -36,20 +36,6 @@ return {
       },
     },
   },
-  {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    build = ":Copilot auth",
-    event = "InsertEnter",
-    opts = {
-      suggestion = { enabled = false },
-      panel = { enabled = false },
-      filetypes = {
-        markdown = true,
-        help = true,
-      },
-    },
-  },
   -- Load when BufWritePre
   {
     "stevearc/conform.nvim",
@@ -300,13 +286,6 @@ return {
     "saghen/blink.cmp",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      {
-        "fang2hou/blink-copilot",
-        opts = {
-          max_completions = 3,
-          max_attempts = 2,
-        },
-      },
     },
     lazy = false,
     version = "*", -- use a release tag to download pre-built binaries
@@ -344,7 +323,7 @@ return {
         },
       },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer", "copilot" },
+        default = { "lsp", "path", "snippets", "buffer" },
 
         providers = {
           buffer = {
@@ -356,12 +335,6 @@ return {
             name = "snippets",
             module = "blink.cmp.sources.snippets",
             score_offset = 6,
-          },
-          copilot = {
-            name = "copilot",
-            module = "blink-copilot",
-            score_offset = 5,
-            async = true,
           },
         },
       },
