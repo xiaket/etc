@@ -41,10 +41,6 @@ act() {
   fi
 }
 
-ip138() {
-	curl "http://www.ip138.com/ips138.asp?ip=$1" 2>/dev/null | iconv -f gb18030 -t utf-8 | egrep "\"ul1" | sed "s/<[^>]*>/./g;s/^\s*//g; s/\.\././g;s/\.\././g" | python -c "import sys; print sys.stdin.read().replace('.', '\n')" | grep -v "^$"
-}
-
 gc() {
 	if git config remote.origin.url | grep -q github.com; then
 		git commit -vs --author "Kai Xia <kaix+github@fastmail.com>" "$@"
@@ -61,15 +57,6 @@ vm() {
 	else
 		set -o emacs
 	fi
-}
-
-aws-extract() {
-	# export values in ~/.aws/credentials
-	while IFS= read -r line; do
-		name=$(echo "$line" | awk '{print $1}' | tr '[:lower:]' '[:upper:]')
-		value=$(echo "$line" | awk '{print $3}')
-		eval "export $name=\"$value\""
-	done < <(cat ~/.aws/credentials | grep -A 3 "\[default\]" | tail -n 3)
 }
 
 cat-dir() {
@@ -120,17 +107,24 @@ cd () {
     return
   fi
 
-  # bookmarked dirs.
-  case "$1" in
-    "=e")
-      builtin cd ~/.xiaket/etc
-      return
-      ;;
-    "=g")
-      builtin cd "$(git rev-parse --show-toplevel)"
-      return
-      ;;
-  esac
+  # bookmarked dirs, configured via CD_BOOKMARK_<name> environment
+  # variables. A value starting with "!" is run as a command and its
+  # output is used as the destination. Examples:
+  #   export CD_BOOKMARK_e=~/.xiaket/etc
+  #   export CD_BOOKMARK_g='!git rev-parse --show-toplevel'
+  if [[ "$1" == =* ]]; then
+    local bookmark_var="CD_BOOKMARK_${1#=}"
+    local bookmark="${!bookmark_var}"
+    if [ -z "$bookmark" ]; then
+      echo "cd: bookmark '$1' is not set (export $bookmark_var to define it)" >&2
+      return 1
+    fi
+    if [[ "$bookmark" == !* ]]; then
+      bookmark="$(eval "${bookmark#!}")" || return 1
+    fi
+    builtin cd "$bookmark"
+    return
+  fi
 
   # dest is a file, go to its dir
   if [[ -f "$1" ]]

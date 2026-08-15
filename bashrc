@@ -105,6 +105,12 @@ export PYTHONSTARTUP=~/.pythonrc
 export PYTHONDONTWRITEBYTECODE="False"
 export GOPATH="${xiaketDIR}/go"
 
+# bookmarks for the cd wrapper in bash_functions: `cd =<name>` goes to
+# $CD_BOOKMARK_<name>; a value starting with "!" is executed and its
+# output is used as the destination.
+export CD_BOOKMARK_e="$HOME/.xiaket/etc"
+export CD_BOOKMARK_g='!git rev-parse --show-toplevel'
+
 # user nvim for everything
 export GIT_EDITOR=nvim
 export VISUAL=nvim
