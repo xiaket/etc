@@ -50,6 +50,7 @@ brew "yq"
 brew "yt-dlp"
 brew "zoxide"
 
+cask "alfred"
 cask "bitwarden"
 cask "cherry-studio"
 cask "font-fira-code-nerd-font"
@@ -59,7 +60,6 @@ cask "iina"
 cask "itsycal"
 cask "kitty"
 cask "only-switch"
-cask "raycast"
 cask "superlist"
 
 # Per host setup
