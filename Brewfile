@@ -72,6 +72,7 @@ if `hostname -s`.strip == "Bragg"
 end
 
 if `hostname -s`.strip == "Feynman"
+  brew "codex"
   brew "deno"
   brew "libpq"
   brew "node"
@@ -82,5 +83,6 @@ if `hostname -s`.strip == "Feynman"
   cask "steam"
   cask "Roblox"
   cask "RobloxStudio"
+  brew "wechat"
   cask "zoom"
 end
