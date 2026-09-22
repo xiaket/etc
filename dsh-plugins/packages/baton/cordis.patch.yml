@@ -1,0 +1,4 @@
+# dsh-baton bundle patch: inserts the plugin row into the profile roster.
+- insert:
+    - id: dsh-baton
+      name: dsh-baton

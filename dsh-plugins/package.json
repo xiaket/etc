@@ -1,0 +1,23 @@
+{
+  "name": "dsh-plugins",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Personal DeepSeek Harness plugins, developed and version-aligned together.",
+  "type": "module",
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "scripts": {
+    "test": "pnpm -r --no-bail test",
+    "typecheck": "pnpm -r --no-bail typecheck",
+    "build": "pnpm -r build",
+    "verify:peers": "node scripts/verify-peer-deps.mjs",
+    "check": "pnpm run verify:peers && pnpm run typecheck && pnpm run test",
+    "redeploy": "scripts/redeploy.sh"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.9"
+  }
+}

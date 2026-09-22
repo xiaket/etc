@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "lib",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [
+      "node",
+      "react"
+    ],
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "src",
+    "tests"
+  ]
+}

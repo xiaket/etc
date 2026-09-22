@@ -1,0 +1,10 @@
+# dsh-sandbox-extra-roots: append configured writable roots to every
+# workspace-write confinement. Roots are configured here (deployment choice);
+# `~` expands to the user's home directory.
+- insert:
+    - id: sandbox-extra-roots
+      name: 'dsh-sandbox-extra-roots'
+      config:
+        roots:
+          - '~/.cache/bazel'
+          - '~/.cache/bazelisk'

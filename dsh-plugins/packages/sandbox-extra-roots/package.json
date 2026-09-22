@@ -1,0 +1,37 @@
+{
+  "name": "dsh-sandbox-extra-roots",
+  "version": "0.3.0",
+  "description": "Grant extra writable roots to the DSH bash sandbox and the fs write/edit tools: globally, per-repo, per-session via /grant-dir, durably per workspace, or interactively when a workspace-write denial happens.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": ["src", "cordis.patch.yml", "README.md"],
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "scripts": {
+    "build": "echo 'plain JS plugin; nothing to build'",
+    "test": "vitest run",
+    "typecheck": "echo 'plain JS plugin; no typecheck' "
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-storage-domain": ">=0.1.0 <0.2.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "4.0.2",
+    "@deepseek-ai/dsh-storage-domain": "0.1.5-rc.2",
+    "vitest": "^2.1.0"
+  }
+}
