@@ -1,0 +1,14 @@
+restart () {
+  launchctl kickstart -k gui/$(id -u)/com.xiaket.dsh.web
+}
+status () {
+  launchctl print gui/$(id -u)/com.xiaket.dsh.web
+}
+disable () {
+  launchctl bootout gui/$(id -u)/com.xiaket.dsh.web
+}
+enable () {
+  launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.xiaket.dsh.web.plist
+  restart
+}
+export -f restart status disable enable
