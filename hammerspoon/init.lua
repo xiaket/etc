@@ -12,7 +12,9 @@ local baseFeatures = {
   b = "Books",
   c = "Canva",
   f = "Finder",
-  g = "Cherry Studio",
+  g = function()
+    require("quickask").trigger()
+  end,
   k = "Kitty",
   l = "Slack",
   m = "Mail",

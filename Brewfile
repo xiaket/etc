@@ -52,7 +52,6 @@ brew "zoxide"
 
 cask "alfred"
 cask "bitwarden"
-cask "cherry-studio"
 cask "font-fira-code-nerd-font"
 cask "font-maple-mono"
 cask "hammerspoon"
