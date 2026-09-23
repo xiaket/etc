@@ -69,7 +69,7 @@ Workspace grants require `@deepseek-ai/dsh-storage`, a backend, and `@deepseek-a
 
 - Background `bash` jobs (`run_in_background`) are confined with the grants but a denial inside one does not prompt.
 - The directories offered for a `bash` denial come from parsing stderr for absolute paths; a tool that reports a relative path yields no candidates, and the free-text field is the fallback.
-- Extra roots are appended to the runner argv (`--rw` for landlock-run, `--bind` for bwrap); the seatbelt runner is not supported and logs a warning once.
+- Extra roots are expressed in the runner's native policy: `--rw` for landlock-run, `--bind` for bwrap, and an appended `file-write*`/`subpath` rule in the macOS Seatbelt (`sandbox-exec`) profile.
 - The plugin reaches into `dsh-sandbox-local` (argv dialect), `dsh-fs-sandbox` (`writeText`/`editText` policy argument, `FS_SANDBOX_DENIED`), and `dsh-bash-sandbox` (`result.sandbox.denied`). Verified against dsh 0.1.1-rc.2 through 0.1.6-alpha.1.
 
 ## Development

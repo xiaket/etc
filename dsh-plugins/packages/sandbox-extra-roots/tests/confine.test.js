@@ -167,6 +167,17 @@ describe('dsh-sandbox-extra-roots', () => {
     expect(grant.filter(a => a === root)).toHaveLength(2)
   })
 
+  it('adds writable subpaths to the sandbox-exec Seatbelt profile', () => {
+    const root = tempDir('extra-root-')
+    const baseProfile = '(version 1)\n(allow default)\n(deny file-write*)'
+    const ctx = contextWith(() => ({ argv: ['sandbox-exec', '-p', baseProfile, '--', 'bash', '-c', 'true'] }))
+    apply(ctx, { roots: [root] })
+
+    const result = ctx.sandbox.confine(['bash'], { mode: 'workspace-write' })
+    expect(result.argv.slice(result.argv.indexOf('--'))).toEqual(['--', 'bash', '-c', 'true'])
+    expect(result.argv[2]).toBe(`${baseProfile}\n(allow file-write* (subpath "${root}"))`)
+  })
+
   it('leaves read-only and full-access policies untouched', () => {
     const root = tempDir('extra-root-')
     const base = ['landlock-run', '--', 'bash']

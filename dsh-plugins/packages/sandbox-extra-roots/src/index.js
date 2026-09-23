@@ -89,6 +89,17 @@ function defaultWritableRoots(policy) {
   return [...new Set([policy.workspaceRoot, '/tmp', tmpdir()].filter(r => typeof r === 'string').map(canonical))]
 }
 
+/** Quote one path as an SBPL string literal (matching dsh-sandbox-local). */
+function sbplString(path) {
+  return `"${path.replaceAll('\\', String.raw`\\`).replaceAll('"', String.raw`\"`)}"`
+}
+
+/** Add writable subpaths to an existing sandbox-exec SBPL profile. */
+function addSeatbeltGrants(profile, roots) {
+  const grants = roots.map(root => `(subpath ${sbplString(root)})`).join(' ')
+  return `${profile}\n(allow file-write* ${grants})`
+}
+
 export function apply(ctx, config) {
   const globalRoots = readRoots(config?.roots)
   const repoGrants = Array.isArray(config?.grants)
@@ -265,6 +276,20 @@ export function apply(ctx, config) {
       grant = roots.flatMap(r => ['--rw', r])
     } else if (runner === 'bwrap') {
       grant = roots.flatMap(r => ['--bind', r, r])
+    } else if (runner === 'sandbox-exec') {
+      // DSH's macOS runner uses `sandbox-exec -p <SBPL> -- <command>`.
+      // Preserve its base policy and add a single allow rule for every root.
+      const profile = confined.argv.indexOf('-p')
+      if (profile === -1 || profile + 1 >= separator || typeof confined.argv[profile + 1] !== 'string') {
+        if (!warned.has(runner)) {
+          warned.add(runner)
+          console.warn('[sandbox-extra-roots] sandbox-exec argv has no SBPL profile; extra roots not granted to bash')
+        }
+        return confined
+      }
+      const argv = [...confined.argv]
+      argv[profile + 1] = addSeatbeltGrants(argv[profile + 1], roots)
+      return { ...confined, argv }
     } else {
       if (!warned.has(runner)) {
         warned.add(runner)
