@@ -16,7 +16,7 @@ import { Composer } from './Composer.tsx'
 import type { PanelProps } from './contract.ts'
 import { css } from './styles.ts'
 import { TaskList } from './TaskList.tsx'
-import { Transcript } from './Transcript.tsx'
+import { Transcript } from './TranscriptView.tsx'
 import { needsInput, runningCount } from './view-model.ts'
 
 const CLOCK_MS = 30_000

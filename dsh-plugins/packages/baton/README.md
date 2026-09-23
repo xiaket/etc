@@ -2,6 +2,29 @@
 
 一个 DeepSeek Harness 插件：在侧栏加一个「代码工作台」面板，你在一个统一的输入框里描述想做的事，一个长期存在的**指挥者**（commander）session 判断该在哪个仓库做、用 `baton_dispatch` 派出 **worker** session 去干活，任务状态实时出现在右栏，完成时页面 toast + 音效提醒；需要深聊时点任务卡片进入那个 worker session 的普通会话视图。
 
+## 安装
+
+需要已安装的 `dsh`、符合本仓库 `package.json` 中 `engines.node` 要求的 Node.js，以及 `pnpm`。在本仓库根目录执行：
+
+```sh
+pnpm install
+pnpm --filter dsh-baton build
+dsh plugin --profile web add "link:$(pwd)/packages/baton"
+dsh web
+```
+
+`build` 会生成 host 入口 `packages/baton/lib/index.js` 和浏览器入口 `packages/baton/lib/client.js`。必须在启动 web 前完成；缺少 `lib/client.js` 时，dsh web 会报 `client bundle not found`。`dsh plugin` 会把本地目录链接到 web profile，并自动将 `dsh-baton` 加入 `dsh.profile.bundles`；无需在 `cordis.patch.yml` 再写 `insert`。
+
+启动后打开 dsh web 页面，侧栏应出现「代码工作台」。若 dsh web 已在运行，安装后先重启进程，再刷新浏览器。
+
+更新本地源码后，重新构建并链接，然后重启 dsh web：
+
+```sh
+pnpm redeploy baton
+```
+
+如果使用自定义 `DSH_HOME`，安装、更新和启动时都要设置同一个值。可用 `dsh --version` 查看已安装的 Harness 版本；升级 Harness 后，按仓库根目录 README 的「Upgrading the harness」同步开发依赖并重建插件。
+
 ## 设计要点
 
 **指挥者不属于任何 workspace。** 它以 `meta.cwd` 创建（默认 `~/.dsh/baton/`）、不传 `workspaceId`，因此 `attachSession` 不会执行；创建后立即 `workspaceRegistry.archiveSession`，侧栏任何分组都不显示它。

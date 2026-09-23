@@ -70,10 +70,13 @@ const modelRef = z.object({
 /**
  * Config schema. Models and the commander directory vary per deployment.
  */
-export const Config: z<Partial<Config>, Config> = z.object({
-  commanderModel: modelRef
+export const Config: z<Partial<Config>, Omit<Config, 'commanderModel' | 'workerModel'> & {
+  commanderModel: ModelRef | undefined
+  workerModel: ModelRef | undefined
+}> = z.object({
+  commanderModel: z.union([modelRef, z.const(undefined)])
     .description('Model for the commander session. Unset follows the deployment default.'),
-  workerModel: modelRef
+  workerModel: z.union([modelRef, z.const(undefined)])
     .description('Model for worker sessions. Unset follows the deployment default.'),
   commanderCwd: z.string().default(dshHomePath('baton'))
     .description('Working directory of the commander session. Not a workspace; created when missing.'),

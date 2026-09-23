@@ -15,6 +15,22 @@ scripts/
   redeploy.sh           Clean-rebuild one plugin and relink it into the web profile.
 ```
 
+## Install Baton in dsh web
+
+From this repository's root, with `dsh`, Node.js, and `pnpm` installed:
+
+```sh
+pnpm install
+pnpm --filter dsh-baton build
+dsh plugin --profile web add "link:$(pwd)/packages/baton"
+dsh web
+```
+
+Build before adding the plugin: dsh web reads `packages/baton/lib/client.js`
+when it starts. The `dsh plugin` command adds Baton's bundle to the web
+profile automatically. For configuration, updates, and troubleshooting, see
+[Baton's installation guide](packages/baton/README.md#安装).
+
 ## Commands
 
 ```sh
