@@ -39,7 +39,7 @@ local function classifyError(status, body)
   if status == 401 then
     return "认证失败（401）：请检查 OPENAI_API_KEY 是否有效" .. (msg and (" — " .. msg) or "")
   elseif status == 429 then
-    return "请求过于频繁（429），请稍后再试"
+    return "请求受限或额度不足（429）" .. (msg and (" — " .. msg) or "；请检查账号额度、项目预算和速率限制")
   elseif status >= 500 then
     return "OpenAI 服务端错误（" .. status .. "），请稍后再试"
   else
@@ -85,23 +85,48 @@ end
 -- cfg: config.get() table
 -- onSuccess(answerText), onError(humanReadableMessage)
 function M.ask(turns, question, images, cfg, onSuccess, onError)
-  local apiKey, keyErr = config.getApiKey()
+  local providerCfg, apiKey, keyErr = config.getProviderConfig()
   if not apiKey then
     onError(keyErr)
     return
   end
+  -- Keep the caller's prompt/timeout while taking provider-specific API defaults.
+  providerCfg.system_prompt = cfg.system_prompt or providerCfg.system_prompt
+  providerCfg.timeout = cfg.timeout or providerCfg.timeout
+  cfg = providerCfg
 
-  local body = {
-    model = cfg.model,
-    instructions = cfg.system_prompt,
-    input = buildInputItems(turns, question, images),
-    max_output_tokens = cfg.max_output_tokens,
-  }
-  if cfg.temperature then
-    body.temperature = cfg.temperature
-  end
-  if cfg.enable_web_search then
-    body.tools = { { type = "web_search" } }
+  local body
+  if cfg.provider == "deepseek" then
+    local function chatContent(text, imageUrls)
+      if not imageUrls or #imageUrls == 0 then
+        return text
+      end
+      local content = { { type = "text", text = text } }
+      for _, dataUrl in ipairs(imageUrls) do
+        table.insert(content, { type = "image_url", image_url = { url = dataUrl } })
+      end
+      return content
+    end
+    local messages = { { role = "system", content = cfg.system_prompt } }
+    for _, turn in ipairs(turns or {}) do
+      table.insert(messages, { role = "user", content = chatContent(turn.question, turn.images) })
+      table.insert(messages, { role = "assistant", content = turn.answer })
+    end
+    table.insert(messages, { role = "user", content = chatContent(question, images) })
+    body = { model = cfg.model, messages = messages, max_tokens = cfg.max_output_tokens }
+  else
+    body = {
+      model = cfg.model,
+      instructions = cfg.system_prompt,
+      input = buildInputItems(turns, question, images),
+      max_output_tokens = cfg.max_output_tokens,
+    }
+    if cfg.temperature then
+      body.temperature = cfg.temperature
+    end
+    if cfg.enable_web_search then
+      body.tools = { { type = "web_search" } }
+    end
   end
 
   local headers = {
@@ -138,7 +163,13 @@ function M.ask(turns, question, images, cfg, onSuccess, onError)
       return
     end
 
-    local answer = extractAnswer(decoded)
+    local answer
+    if cfg.provider == "deepseek" then
+      answer = decoded.choices and decoded.choices[1] and decoded.choices[1].message
+        and decoded.choices[1].message.content or ""
+    else
+      answer = extractAnswer(decoded)
+    end
     if answer == "" then
       onError("模型没有返回文本内容")
       return
