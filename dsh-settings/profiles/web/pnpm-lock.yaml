@@ -1,0 +1,106 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+patchedDependencies:
+  dsh-codex-auth@0.3.3-rc.1: d4d0fa6fccc19c9dba309f7afc375c1018f05591bbac73de4ab2262556752dde
+
+importers:
+
+  .:
+    dependencies:
+      '@changfenhuang/dsh-annotation':
+        specifier: ^1.4.2
+        version: 1.4.2
+      dsh-baton:
+        specifier: link:/Users/xiaket/.xiaket/share/github/etc/dsh-plugins/packages/baton
+        version: link:../../../.xiaket/share/github/etc/dsh-plugins/packages/baton
+      dsh-codex-auth:
+        specifier: 0.3.3-rc.1
+        version: 0.3.3-rc.1(patch_hash=d4d0fa6fccc19c9dba309f7afc375c1018f05591bbac73de4ab2262556752dde)
+      dsh-context:
+        specifier: ^0.11.2
+        version: 0.11.2
+      dsh-sandbox-extra-roots:
+        specifier: link:/Users/xiaket/.xiaket/share/github/etc/dsh-plugins/packages/sandbox-extra-roots
+        version: link:../../../.xiaket/share/github/etc/dsh-plugins/packages/sandbox-extra-roots
+
+packages:
+
+  '@changfenhuang/dsh-annotation@1.4.2':
+    resolution: {integrity: sha512-jA5YmFfdknRZJazfzGidqrj48dSb78avEKwmAhvMhxU4dS6n9nEh6wDIE1R/uC3LRW66WdFt4UQ8uHIRrJtNCg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      cordis: ^4.0.0-rc.7 || ^4.0.1
+
+  dsh-codex-auth@0.3.3-rc.1:
+    resolution: {integrity: sha512-oYiHUETYsm2HR7ZBfAW/nfP71HgIQZmmQJriHoAQE/xVw+PL9Tq8K17IhwmtGiZ1hafkb6bCJHR87M4yb2CixA==}
+    engines: {node: ^22.19.0 || >=24.0.0}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.2
+      '@deepseek-ai/dsh-agent': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-api-remotes': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-api-session-controller': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-atomic-write': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-attachment': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-connection': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-locale': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-ui-chat': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-ui-primitives': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-ui-renderer': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-ui-session': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-ui-settings': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-ui-slots': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-client-ui-tool': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-commands': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-compaction': 0.1.5-rc.1
+      '@deepseek-ai/dsh-compaction-basic': 0.1.5-rc.1
+      '@deepseek-ai/dsh-credentials': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-fs': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-host-webserver': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-invariants': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-llm': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-llm-pi-ai': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-session': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-settings': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-token-meter': 0.1.5-rc.1
+      '@deepseek-ai/dsh-tools': ^0.1.5-rc.1
+      '@deepseek-ai/dsh-web': ^0.1.5-rc.1
+      '@deepseek-ai/schemastery': ^3.18.2
+      '@earendil-works/pi-ai': ^0.85.1
+      react: ^18.2.0
+    peerDependenciesMeta:
+      '@deepseek-ai/dsh-compaction':
+        optional: true
+      '@deepseek-ai/dsh-compaction-basic':
+        optional: true
+      '@deepseek-ai/dsh-token-meter':
+        optional: true
+
+  dsh-context@0.11.2:
+    resolution: {integrity: sha512-PBF8sGjXhlY9XKXdOFIuh4C/Mh7s1uiWlacu067ses9WHLdWkTFmD65JhQiYDOSA67d3i+Y9su67J5Cdd5dvNA==}
+
+  undici@8.10.0:
+    resolution: {integrity: sha512-HvltHd7avK13QIw/oLe4qoOLyoVSoafqJ2jYOrtMRBkbYT31eiBQ8O0ehRKZiEZCMEyLFQNIADpgCWC5fALvYQ==}
+    engines: {node: '>=22.19.0'}
+
+  zod@4.4.3:
+    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
+snapshots:
+
+  '@changfenhuang/dsh-annotation@1.4.2': {}
+
+  dsh-codex-auth@0.3.3-rc.1(patch_hash=d4d0fa6fccc19c9dba309f7afc375c1018f05591bbac73de4ab2262556752dde):
+    dependencies:
+      undici: 8.10.0
+
+  dsh-context@0.11.2:
+    dependencies:
+      zod: 4.4.3
+
+  undici@8.10.0: {}
+
+  zod@4.4.3: {}

@@ -1,0 +1,9 @@
+ui-onboarding:
+  welcomeNoticeVersion: 2026-08-13.1
+llm-pi-ai:
+  providers: {}
+agent-default-model:
+  provider: openai-codex
+  model: gpt-6-luna
+locale:
+  preference: zh

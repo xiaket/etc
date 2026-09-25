@@ -1,0 +1,24 @@
+# Your patch layer for this dsh profile, applied after every bundle layer:
+# a top-level YAML array of loader patch entries (id-targeted config
+# overrides, disables, and insert lists; `!!js` expressions allowed).
+# Baton sessions use the local Codex CLI login through dsh-codex-auth.
+- id: llm-codex-auth
+  config:
+    llmEnabled: true
+    codexCommand: /opt/homebrew/bin/codex
+
+- id: dsh-baton
+  name: dsh-baton
+  config:
+    commanderModel:
+      provider: openai-codex
+      model: gpt-6-sol
+    workerModel:
+      provider: openai-codex
+      model: gpt-6-sol
+    commanderCwd: ~/.dsh/baton
+    commanderTitle: 代码工作台
+    commanderPreset: ''
+    workerPreset: ''
+    workerNotes: []
+    summaryLimit: 500

@@ -1,0 +1,7 @@
+packages:
+  - .
+
+nodeLinker: hoisted
+autoInstallPeers: false
+patchedDependencies:
+  dsh-codex-auth@0.3.3-rc.1: patches/dsh-codex-auth@0.3.3-rc.1.patch

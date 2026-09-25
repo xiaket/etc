@@ -1,0 +1,24 @@
+{
+  "name": "dsh-profile-web",
+  "private": true,
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "dsh-codex-auth",
+        "dsh-context",
+        "@changfenhuang/dsh-annotation",
+        "dsh-baton",
+        "dsh-sandbox-extra-roots"
+      ]
+    }
+  },
+  "dependencies": {
+    "@changfenhuang/dsh-annotation": "^1.4.2",
+    "dsh-baton": "link:../../../dsh-plugins/packages/baton",
+    "dsh-codex-auth": "0.3.3-rc.1",
+    "dsh-context": "^0.11.2",
+    "dsh-sandbox-extra-roots": "link:../../../dsh-plugins/packages/sandbox-extra-roots"
+  }
+}

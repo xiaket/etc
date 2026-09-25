@@ -1,0 +1,59 @@
+diff --git a/lib/bounded-response-BG1X2Lzs.js b/lib/bounded-response-BG1X2Lzs.js
+index 7b2de54fa50326fb200262d547093f4b0748e5bd..31f5d2d9257aa8202984f1cfa08256c97b0d9b74 100644
+--- a/lib/bounded-response-BG1X2Lzs.js
++++ b/lib/bounded-response-BG1X2Lzs.js
+@@ -210,13 +210,19 @@ const CODEX_STANDARD_CONTEXT_WINDOW = 272e3;
+ const CODEX_LONG_CONTEXT_WINDOW = 1e6;
+ /** Current Codex flagship. Installed pi-ai 0.84.4 omits this descriptor. */
+ const CODEX_GPT_6_ASTRA_MODEL_ID = "gpt-6-astra";
+-/** Template used only when the installed catalog has no GPT-6 Astra row. */
+-const CODEX_GPT_6_ASTRA_TEMPLATE_ID = "gpt-5.6-sol";
++/** Server-backed GPT-6 Sol model, currently omitted by some installed catalogs. */
++const CODEX_GPT_6_SOL_MODEL_ID = "gpt-6-sol";
++/** Server-backed GPT-6 Luna model, currently omitted by some installed catalogs. */
++const CODEX_GPT_6_LUNA_MODEL_ID = "gpt-6-luna";
++/** Template used only when the installed catalog has no GPT-6 descriptor row. */
++const CODEX_GPT_6_TEMPLATE_ID = "gpt-5.6-sol";
+ const LONG_CONTEXT_MODEL_IDS = /* @__PURE__ */ new Set([
+ 	"gpt-5.6-luna",
+ 	"gpt-5.6-sol",
+ 	"gpt-5.6-terra",
+-	CODEX_GPT_6_ASTRA_MODEL_ID
++	CODEX_GPT_6_ASTRA_MODEL_ID,
++	CODEX_GPT_6_SOL_MODEL_ID,
++	CODEX_GPT_6_LUNA_MODEL_ID
+ ]);
+ /**
+ * Official Codex GPT-6 Astra pricing and reasoning map from pi-ai 0.85.1.
+@@ -260,16 +266,27 @@ function applyCodexContextPolicy(models, settings) {
+ 	} : model);
+ }
+ function ensureCodexCatalogModels(models) {
+-	if (models.some((model) => model.id === "gpt-6-astra")) return models;
+-	const template = models.find((model) => model.id === CODEX_GPT_6_ASTRA_TEMPLATE_ID);
++	const template = models.find((model) => model.id === CODEX_GPT_6_TEMPLATE_ID);
+ 	if (template === void 0) return models;
+-	return [{
++	const additions = [];
++	if (!models.some((model) => model.id === CODEX_GPT_6_ASTRA_MODEL_ID)) additions.push({
+ 		...template,
+ 		id: CODEX_GPT_6_ASTRA_MODEL_ID,
+ 		name: "GPT-6 Astra",
+ 		cost: GPT_6_ASTRA_COST,
+ 		thinkingLevelMap: { ...GPT_6_ASTRA_THINKING_LEVEL_MAP }
+-	}, ...models];
++	});
++	if (!models.some((model) => model.id === CODEX_GPT_6_SOL_MODEL_ID)) additions.push({
++		...template,
++		id: CODEX_GPT_6_SOL_MODEL_ID,
++		name: "GPT-6 Sol"
++	});
++	if (!models.some((model) => model.id === CODEX_GPT_6_LUNA_MODEL_ID)) additions.push({
++		...template,
++		id: CODEX_GPT_6_LUNA_MODEL_ID,
++		name: "GPT-6 Luna"
++	});
++	return additions.length === 0 ? models : [...additions, ...models];
+ }
+ //#endregion
+ //#region src/native-checkpoint-replay.ts
