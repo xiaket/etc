@@ -63,7 +63,7 @@ pending ──→ running ──→ in_review ──(用户确认)──→ comp
     # commanderModel / workerModel 留空则跟随部署默认模型；需要覆盖时按下面的形状填：
     # commanderModel: { provider: <provider-id>, model: <model-id> }
     # workerModel:    { provider: <provider-id>, model: <model-id> }
-    commanderCwd: ~/.dsh/baton
+    commanderCwd: ~/.dsh/baton # 支持 ~、$HOME、${HOME} 和环境变量；不执行 shell
     commanderTitle: 代码工作台
     commanderPreset: ''        # 空 = 部署默认 preset（standard）
     workerPreset: ''

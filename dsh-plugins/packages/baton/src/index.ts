@@ -18,6 +18,7 @@ import type {} from '@deepseek-ai/dsh-agent'
 import type {} from '@deepseek-ai/dsh-workspace'
 import { PROTOCOL_SECTION_NAME, PROTOCOL_SECTION_ORDER, buildProtocol } from './host/protocol-text.ts'
 import { Commander, type CommanderAgentsFace, type CommanderWorkspaceFace } from './host/commander.ts'
+import { expandConfigPath } from './host/config-path.ts'
 import type { AgentPresetsFace } from './host/composition.ts'
 import { ExecutionEngine, type AgentsFace, type EventsFace, type WorktreePoolFace } from './host/execution.ts'
 import { NotificationService } from './host/notification.ts'
@@ -218,7 +219,7 @@ export function apply(ctx: Context, config: Config): void {
           if (session !== undefined) titleService.rename(session, title)
         },
       },
-    cwd: config.commanderCwd,
+    cwd: expandConfigPath(config.commanderCwd),
     ...(config.commanderModel === undefined ? {} : { model: config.commanderModel }),
     displayTitle: config.commanderTitle,
     presets,
