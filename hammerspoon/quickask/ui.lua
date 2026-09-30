@@ -359,6 +359,10 @@ function M.newSession(cfg)
     if self.webview then
       self.webview:show()
       self.webview:bringToFront(true)
+      local win = self.webview:hswindow()
+      if win then
+        win:focus()
+      end
     end
   end
 
