@@ -118,6 +118,12 @@ build-ps1() {
   touch-done
 }
 
+engram() {
+  check-done || return 0
+  go install github.com/Gentleman-Programming/engram/cmd/engram@latest
+  touch-done
+}
+
 create-links() {
   check-done || return 0
   # for configuration in $HOME
@@ -155,5 +161,6 @@ homebrew
 homebrew-packages
 python-packages
 build-ps1
+engram
 create-links
 misc-config

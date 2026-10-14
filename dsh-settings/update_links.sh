@@ -7,6 +7,7 @@ SETTINGS_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 DSH_DIR="${HOME}/.dsh"
 
 sources=(
+  "$SETTINGS_DIR/cordis.patch.yml"
   "$SETTINGS_DIR/settings.yaml"
   "$SETTINGS_DIR/profiles/web/package.json"
   "$SETTINGS_DIR/profiles/web/cordis.patch.yml"
@@ -15,6 +16,7 @@ sources=(
   "$SETTINGS_DIR/profiles/web/patches/dsh-codex-auth@0.3.3-rc.1.patch"
 )
 targets=(
+  "$DSH_DIR/cordis.patch.yml"
   "$DSH_DIR/settings.yaml"
   "$DSH_DIR/profiles/web/package.json"
   "$DSH_DIR/profiles/web/cordis.patch.yml"
