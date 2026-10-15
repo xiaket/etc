@@ -41,7 +41,7 @@ pnpm redeploy baton
 pending ──→ running ──→ in_review ──(用户确认)──→ completed
               │  ▲           │
               ▼  │           └──(follow_up)──→ running
-        needs_input          
+        needs_input
               │
               ▼
            failed ──(follow_up)──→ running

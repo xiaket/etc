@@ -1,34 +1,40 @@
+# shellcheck shell=bash
 gm() {
-	mod="$1"
-	# goto module directory
-	module_path=$(python3 -c "import $mod;print($1.__file__.rsplit('/', 1)[0])" 2>/dev/null)
-	cd $module_path
+  # goto a python module's directory
+  local module_path
+  module_path=$(python3 -c "import $1;print($1.__file__.rsplit('/', 1)[0])" 2> /dev/null)
+  if [ -z "$module_path" ]; then
+    echo "gm: cannot locate module '$1'" >&2
+    return 1
+  fi
+  cd "$module_path" || return 1
 }
 
 ls() {
-	cwd=$(pwd)
-	OPTIONS="-lhtr"
+  local bin="/bin/ls"
+  local -a options=(-lhtr)
 
-	if [ "x$cwd" = "x$HOME" ]; then
-		OPTIONS="--hide='VirtualBox VMs' --hide=Applications --hide=Books --hide=Desktop --hide=Dropbox --hide=Library --hide=Music --hide=Movies --hide=Pictures --hide=Public --hide=Documents $OPTIONS"
-	fi
+  if [ "$PWD" = "$HOME" ]; then
+    options=(
+      --hide='VirtualBox VMs' --hide=Applications --hide=Books
+      --hide=Desktop --hide=Documents --hide=Dropbox --hide=Library
+      --hide=Movies --hide=Music --hide=Pictures --hide=Public
+      "${options[@]}"
+    )
+  fi
 
-	if [ "x$ARCH" = "xDarwin" ]; then
-		bin="gls"
-	else
-		bin="/bin/ls"
-	fi
+  [ "$ARCH" = "Darwin" ] && bin="gls"
 
-	echo $OPTIONS | xargs "$bin" --color=always $*
+  command "$bin" --color=always "${options[@]}" "$@"
 }
 
 mk() {
-	if [ $# -eq 0 ]; then
-		eval "$MARKED"
-	else
-		export MARKED="$@"
-		echo "command marked."
-	fi
+  if [ $# -eq 0 ]; then
+    eval "$MARKED"
+  else
+    export MARKED="$*"
+    echo "command marked."
+  fi
 }
 
 act() {
@@ -103,7 +109,7 @@ cat-files() {
 cd () {
   if [ "$#" = 0 ]
   then
-    builtin cd
+    builtin cd || return 1
     return
   fi
 
@@ -122,22 +128,22 @@ cd () {
     if [[ "$bookmark" == !* ]]; then
       bookmark="$(eval "${bookmark#!}")" || return 1
     fi
-    builtin cd "$bookmark"
+    builtin cd "$bookmark" || return 1
     return
   fi
 
   # dest is a file, go to its dir
   if [[ -f "$1" ]]
   then
-    dir_name="$(dirname $1)"
-    builtin cd "$dir_name"
+    dir_name="$(dirname "$1")"
+    builtin cd "$dir_name" || return 1
     return
   fi
 
   if [[ -d "$1" ]] || [[ $1 == */* ]] || [[ $1 == "-" ]]
   then
     # default cd behavior
-    builtin cd "$1"
+    builtin cd "$1" || return 1
     return
   fi
 
@@ -152,10 +158,10 @@ cd () {
   if [ "$matches" = "0" ]
   then
     # fallback to default cd behavior, but this would probably fail
-    builtin cd "$@"
+    builtin cd "$@" || return 1
   elif [ "$matches" = "1" ]
   then
-    builtin cd "$found"
+    builtin cd "$found" || return 1
   else
     echo -e "found $matches dirs:\n\n$found"
   fi

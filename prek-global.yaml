@@ -1,0 +1,70 @@
+# Global prek configuration.
+#
+# git-hooks/pre-commit uses this file for every repo on this machine.
+# Keep it conservative: a check that is wrong here blocks commits
+# everywhere.
+#
+# Two deliberate choices:
+#
+#   * Everything comes from `repo: builtin` -- prek's own Rust implementations.
+#     No repository is cloned, no Python environment is built, nothing is
+#     fetched. A cold cache is 16K and a cold run is well under a second.
+#
+#   * Every hook is check-only: no hook rewrites a file. That leaves the
+#     worktree untouched, so prek's stash/restore cycle has nothing to collide
+#     with. Auto-fixing hooks are what make that cycle risky.
+#
+# Per-repo escape hatches:
+#   SKIP=shellcheck git commit ...   skip one hook
+#   git commit --no-verify           skip the hook entirely
+
+repos:
+  - repo: builtin
+    hooks:
+      - id: trailing-whitespace
+        # A markdown line ending in exactly two spaces is a hard line break.
+        args: ["--check", "--markdown-linebreak-ext=md,markdown"]
+
+      - id: end-of-file-fixer
+        args: ["--check"]
+
+      # deny-pattern is line-based by default and never sees the line ending,
+      # so CRLF has to be matched with the whole file in memory.
+      - id: deny-pattern
+        alias: no-crlf
+        name: no CRLF line endings
+        args: ["--multiline", "\\r\\n"]
+
+      # Written as a character class so this file does not match its own rule.
+      - id: deny-pattern
+        alias: no-wip-marker
+        name: no uppercase do-not-commit markers
+        args: ["DO NOT[ ]COMMIT"]
+
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+
+      - id: check-yaml
+        args: ["--allow-multiple-documents"]
+      - id: check-json
+      - id: check-toml
+
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  - repo: local
+    hooks:
+      # language: system means prek runs the shellcheck already on $PATH and
+      # builds no environment for it.
+      - id: shellcheck
+        name: shellcheck
+        language: system
+        # SC1071 (not sh/bash/dash/ksh) and SC2148 (no shebang, dialect
+        # unknown) both mean "shellcheck cannot analyse this file" rather than
+        # "this file is wrong". In a global hook that is a skip, not a failure.
+        entry: shellcheck --severity=error --exclude=SC1071,SC2148
+        # prek classifies by extension and shebang, which misses sourced files
+        # like bashrc that have neither, so they are named explicitly.
+        types_or: [shell, file]
+        files: '(^|/)(bashrc|alias|bash_functions)$|\.(ba)?sh$'
+        exclude: '\.zsh$'

@@ -1,0 +1,4 @@
+# Follow `source`d files instead of reporting SC1091 for each of them. bashrc
+# is a loader: nearly every line of real content lives in a sourced file, so
+# without this shellcheck sees almost nothing.
+external-sources=true

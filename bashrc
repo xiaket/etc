@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 ##############
 # The basics #
 ##############
@@ -59,17 +60,15 @@ fi
 
 # secrets.
 if [ -f "$etcdir/bash_secrets" ]; then
+  # shellcheck source=/dev/null  # machine-local, not in the repo
   source "$etcdir/bash_secrets"
 fi
 
 # For Alternative settings
 if [ -f "$altdir/etc/bashrc" ]; then
+  # shellcheck source=/dev/null  # machine-local overlay, not in the repo
   . "$altdir/etc/bashrc"
 fi
-
-# for fzf
-#set rtp+=/usr/local/opt/fzf
-#[ -f $etcdir/fzf/key-binding.sh ] && source $etcdir/fzf/key-binding.sh
 
 # For bash completion.
 . "$etcdir"/bash_completion
@@ -83,19 +82,6 @@ function _xiaket_prompt {
 }
 
 export PROMPT_COMMAND='_xiaket_prompt'
-
-################
-# bash history #
-################
-
-# don't put duplicate lines in the history. See bash(1) for more options
-#export HISTCONTROL=ignoredups
-# unlimited playback.
-#export HISTFILESIZE=99999
-#export HISTSIZE=99999
-#export HISTTIMEFORMAT="%h/%d - %H:%M:%S "
-# append to the history file, don't overwrite it
-#shopt -s histappend
 
 #########################
 # environment variables #
@@ -194,6 +180,7 @@ if ls -l ~/.ssh/*.priv > /dev/null 2>&1; then
     content=$(/usr/bin/ssh-agent | sed "/^echo/d")
     [ -f "$SSH_ENV" ] && return 0 || echo "$content" > "$SSH_ENV"
     chmod 600 "${SSH_ENV}"
+    # shellcheck source=/dev/null
     . "${SSH_ENV}" > /dev/null
     /usr/bin/ssh-add ~/.ssh/*.priv
   }
@@ -210,6 +197,7 @@ if ls -l ~/.ssh/*.priv > /dev/null 2>&1; then
   trap 'rm -f "$LOCKFILE"; exit $?' INT TERM EXIT
 
   if [ -f "${SSH_ENV}" ]; then
+    # shellcheck source=/dev/null
     . "${SSH_ENV}" > /dev/null
     if ! pgrep -q "ssh-agent$"; then
       rm -f "${SSH_ENV}"
@@ -223,3 +211,6 @@ if ls -l ~/.ssh/*.priv > /dev/null 2>&1; then
   rm -f "$LOCKFILE"
   trap - INT TERM EXIT
 fi
+# BEGIN ANSIBLE MANAGED BLOCK FOR canva_git
+export PATH="$HOME/.local/share/canva-git/bin:$PATH"
+# END ANSIBLE MANAGED BLOCK FOR canva_git

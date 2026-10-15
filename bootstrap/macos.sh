@@ -6,6 +6,7 @@ set -o pipefail
 
 # This stage does not have any prerequisites. We should run this after the first boot.
 BASE_DIR="$HOME/.xiaket"
+altdir="$BASE_DIR/alt"
 if [ "$(uname -m)" = "arm64" ]; then
   brewdir=/opt/homebrew
 else
@@ -124,27 +125,69 @@ engram() {
   touch-done
 }
 
-create-links() {
-  check-done || return 0
+# Create or repair one symlink. Unlike a bare `ln -sf`, this is safe to run
+# repeatedly: `ln -sf` follows an existing symlink-to-a-directory and drops a
+# nested link *inside* the target (~/.config/nvim/nvim), so -n is mandatory
+# here. Anything that is not ours -- a real file, or an $altdir overlay that
+# deliberately shadows the repo copy -- is reported and left alone.
+link() {
+  local src="$1" dst="$2" cur
+
+  if [ ! -e "$src" ]; then
+    echo "  MISS   $src does not exist, skipping $dst" >&2
+    return 0
+  fi
+
+  if [ -L "$dst" ]; then
+    if [ "$(realpath "$dst" 2> /dev/null)" = "$(realpath "$src" 2> /dev/null)" ]; then
+      return 0
+    fi
+    cur=$(readlink "$dst")
+    case "$cur" in
+      "$altdir"/*)
+        echo "  keep   $dst -> $cur (alt overlay)"
+        return 0
+        ;;
+    esac
+    ln -sfn "$src" "$dst"
+    echo "  relink $dst -> $src (was $cur)"
+    return 0
+  fi
+
+  if [ -e "$dst" ]; then
+    echo "  SKIP   $dst: a real $([ -d "$dst" ] && echo directory || echo file) is in the way" >&2
+    return 0
+  fi
+
+  ln -sfn "$src" "$dst"
+  echo "  link   $dst -> $src"
+}
+
+# Deliberately NOT guarded by check-done: links are convergent state, not a
+# one-off step, so this runs on every invocation and reports what it changed.
+sync-links() {
+  echo "> syncing links"
+  mkdir -p "$HOME/.config"
+
   # for configuration in $HOME
-  ln -sf "$BASE_DIR/etc/bashrc" "$HOME/.bashrc"
-  ln -sf "$HOME/.bashrc" "$HOME/.bash_profile"
-  ln -sf "$BASE_DIR/etc/gitconfig" "$HOME/.gitconfig"
-  ln -sf "$BASE_DIR/etc/hammerspoon" "$HOME/.hammerspoon"
-  ln -sf "$BASE_DIR/etc/inputrc" "$HOME/.inputrc"
-  ln -sf "$BASE_DIR/etc/pythonrc" "$HOME/.pythonrc"
-  ln -sf "$BASE_DIR/etc/snape.json" "$HOME/.snape.json"
-  ln -sf "$BASE_DIR/etc/nvim" "$HOME/.vim"
-  ln -sf "$BASE_DIR/share/github" "$HOME/.Github"
-  ln -sf "$BASE_DIR/share/ssh" "$HOME/.ssh"
+  link "$BASE_DIR/etc/bashrc" "$HOME/.bashrc"
+  link "$HOME/.bashrc" "$HOME/.bash_profile"
+  link "$BASE_DIR/etc/gitconfig" "$HOME/.gitconfig"
+  link "$BASE_DIR/etc/hammerspoon" "$HOME/.hammerspoon"
+  link "$BASE_DIR/etc/inputrc" "$HOME/.inputrc"
+  link "$BASE_DIR/etc/pythonrc" "$HOME/.pythonrc"
+  link "$BASE_DIR/etc/snape.json" "$HOME/.snape.json"
+  link "$BASE_DIR/etc/nvim" "$HOME/.vim"
+  link "$BASE_DIR/share/github" "$HOME/.Github"
+  link "$BASE_DIR/share/ssh" "$HOME/.ssh"
 
   # for configuration in .config
-  mkdir -p "$HOME/.config"
-  ln -sf "$BASE_DIR/etc/nvim" "$HOME/.config/nvim"
-  ln -sf "$BASE_DIR/etc/kitty" "$HOME/.config/kitty"
-  ln -sf $brewdir/bin/python3 $brewdir/bin/python
-  ln -sf $brewdir/bin/pip3 $brewdir/bin/pip
-  touch-done
+  link "$BASE_DIR/etc/nvim" "$HOME/.config/nvim"
+  link "$BASE_DIR/etc/kitty" "$HOME/.config/kitty"
+
+  # unversioned python/pip shims
+  link "$brewdir/bin/python3" "$brewdir/bin/python"
+  link "$brewdir/bin/pip3" "$brewdir/bin/pip"
 }
 
 misc-config() {
@@ -162,5 +205,5 @@ homebrew-packages
 python-packages
 build-ps1
 engram
-create-links
+sync-links
 misc-config

@@ -37,7 +37,7 @@ A command-line tool to transcribe audio files using the OpenAI Whisper API, with
    ```bash
    export OPENAI_API_KEY=your_api_key_here
    ```
-   
+
    Alternatively, create a `.env` file in the same directory as the executable with:
    ```
    OPENAI_API_KEY=your_api_key_here

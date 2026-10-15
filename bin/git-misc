@@ -10,7 +10,12 @@ blank() {
 }
 
 br() {
-  git for-each-ref --sort=-committerdate refs/heads --format='%(authoremail) %(refname:short) %(committerdate:short)' | grep '^<kaix' | awk '$3 >= "'$(date -v-14d +%Y-%m-%d)'" {print $2}'
+  local cutoff
+  cutoff=$(date -v-14d +%Y-%m-%d)
+  git for-each-ref --sort=-committerdate refs/heads \
+    --format='%(authoremail) %(refname:short) %(committerdate:short)' \
+    | grep '^<kaix' \
+    | awk -v cutoff="$cutoff" '$3 >= cutoff {print $2}'
 }
 
 get-primary-branch() {

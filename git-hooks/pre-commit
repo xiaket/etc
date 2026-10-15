@@ -1,15 +1,32 @@
 #!/bin/bash
+#
+# Global pre-commit hook, wired up via core.hooksPath in gitconfig, so this
+# runs in every repo on this machine. It performs no checks of its own -- it
+# picks a config and hands off to prek.
+#
+# Config resolution, in order:
+#   1. prek.toml in the repository, which then owns its own checks
+#   2. prek-global.yaml from this repo, for everything else
+#
+# Escape hatches:
+#   SKIP=shellcheck git commit ...   skip one hook
+#   git commit --no-verify           skip the hook entirely
 
-set -o errexit
 set -o nounset
-set -o pipefail
 
-for file in $(git diff --name-only --cached --diff-filter=ACMR)
-do
-  if grep -iq "do not commit" "$file"; then
-      echo "Commit message contains 'do not commit'. Commit aborted."
-      exit 1
-  fi
-done
+# prek missing (fresh machine, before `brew bundle`) must not block commits.
+if ! command -v prek > /dev/null 2>&1; then
+  echo "pre-commit: prek is not installed, skipping checks (brew install prek)" >&2
+  exit 0
+fi
 
-exit 0
+top=$(git rev-parse --show-toplevel 2> /dev/null) || exit 0
+
+config="$top/prek.toml"
+if [ ! -f "$config" ]; then
+  config="$HOME/.xiaket/etc/prek-global.yaml"
+  # No global config either (e.g. the etc repo is not checked out yet).
+  [ -f "$config" ] || exit 0
+fi
+
+exec prek run --config "$config"
