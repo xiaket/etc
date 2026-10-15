@@ -19,7 +19,7 @@ do
       FORCE="true"
       shift
       ;;
-    -*|--*)
+    -*)
       echo "Unknown option $1"
       exit 1
       ;;

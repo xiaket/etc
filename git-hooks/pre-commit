@@ -5,8 +5,17 @@
 # picks a config and hands off to prek.
 #
 # Config resolution, in order:
-#   1. prek.toml in the repository, which then owns its own checks
-#   2. prek-global.yaml from this repo, for everything else
+#   1. prek.toml in the repository being committed to, which then owns its
+#      own checks
+#   2. prek-global.yaml sitting next to this hook's directory
+#
+# The baseline is located relative to this file rather than through a fixed
+# ~/.xiaket/etc path, so the same hook works wherever the dotfiles repo is
+# checked out and however core.hooksPath points at it.
+#
+# .pre-commit-config.yaml is deliberately NOT honoured: a repo carrying one is
+# usually running it through its own tooling, and it should not get to decide
+# what happens on this machine.
 #
 # Escape hatches:
 #   SKIP=shellcheck git commit ...   skip one hook
@@ -14,9 +23,9 @@
 
 set -o nounset
 
-# prek missing (fresh machine, before `brew bundle`) must not block commits.
+# prek missing (fresh machine, before bootstrap) must not block commits.
 if ! command -v prek > /dev/null 2>&1; then
-  echo "pre-commit: prek is not installed, skipping checks (brew install prek)" >&2
+  echo "pre-commit: prek is not installed, skipping checks" >&2
   exit 0
 fi
 
@@ -24,8 +33,9 @@ top=$(git rev-parse --show-toplevel 2> /dev/null) || exit 0
 
 config="$top/prek.toml"
 if [ ! -f "$config" ]; then
-  config="$HOME/.xiaket/etc/prek-global.yaml"
-  # No global config either (e.g. the etc repo is not checked out yet).
+  hook_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P) || exit 0
+  config="$hook_dir/../prek-global.yaml"
+  # No baseline either (e.g. the dotfiles repo is not checked out yet).
   [ -f "$config" ] || exit 0
 fi
 
