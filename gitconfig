@@ -1,6 +1,18 @@
+# Base git configuration, symlinked to ~/.gitconfig.
+#
+# Machine-local and work-specific settings live in ~/.xiaket/alt/etc/gitconfig,
+# which is included at the bottom of this file and therefore wins on any key it
+# also sets (identity, per-directory identity routing, maintenance/scalar
+# registrations). Git ignores the include silently when that file is absent, so
+# this works unchanged on a machine with no alt overlay.
+
 [user]
-    name = Kai Xia
-    email = kaix+github@fastmail.com
+    # No name/email here on purpose. Identity is selected per repository by the
+    # includeIf rules in the alt overlay; useConfigOnly makes git refuse to
+    # commit when none of them matched, instead of silently inheriting whatever
+    # happens to be the default. To fix a repo git rejects:
+    #     git config user.name "..." && git config user.email "..."
+    useConfigOnly = true
 
 [alias]
     st = status
@@ -19,26 +31,89 @@
 
 [core]
     excludesfile = ~/.xiaket/etc/gitignore_global
-    pager = cat
-    quotepath = false
     hooksPath = ~/.xiaket/etc/git-hooks
+    pager = delta
+    quotepath = false
+
+[init]
+    defaultBranch = main
+
 [push]
     default = current
+    # First push of a new branch no longer needs -u.
+    autoSetupRemote = true
+
+[fetch]
+    # Drop local refs for branches deleted on the remote.
+    prune = true
+
+[rebase]
+    # Stash and restore a dirty worktree instead of refusing to start.
+    autoStash = true
+
+[rerere]
+    # Record how a conflict was resolved and replay it the next time the same
+    # conflict shows up. Worth the most with branch.autosetuprebase = always.
+    enabled = true
+    autoupdate = true
+
+[commit]
+    # Show the diff in the commit message editor.
+    verbose = true
+
+[merge]
+    conflictstyle = zdiff3
+    # List the merged commits in the merge commit message.
+    log = true
+
+[pull]
+    twohead = ort
+
+[branch]
+    autosetuprebase = always
+
+[grep]
+    extendRegexp = true
+    lineNumber = true
+
 [color]
     ui = true
     branch = auto
     diff = auto
     interactive = auto
     status = auto
-[grep]
-    extendRegexp = true
-    lineNumber = true
-[branch]
-    autosetuprebase = always
 
 [diff]
+    colorMoved = default
     tool = icdiff
 [difftool]
     prompt = false
 [difftool "icdiff"]
     cmd = icdiff --line-numbers $LOCAL $REMOTE
+
+[pager]
+    diff = delta
+    log = delta
+    reflog = delta
+    show = delta
+
+[delta]
+    plus-style = "syntax #012800"
+    minus-style = "syntax #340001"
+    syntax-theme = Monokai Extended
+    navigate = false
+    line-numbers = false
+    side-by-side = true
+
+[interactive]
+    diffFilter = delta --color-only
+
+[protocol]
+    version = 2
+
+[advice]
+    addIgnoredFile = false
+
+# Must stay last: these override anything above.
+[include]
+    path = ~/.xiaket/alt/etc/gitconfig

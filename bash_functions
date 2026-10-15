@@ -47,14 +47,6 @@ act() {
   fi
 }
 
-gc() {
-	if git config remote.origin.url | grep -q github.com; then
-		git commit -vs --author "Kai Xia <kaix+github@fastmail.com>" "$@"
-	else
-		git commit -v --author "Kai Xia <${ALT_GIT_EMAIL}>" "$@"
-	fi
-}
-
 vm() {
 	# toggle vi edit mode in bash.
 	current_mode=$(bind -v | awk '/keymap/ {print $NF}')

@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Global pre-push hook, wired up via core.hooksPath in gitconfig, so this runs
+# in every repo on this machine.
+#
+# Git has no config that makes a plain `--force` behave like
+# `--force-with-lease`, so this does the lease check itself: for any push that
+# is not a fast-forward, compare what the remote actually has right now
+# against what our remote-tracking ref says it has. If they disagree, the
+# remote moved since the last fetch and the push would discard someone's work.
+#
+# Normal (fast-forward) pushes never reach the check. `git push --no-verify`
+# bypasses the hook entirely.
+#
+# Git calls this with: $1 = remote name or URL, $2 = URL
+# and feeds it one line per ref on stdin:
+#     <local ref> <local sha> <remote ref> <remote sha>
+# where <remote sha> is what the remote reports *now*, not a cached value.
+
+set -o nounset
+
+remote="${1:-}"
+
+# A push straight to a URL has no remote-tracking refs to compare against, so
+# there is no lease to check. Say so rather than failing every such push.
+if ! git config --get "remote.${remote}.url" > /dev/null 2>&1; then
+  echo "pre-push: pushing to a URL rather than a named remote, no lease check" >&2
+  exit 0
+fi
+
+# An all-zero sha means "no such ref"; its width follows the repo's hash
+# algorithm, so derive it instead of hardcoding 40 characters.
+empty_object=$(git hash-object --stdin < /dev/null)
+zero=${empty_object//[0-9a-f]/0}
+
+status=0
+while read -r _local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue  # deleting a branch
+  [ "$remote_sha" = "$zero" ] && continue # creating a new one
+
+  # Only branches have remote-tracking refs. Tags and anything else cannot be
+  # lease-checked, so leave them to git's own rules.
+  case "$remote_ref" in
+    refs/heads/*) ;;
+    *) continue ;;
+  esac
+
+  # Fast-forward: the remote's commit is already in our history, nothing of
+  # theirs is being discarded.
+  git merge-base --is-ancestor "$remote_sha" "$local_sha" 2> /dev/null && continue
+
+  # Past here the push rewrites remote history. The lease: does our
+  # remote-tracking ref still agree with what the remote just told us?
+  tracking="refs/remotes/${remote}/${remote_ref#refs/heads/}"
+  known=$(git rev-parse --verify --quiet "$tracking" || true)
+
+  if [ "$known" != "$remote_sha" ]; then
+    {
+      echo "pre-push: ${remote_ref#refs/heads/} on ${remote} moved since your last fetch"
+      echo "          remote now has ${remote_sha}"
+      echo "          you last saw   ${known:-<nothing>}"
+      echo "          force-pushing would discard the difference."
+      echo "          Fetch and look, or re-run with --no-verify to override."
+    } >&2
+    status=1
+  fi
+done
+
+exit "$status"
