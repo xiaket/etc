@@ -7,7 +7,7 @@ local DEFAULTS = {
   temperature = nil, -- nil = don't send it; reasoning models may reject this param anyway
   system_prompt = "直接回答问题，不要客套，不要重复问题，能简洁就简洁。",
   enable_web_search = true, -- OpenAI Responses API only
-  timeout = 10, -- seconds
+  timeout = 20, -- seconds
 }
 
 local DEEPSEEK_DEFAULTS = {
