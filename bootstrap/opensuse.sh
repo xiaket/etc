@@ -96,17 +96,9 @@ rust-config () {
   rustup default stable
 }
 
-engram () {
-    check-done || return 0
-    command -v go > /dev/null || sudo zypper install -y go
-    go install github.com/Gentleman-Programming/engram/cmd/engram@latest
-    touch-done
-}
-
 clone-etc
 packages
 python-packages
 build-ps1
-engram
 create-links
 misc-config

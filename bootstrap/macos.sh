@@ -119,12 +119,6 @@ build-ps1() {
   touch-done
 }
 
-engram() {
-  check-done || return 0
-  go install github.com/Gentleman-Programming/engram/cmd/engram@latest
-  touch-done
-}
-
 # Create or repair one symlink. Unlike a bare `ln -sf`, this is safe to run
 # repeatedly: `ln -sf` follows an existing symlink-to-a-directory and drops a
 # nested link *inside* the target (~/.config/nvim/nvim), so -n is mandatory
@@ -204,6 +198,5 @@ homebrew
 homebrew-packages
 python-packages
 build-ps1
-engram
 sync-links
 misc-config
