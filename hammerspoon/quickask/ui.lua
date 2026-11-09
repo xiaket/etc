@@ -9,16 +9,30 @@ local HTML_TEMPLATE = [[
 <head>
 <meta charset="utf-8">
 <style>
-  :root { color-scheme: light dark; }
+  /* System colors only, so the page tracks the macOS appearance (and accent
+     / increased-contrast settings) without maintaining our own palettes. */
+  :root {
+    color-scheme: light dark;
+    --accent: -apple-system-control-accent;
+    --muted: -apple-system-secondary-label;
+    --error: -apple-system-red;
+    --code-bg: -apple-system-quaternary-label;
+    --divider: -apple-system-separator;
+    --border: -apple-system-separator;
+    --badge-bg: ButtonFace;
+    --btn-border: -apple-system-separator;
+    --btn-hover: -apple-system-unemphasized-selected-content-background;
+  }
   * { box-sizing: border-box; }
   html, body {
     margin: 0;
     height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-    background: #1e1e1e;
-    color: #eee;
   }
   body { display: flex; flex-direction: column; }
+  /* The window uses fullSizeContentView, so the page draws under the
+     (otherwise see-through) titlebar; keep content clear of it. */
+  #titlebar { height: 28px; flex-shrink: 0; -webkit-user-select: none; }
   #content {
     flex: 1;
     overflow-y: auto;
@@ -29,27 +43,27 @@ local HTML_TEMPLATE = [[
   #content .qa-question {
     font-weight: 600;
     margin: 10px 0 4px;
-    color: #8ab4f8;
+    color: var(--accent);
   }
   #content .qa-question:first-child { margin-top: 0; }
-  #content .qa-thinking { color: #999; font-style: italic; }
-  #content .qa-error { color: #f28b82; white-space: pre-wrap; }
+  #content .qa-thinking { color: var(--muted); font-style: italic; }
+  #content .qa-error { color: var(--error); white-space: pre-wrap; }
   #content .qa-answer p { margin: 0 0 8px; }
   #content pre {
-    background: #111;
+    background: var(--code-bg);
     padding: 8px;
     border-radius: 6px;
     overflow-x: auto;
   }
   #content code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; }
   #content pre code { display: block; }
-  #content a { color: #8ab4f8; }
+  #content a { color: var(--accent); }
   #footer {
     display: flex;
     flex-direction: column;
     gap: 6px;
     padding: 10px;
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--divider);
     flex-shrink: 0;
   }
   #attachments {
@@ -68,7 +82,7 @@ local HTML_TEMPLATE = [[
     height: 100%;
     object-fit: cover;
     border-radius: 4px;
-    border: 1px solid #444;
+    border: 1px solid var(--border);
   }
   .qa-thumb .qa-thumb-remove {
     position: absolute;
@@ -79,11 +93,10 @@ local HTML_TEMPLATE = [[
     line-height: 16px;
     text-align: center;
     border-radius: 50%;
-    background: #555;
-    color: #eee;
+    background: var(--badge-bg);
     font-size: 11px;
     cursor: pointer;
-    border: 1px solid #222;
+    border: 1px solid Canvas;
   }
   #inputRow {
     display: flex;
@@ -93,9 +106,7 @@ local HTML_TEMPLATE = [[
     flex: 1;
     resize: none;
     height: 36px;
-    background: #2a2a2a;
-    color: #eee;
-    border: 1px solid #444;
+    border: 1px solid var(--border);
     border-radius: 6px;
     padding: 8px;
     font-size: 14px;
@@ -103,18 +114,17 @@ local HTML_TEMPLATE = [[
   }
   #question:disabled { opacity: 0.6; }
   button {
-    background: #3a3a3a;
-    color: #eee;
-    border: 1px solid #555;
+    border: 1px solid var(--btn-border);
     border-radius: 6px;
     padding: 0 12px;
     cursor: pointer;
     font-size: 13px;
   }
-  button:hover { background: #4a4a4a; }
+  button:hover { background: var(--btn-hover); }
 </style>
 </head>
 <body>
+  <div id="titlebar"></div>
   <div id="content"></div>
   <div id="footer">
     <div id="attachments"></div>
@@ -340,8 +350,15 @@ function M.newSession(cfg)
   }
 
   local webview = hs.webview.new(rect, { developerExtrasEnabled = false }, uc)
-  webview:windowStyle({ "titled", "closable", "resizable" })
+  -- hs.webview windows have a clear background, so on recent macOS the
+  -- titlebar shows whatever is behind the window. Extend the page under the
+  -- titlebar so it picks up the page's background. Appearance is left to the
+  -- system; the page follows it via prefers-color-scheme.
+  webview:windowStyle({ "titled", "closable", "resizable", "fullSizeContentView" })
   webview:windowTitle("Quick Ask")
+  -- Off by default for hs.webview; without it the window blends into
+  -- light backgrounds.
+  webview:shadow(true)
   webview:allowNewWindows(false)
   webview:allowTextEntry(true)
   webview:level(hs.drawing.windowLevels.floating)
