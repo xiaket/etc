@@ -225,40 +225,22 @@ return {
       })
       vim.lsp.enable("lua_ls")
 
-      -- pyright custom config with virtual environment detection
-      local get_python_venv = function()
-        if vim.env.VIRTUAL_ENV then
-          return vim.env.VIRTUAL_ENV
-        end
-
-        local cwd = vim.fn.getcwd()
-        while true do
-          if cwd == "/" then
-            break
-          end
-
-          local match = vim.fn.glob(cwd, "Venv")
-          if match ~= "" then
-            return cwd .. "/Venv"
-          end
-          local rev = string.reverse(cwd)
-          local index = string.find(rev, "/")
-          if index == nil then
-            break
-          end
-          cwd = string.reverse(string.sub(rev, index + 1))
-        end
-      end
-
-      local venv = get_python_venv()
-      local python_path = venv and (venv .. "/bin/python3") or nil
-
+      -- pyright custom config with uv's standard .venv layout
       vim.lsp.config("pyright", {
         capabilities = capabilities,
+        before_init = function(_, config)
+          local root = vim.fs.root(config.root_dir or vim.fn.getcwd(), ".venv")
+          local venv = root and vim.fs.joinpath(root, ".venv") or vim.env.VIRTUAL_ENV
+          if venv then
+            local python = vim.fs.joinpath(venv, "bin", "python")
+            if vim.fn.executable(python) == 1 then
+              config.settings.python.pythonPath = python
+            end
+          end
+        end,
         settings = {
           pyright = { autoImportCompletion = true },
           python = {
-            pythonPath = python_path,
             analysis = {
               autoSearchPaths = true,
               diagnosticMode = "openFilesOnly",
