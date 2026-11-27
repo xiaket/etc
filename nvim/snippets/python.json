@@ -1,0 +1,14 @@
+{
+  "exit": {
+    "prefix": "exit",
+    "body": ["import sys", "sys.exit()"]
+  },
+  "ifmain": {
+    "prefix": "ifmain",
+    "body": ["if __name__ == '__main__':", "    main()"]
+  },
+  "shell": {
+    "prefix": "shell",
+    "body": "from ptpython.repl import embed; embed(globals(), locals())"
+  }
+}
